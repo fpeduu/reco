@@ -1,0 +1,8 @@
+.footerSection {
+    @apply flex flex-col gap-6 text-gray-500;
+
+        
+    p {
+        @apply font-medium text-xl pb-2 border-b border-gray-400 text-black;
+    }
+}
