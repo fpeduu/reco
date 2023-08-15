@@ -1,13 +1,14 @@
 import { Acordo } from "@/models/Acordos";
+import { serverURL } from "../../config";
 
 async function fetchContracts() {
-    const response = await fetch('http://localhost:3000/contract/api/');
+    const response = await fetch(`${serverURL}/contract/api/`);
     const contractList: Acordo[] = await response.json();
     return contractList;
 }
 
 async function createContract() {
-    const response = await fetch('http://localhost:3000/contract/api/', {
+    const response = await fetch(`${serverURL}/contract/api/`, {
         method: 'POST',
         body: JSON.stringify({
             id: 0,
@@ -26,7 +27,7 @@ async function createContract() {
 }
 
 async function deleteContracts() {
-    const response = await fetch('http://localhost:3000/contract/api/', {
+    const response = await fetch(`${serverURL}/contract/api/`, {
         method: 'DELETE',
         body: JSON.stringify({})
     });
