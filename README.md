@@ -12,9 +12,20 @@
 
 Clone ou faça o download do repositório, e siga os passos abaixo:
 
+### Adicionando as variáveis de ambiente
+```bash
+# Crie um arquivo .env.local na pasta nextjs_frontend
+$ touch nextjs_frontend/.env.local
+# Copie o conteúdo do arquivo .env.example para o .env
+$ cp nextjs_frontend/.env.example nextjs_frontend/.env
+# Modifique as variáveis de ambiente
+```
+
 ### Frontend
 
 ```bash 
+# Instala o yarn
+$ npm install --global yarn
 # Acesse a pasta do frontend
 $ cd nextjs_frontend
 # Instale as dependências
