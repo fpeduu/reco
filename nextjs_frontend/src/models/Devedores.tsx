@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-export interface Devedores {
+export interface Devedor {
   cpf: string;
   nome: string;
   mensalidadesAtrasadas: number;
@@ -14,5 +14,5 @@ const DevedorSchema = new mongoose.Schema({
   condominioCnpj: String,
 });
 
-export default mongoose.models.Bot ||
-  mongoose.model("Devedores", DevedorSchema);
+export default mongoose.models.Devedores ||
+               mongoose.model("Devedores", DevedorSchema);

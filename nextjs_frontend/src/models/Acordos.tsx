@@ -1,29 +1,42 @@
 import mongoose from "mongoose";
 
-export interface Acordos {
+export interface Acordo {
   id: number;
-  valor: number;
-  dataAcordo: Date;
-  diaPagamento: Date;
-  qtdParcelas: number;
-  juros: number;
-  status: string;
   usuarioEmail: string;
   devedorCpf: string;
+  dataAcordo?: Date;
+  status: string;
+  valor: number;
+  juros: number;
+  diaPagamento: Date;
+  qtdParcelas: number;
   descricao: string;
 }
 
 const AcordoSchema = new mongoose.Schema({
-  id: Number,
+  id: {
+    type: Number,
+    required: true,
+  },
+  usuarioEmail: {
+    type: String,
+    required: true,
+  },
+  devedorCpf: {
+    type: String,
+    required: true,
+  },
+  dataAcordo: {
+    type: Date,
+    default: Date.now,
+  },
+  status: String,
   valor: Number,
-  dataAcordo: Date,
+  juros: Number,
   diaPagamento: Date,
   qtdParcelas: Number,
-  juros: Number,
-  status: String,
-  usuarioEmail: String,
-  devedorCpf: String,
   descricao: String,
 });
 
-export default mongoose.models.Bot || mongoose.model("Acordos", AcordoSchema);
+export default mongoose.models.Acordos ||
+               mongoose.model("Acordos", AcordoSchema);

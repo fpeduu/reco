@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-export interface Condominios {
+export interface Condominio {
   cnpj: string;
   nome: string;
   valorMensalidade: number;
@@ -14,5 +14,5 @@ const CondominioSchema = new mongoose.Schema({
   administradorEmail: String,
 });
 
-export default mongoose.models.Bot ||
-  mongoose.model("Condominiums", CondominioSchema);
+export default mongoose.models.Condominiums ||
+               mongoose.model("Condominiums", CondominioSchema);

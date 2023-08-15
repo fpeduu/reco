@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-export interface Usuarios {
+export interface Usuario {
   nome: string;
   email: string;
   password: string;
@@ -12,4 +12,5 @@ const UsuarioSchema = new mongoose.Schema({
   password: String,
 });
 
-export default mongoose.models.Bot || mongoose.model("Usuarios", UsuarioSchema);
+export default mongoose.models.Usuarios ||
+               mongoose.model("Usuarios", UsuarioSchema);
