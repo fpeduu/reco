@@ -3,8 +3,7 @@ import { serverURL } from "../../config";
 
 async function fetchContracts() {
     const response = await fetch(`${serverURL}/contract/api/`);
-    const contractList: Acordo[] = await response.json();
-    return contractList;
+    return await response.json() as Acordo[];
 }
 
 async function createContract() {
@@ -22,8 +21,7 @@ async function createContract() {
             usuarioEmail: "teste@email.com",
         })
     });
-    const newContract: Acordo = await response.json();
-    return newContract;
+    return await response.json() as Acordo;
 }
 
 async function deleteContracts() {
@@ -31,8 +29,7 @@ async function deleteContracts() {
         method: 'DELETE',
         body: JSON.stringify({})
     });
-    const deletedContracts: Acordo[] = await response.json();
-    return deletedContracts;
+    return await response.json() as Acordo[];
 }
 
 export default async function ContractPage() {
