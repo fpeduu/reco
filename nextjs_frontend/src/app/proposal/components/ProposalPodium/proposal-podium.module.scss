@@ -1,0 +1,30 @@
+.proposalCard {
+  @apply w-full h-96 mb-10 flex flex-col items-center justify-center
+    bg-white shadow border rounded-[10px] border-gray-950 border-opacity-50
+    transition-transform ease-in-out duration-300;
+
+  &.selected {
+    @apply scale-125 -translate-y-5;
+  }
+
+  ul {
+    @apply font-medium text-sm text-[#969696];
+
+    li {
+      @apply pl-7 py-2
+      bg-[url(/icons/check_circle.svg)] bg-no-repeat bg-left;
+    }
+  }
+}
+
+.cardWrapper {
+  @apply w-full pt-20 pb-10 px-10 flex justify-center items-center gap-5 md:gap-10 xl:gap-20
+    max-lg:overflow-hidden;
+
+  button {
+    &:not(.active) {
+      @apply bg-white border border-neutral-400
+        text-neutral-400 font-medium;
+    }
+  }
+}

@@ -8,7 +8,7 @@ export interface Acordo {
   status: string;
   valor: number;
   juros: number;
-  diaPagamento: Date;
+  diaPagamento: number;
   qtdParcelas: number;
   descricao: string;
 }
@@ -16,27 +16,26 @@ export interface Acordo {
 const AcordoSchema = new mongoose.Schema({
   id: {
     type: Number,
-    required: true,
+    required: true
   },
   usuarioEmail: {
     type: String,
-    required: true,
+    required: true
   },
   devedorCpf: {
     type: String,
-    required: true,
+    required: true
   },
   dataAcordo: {
     type: Date,
-    default: Date.now,
+    default: Date.now
   },
   status: String,
   valor: Number,
   juros: Number,
-  diaPagamento: Date,
+  diaPagamento: Number,
   qtdParcelas: Number,
-  descricao: String,
+  descricao: String
 });
 
-export default mongoose.models.Acordos ||
-               mongoose.model("Acordos", AcordoSchema);
+export default mongoose.models.Acordos || mongoose.model("Acordos", AcordoSchema);
