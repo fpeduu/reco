@@ -16,14 +16,14 @@ interface ProposalPageProps {
 
 async function fetchProposals(devedorCPF: string) {
   const response = await fetch(
-    `${serverURL}/proposal/api/`,
+    `${serverURL}/proposal/api/${devedorCPF}/`,
     { method: "GET" });
   return await response.json() as Acordo[];
 }
 
-async function chooseProposal(acordo: Acordo) {
+async function chooseProposal(devedorCPF: string, acordo: Acordo) {
   const proposalChoosed: boolean = await fetch(
-    `${serverURL}/proposal/api/`, {
+    `${serverURL}/proposal/api/${devedorCPF}/`, {
       method: "POST",
       body: JSON.stringify(acordo)
     }).then((response) => response.ok)
@@ -49,7 +49,8 @@ export default function ProposalPage({ params }: ProposalPageProps) {
 
   async function handleFinishProposal() {
     if (!selectedProposal) return;
-    const proposalSelected = await chooseProposal(selectedProposal);
+    const proposalSelected = await chooseProposal(params.devedorCPF,
+                                                  selectedProposal);
     if (proposalSelected) {
       alert("Proposta selecionada com sucesso!");
     } else {
