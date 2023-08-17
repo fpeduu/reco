@@ -1,0 +1,10 @@
+.proposalPage {
+  @apply w-full min-h-screen p-10 lg:px-32 lg:py-10 bg-[#F3F4F8];
+
+  button {
+    @apply w-32 md:w-48 lg:w-52 xl:w-64 h-16 p-5
+      bg-gray-950 rounded-[56px] shadow
+      justify-center items-center gap-2 inline-flex
+      text-center text-gray-100 text-sm lg:text-base font-extrabold leading-tight;
+  }
+}
