@@ -1,69 +1,64 @@
-"use client";
+"use client"
+
 import Image from "next/image";
 import ProposalPodium from "./components/ProposalPodium/proposal-podium";
 import Styles from "./proposal-page.module.scss";
 import { Acordo } from "@/models/Acordos";
-import { Devedor } from "@/models/Devedores";
 import { useEffect, useState } from "react";
+import { serverURL } from "@/config";
 
-async function fetchProposals(devedor: Devedor) {
-  const response = await fetch("http://localhost:3000/proposal/api/", {
-    method: "GET",
-    body: JSON.stringify(devedor)
-  });
-  const proposalList: Acordo[] = await response.json();
-  return proposalList;
+interface ProposalPageProps {
+  params: {
+    devedorCPF: string;
+  }
+}
+
+async function fetchProposals(devedorCPF: string) {
+  const response = await fetch(
+    `${serverURL}/proposal/api/`,
+    { method: "GET" });
+  return await response.json() as Acordo[];
 }
 
 async function chooseProposal(acordo: Acordo) {
-  const response = await fetch("http://localhost:3000/proposal/api/", {
-    method: "POST",
-    body: JSON.stringify(acordo)
-  });
-  const newProposal: Acordo = await response.json();
-  return newProposal;
+  const proposalChoosed: boolean = await fetch(
+    `${serverURL}/proposal/api/`, {
+      method: "POST",
+      body: JSON.stringify(acordo)
+    }).then((response) => response.ok)
+      .catch((error) => {
+        console.error(error);
+        return false;
+      });
+  return proposalChoosed;
 }
 
-export default function ProposalPage({ devedor }: { devedor: Devedor }) {
-  const [topProposals, setTopProposals] = useState<Acordo[]>([] as Acordo[]);
-  const [selProposal, setSelProposal] = useState<Acordo | null>(null);
+export default function ProposalPage({ params }: ProposalPageProps) {
+  const [proposals, setProposals] = useState<Acordo[]>([] as Acordo[]);
+  const [selectedProposal, setSelectedProposal] = useState<Acordo>();
 
-  const [isFetching, setIsFetching] = useState<boolean>(true);
-  const [isChoosing, setIsChoosing] = useState<boolean>(false);
-
-  const handleChangeSelProposal = (proposal: Acordo) => {
-    setSelProposal(proposal);
-  };
-
-  const handleFetchProposals = () => {
-    setIsFetching(true);
-  };
-
-  const handleChooseProposal = () => {
-    setIsChoosing(true);
-  };
+  async function fetchNewProposals() {
+    const newProposals = await fetchProposals(params.devedorCPF);
+    setProposals(newProposals);
+  }
 
   useEffect(() => {
-    async function fetchData() {
-      const proposals = await fetchProposals(devedor);
-      setTopProposals(proposals);
-      setSelProposal(proposals[0]);
-    }
+    fetchNewProposals();
+  }, []);
 
-    async function sendData(proposal: Acordo) {
-      const newProposal = await chooseProposal(proposal);
+  async function handleFinishProposal() {
+    if (!selectedProposal) return;
+    const proposalSelected = await chooseProposal(selectedProposal);
+    if (proposalSelected) {
+      alert("Proposta selecionada com sucesso!");
+    } else {
+      alert("Erro ao selecionar proposta!");
     }
+  };
 
-    if (isFetching) {
-      fetchData();
-      setIsFetching(false);
-    }
-
-    if (isChoosing && selProposal) {
-      sendData(selProposal);
-      setIsChoosing(false);
-    }
-  }, [devedor, isFetching, isChoosing, selProposal]);
+  function handleSelectProposal(proposal: Acordo) {
+    setSelectedProposal(proposal);
+  }
 
   return (
     <div className={Styles.proposalPage}>
@@ -81,11 +76,10 @@ export default function ProposalPage({ devedor }: { devedor: Devedor }) {
           <span className="font-semibold">selecione o acordo</span>
           <span> de sua escolha clicando nele abaixo.</span>
         </p>
-        {selProposal && (
-          <ProposalPodium
-            proposals={topProposals}
-            changeProposal={handleChangeSelProposal}></ProposalPodium>
-        )}
+        <ProposalPodium
+          proposals={proposals}
+          changeProposal={handleSelectProposal}
+        />
       </div>
       <div className="w-full py-20 px-5 flex items-center justify-center flex-wrap-reverse gap-5">
         <a href="#" className="w-12 mr-auto inline-flex gap-5 items-center">
@@ -99,8 +93,12 @@ export default function ProposalPage({ devedor }: { devedor: Devedor }) {
           <span>Voltar</span>
         </a>
         <div className="mx-10 lg:mx-0 flex justify-center items-center gap-10">
-          <button onClick={handleChooseProposal}>Escolher Proposta</button>
-          <button onClick={handleFetchProposals}>Gerar novas propostas</button>
+          <button onClick={fetchNewProposals}>
+            Gerar novas propostas
+          </button>
+          <button onClick={handleFinishProposal}>
+            Determinar Proposta
+          </button>
         </div>
         <span className="w-12 ml-auto invisible hidden lg:block"></span>
       </div>

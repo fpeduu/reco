@@ -1,5 +1,5 @@
 import { Acordo } from "@/models/Acordos";
-import { serverURL } from "../../config";
+import { serverURL } from "@/config";
 
 async function fetchContracts() {
   const response = await fetch(`${serverURL}/contract/api/`);
