@@ -1,6 +1,6 @@
 .proposalCard {
   @apply w-full h-96 mb-10 flex flex-col items-center justify-center
-       bg-white shadow border rounded-[10px] border-gray-950
+       bg-white shadow border rounded-lg border-gray-950
          border-opacity-50 transition-transform ease-in-out duration-300;
 
   &[data-selected="true"] {

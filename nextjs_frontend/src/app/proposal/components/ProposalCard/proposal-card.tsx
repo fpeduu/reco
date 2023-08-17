@@ -19,7 +19,11 @@ export default function ProposalCard({
   };
 
   const handleSelect = () => {
-    onSelected(proposal.id);
+    if (isSelected) {
+      onSelected(-1);
+    } else {
+      onSelected(proposal.id);
+    }
   };
 
   return (
@@ -35,11 +39,11 @@ export default function ProposalCard({
           melhor Acordo
         </span>
         <span className="font-bold text-4xl">R$ {proposal.valor}</span>
-        <span className="font-medium text-[#969696] text-sm text-center">p/ mês</span>
-        <span className="py-5 font-medium text-[#969696] whitespace-pre text-sm text-center">
+        <span className="font-medium text-gray-400 text-sm text-center">p/ mês</span>
+        <span className="py-5 font-medium text-gray-400 whitespace-pre text-sm text-center">
           {proposal.descricao}
         </span>
-        <ul className="font-medium text-sm text-[#969696]">
+        <ul className="font-medium text-sm text-gray-400">
           <li>Valor: {proposal.valor} reais</li>
           <li>Parcela dividida: {proposal.qtdParcelas} meses</li>
           <li>Pagamento: Mensalmente</li>
