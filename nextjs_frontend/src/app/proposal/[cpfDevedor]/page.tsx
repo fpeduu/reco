@@ -10,15 +10,17 @@ import Link from "next/link";
 
 interface ProposalPageProps {
   params: {
-    devedorCPF: string;
+    cpfDevedor: string;
   }
 }
 
 async function fetchProposals(devedorCPF: string) {
-  const response = await fetch(
+  return await fetch(
     `${serverURL}/proposal/api/${devedorCPF}/`,
-    { method: "GET" });
-  return await response.json() as Acordo[];
+  ).then((response) => response.json()).catch((error) => {
+    console.error(error);
+    return [] as Acordo[];
+  }) as Acordo[];
 }
 
 async function chooseProposal(devedorCPF: string, acordo: Acordo) {
@@ -39,7 +41,7 @@ export default function ProposalPage({ params }: ProposalPageProps) {
   const [selectedProposal, setSelectedProposal] = useState<Acordo>();
 
   async function fetchNewProposals() {
-    const newProposals = await fetchProposals(params.devedorCPF);
+    const newProposals = await fetchProposals(params.cpfDevedor);
     setProposals(newProposals);
   }
 
@@ -49,7 +51,7 @@ export default function ProposalPage({ params }: ProposalPageProps) {
 
   async function handleFinishProposal() {
     if (!selectedProposal) return;
-    const proposalSelected = await chooseProposal(params.devedorCPF,
+    const proposalSelected = await chooseProposal(params.cpfDevedor,
                                                   selectedProposal);
     if (proposalSelected) {
       alert("Proposta selecionada com sucesso!");

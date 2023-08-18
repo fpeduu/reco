@@ -18,6 +18,11 @@ export default function ProposalCard({
     return juros !== 0 ? `${juros * 100}%` : "Sem taxa de juros";
   };
 
+  function totalValue() {
+    return (proposal.valor / proposal.qtdParcelas)
+            .toFixed(2).replace(".", ",")
+  }
+
   const handleSelect = () => {
     if (isSelected) {
       onSelected(-1);
@@ -38,7 +43,9 @@ export default function ProposalCard({
           </span>
           melhor Acordo
         </span>
-        <span className="font-bold text-4xl">R$ {proposal.valor}</span>
+        <span className="font-bold text-4xl">
+          R$ {totalValue()}
+        </span>
         <span className="font-medium text-gray-400 text-sm text-center">p/ mês</span>
         <span className="py-5 font-medium text-gray-400 whitespace-pre text-sm text-center">
           {proposal.descricao}

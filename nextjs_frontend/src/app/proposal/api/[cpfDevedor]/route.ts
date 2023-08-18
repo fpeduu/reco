@@ -1,86 +1,56 @@
-import { NextResponse } from "next/server";
-import { Acordo } from "@/models/Acordos";
-import { randomInt } from "crypto";
+import { NextRequest, NextResponse } from "next/server";
+import Acordos, { Acordo } from "@/models/Acordos";
+import { faker } from '@faker-js/faker/locale/pt_BR';
 
-const top = [
-  {
-    id: 0,
-    usuarioEmail: "a@b.com",
-    devedorCpf: "123",
+function createRandomAcordo(cpfDevedor: string, minimumValue: number) { 
+  const value = faker.number.float({
+    min: minimumValue / 10, max: minimumValue * 2, precision: 2
+  })
+
+  const chance = faker.number.int({ max: 100 });
+  const gain = (value / minimumValue * 100).toFixed(2);
+  const chanceTxt = `${chance}% de chance de aceitação.`
+  const gainTxt = `Retorno de ${gain}% ao condomínio.`
+
+  const newAcordo: Acordo =  {
+    id: faker.number.int(),
+    devedorCpf: cpfDevedor,
     status: "Pendente",
-    valor: 1000,
-    juros: 0,
-    diaPagamento: 8,
-    qtdParcelas: 3,
-    descricao: "90% de chance de aceitação\nRetorno de XXX ao condomínio."
-  },
-  {
-    id: 1,
-    usuarioEmail: "b@b.com",
-    devedorCpf: "234",
-    status: "Pendente",
-    valor: 1200,
-    juros: 0.01,
-    diaPagamento: 20,
-    qtdParcelas: 2,
-    descricao: "Retorno de XXX ao condomínio."
-  },
-  {
-    id: 2,
-    usuarioEmail: "c@b.com",
-    devedorCpf: "345",
-    status: "Pendente",
-    valor: 800,
-    juros: 0.01,
-    diaPagamento: 12,
-    qtdParcelas: 3,
-    descricao: "Retorno de XXX ao condomínio."
+    valor: value,
+    usuarioEmail: faker.internet.email(),
+    juros: faker.number.float({ min: 0, max: 1, precision: 2 }),
+    diaPagamento: faker.number.int({ min: 1, max: 31 }),
+    qtdParcelas: faker.number.int({ min: 1, max: 12 * 5 }),
+    descricao: `${chanceTxt}\n${gainTxt}`
   }
-];
 
-const top2 = [
-  {
-    id: 0,
-    usuarioEmail: "a@b.com",
-    devedorCpf: "123",
-    status: "Pendente",
-    valor: 2000,
-    juros: 0,
-    diaPagamento: 8,
-    qtdParcelas: 3,
-    descricao: "90% de chance de aceitação\nRetorno de XXX ao condomínio."
-  },
-  {
-    id: 1,
-    usuarioEmail: "b@b.com",
-    devedorCpf: "234",
-    status: "Pendente",
-    valor: 1576,
-    juros: 0.02,
-    diaPagamento: 20,
-    qtdParcelas: 2,
-    descricao: "Retorno de XXX ao condomínio."
-  },
-  {
-    id: 2,
-    usuarioEmail: "c@b.com",
-    devedorCpf: "345",
-    status: "Pendente",
-    valor: 946,
-    juros: 0.01,
-    diaPagamento: 12,
-    qtdParcelas: 3,
-    descricao: "Retorno de XXX ao condomínio."
-  }
-];
+  return newAcordo;
+}
 
-export async function GET(req: Request) {
-  const index = randomInt(0, 2);
-  const acordos: Acordo[] = index === 0 ? top : top2;
+function createRandomAcordoList(cpfDevedor: string) {
+  // const cpfDevedor = String(faker.number.int())
+  //                 .padStart(11, "0").slice(0, 11)
+  const minimumValue = faker.number.float({
+    min: 100, max: 10000, precision: 2
+  });
+  return faker.helpers.multiple(() => createRandomAcordo(
+    cpfDevedor, minimumValue
+  ));
+}
+
+
+export async function GET(req: NextRequest) {
+  const cpfDevedor = req.nextUrl.href.split("/").pop() as string;
+
+  // const hasAcordos = await Acordos.find({ devedorCpf: cpfDevedor });
+  // if (hasAcordos.length > 0) return NextResponse.json(hasAcordos);
+
+  const acordos: Acordo[] = createRandomAcordoList(cpfDevedor);
   return NextResponse.json(acordos);
 }
 
 export async function POST(req: Request) {
   const newAcordo: Acordo = await req.json();
-  return NextResponse.json(newAcordo);
+  const created = await Acordos.create(newAcordo);
+  return NextResponse.json(created);
 }
