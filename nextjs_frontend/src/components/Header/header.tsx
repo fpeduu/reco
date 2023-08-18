@@ -5,9 +5,8 @@ export default function Header() {
         <div className='flex justify-around border-b border-gray-300 p-6'>
             <span className='flex place-items-center gap-8 font-medium'>
                 <Image
-                    className="mr-10"
-                    src="/vercel.svg"
-                    alt="Vercel Logo"
+                    src="/logo.svg"
+                    alt="Reco Logo"
                     width={100}
                     height={24}
                     priority
