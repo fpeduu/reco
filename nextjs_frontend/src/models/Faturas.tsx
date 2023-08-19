@@ -1,42 +1,35 @@
 import mongoose from "mongoose";
 
 export interface Fatura {
-  id: number;
-  usuarioEmail: string;
+  codigo: number;
   devedorCpf: string;
-  dataAcordo?: Date;
-  status: string;
   valor: number;
-  juros: number;
-  diaPagamento: Date;
-  qtdParcelas: number;
-  descricao: string;
+  dataVencimento: Date;
+  dataPagamento: Date;
 }
 
-const AcordoSchema = new mongoose.Schema({
-  id: {
+const FaturaSchema = new mongoose.Schema({
+  codigo: {
     type: Number,
-    required: true,
-  },
-  usuarioEmail: {
-    type: String,
     required: true,
   },
   devedorCpf: {
     type: String,
     required: true,
   },
-  dataAcordo: {
-    type: Date,
-    default: Date.now,
+  valor: {
+    type: Number,
+    required: true,
   },
-  status: String,
-  valor: Number,
-  juros: Number,
-  diaPagamento: Date,
-  qtdParcelas: Number,
-  descricao: String,
+  dataVencimento: {
+    type: Date,
+    required: true,
+  },
+  dataPagamento: {
+    type: Date,
+    required: false,
+  },
 });
 
-export default mongoose.models.Acordos ||
-  mongoose.model("Acordos", AcordoSchema);
+export default mongoose.models.Faturas ||
+  mongoose.model("Faturas", FaturaSchema);
