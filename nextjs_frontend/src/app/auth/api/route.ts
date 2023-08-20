@@ -1,12 +1,27 @@
-import NextAuth from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
+import { NextRequest, NextResponse } from "next/server";
+import Usuarios, { Usuario } from "@/models/Usuarios";
 
-export const authOptions = {
-  providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_ID || "",
-      clientSecret: process.env.GOOGLE_SECRET || "",
-    }),
-  ],
-};
-export default NextAuth(authOptions);
+export async function GET(req: NextRequest) {
+  const usuario: Usuario = await req.json();
+
+  const hasUsuarios = await Usuarios.find({ email: usuario.email });
+
+  if (hasUsuarios.length > 0) {
+    return NextResponse.json(hasUsuarios);
+  } else {
+    return NextResponse.json({ error: "Usuário não cadastrado!" });
+  }
+}
+
+export async function POST(req: Request) {
+  const newUsuario: Usuario = await req.json();
+  const hasUsuario = await Usuarios.find({ email: newUsuario.email });
+
+  if (hasUsuario.length > 0) {
+    return NextResponse.json({ error: "Usuário já cadastrado!" });
+  }
+
+  const created = await Usuarios.create(newUsuario);
+
+  return NextResponse.json(created);
+}
