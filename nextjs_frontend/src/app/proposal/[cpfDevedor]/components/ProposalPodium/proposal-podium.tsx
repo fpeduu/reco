@@ -40,11 +40,11 @@ export default function ProposalPodium({
 
   return (
     <div className={Styles.cardWrapper}>
-      {proposalsSorted().map(([position, proposal]) => (
+      {proposalsSorted().map(([priority, proposal]) => (
         <ProposalCard
           key={proposal.id}
           proposal={proposal}
-          position={position}
+          priority={priority}
           onSelected={handleCardClick}
           isSelected={selectedCardID === proposal.id}
         />

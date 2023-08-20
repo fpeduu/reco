@@ -3,14 +3,14 @@ import Styles from "./proposal-card.module.scss";
 
 interface ProposalCardProps {
   proposal: Acordo;
-  position: number;
+  priority: number;
   isSelected: boolean;
   onSelected: (proposalID: number) => void;
 }
 
 export default function ProposalCard({
   proposal,
-  position,
+  priority,
   isSelected,
   onSelected,
 }: ProposalCardProps) {
@@ -18,7 +18,7 @@ export default function ProposalCard({
     return juros !== 0 ? `${juros * 100}%` : "Sem taxa de juros";
   };
 
-  function totalValue() {
+  function installmentValue() {
     return (proposal.valor / proposal.qtdParcelas)
             .toFixed(2).replace(".", ",")
   }
@@ -39,12 +39,12 @@ export default function ProposalCard({
       >
         <span className="font-medium mb-1">
           <span className="font-extrabold text-xl">
-            {position}º&nbsp;
+            {priority}º&nbsp;
           </span>
           melhor Acordo
         </span>
         <span className="font-bold text-4xl">
-          R$ {totalValue()}
+          R$ {installmentValue()}
         </span>
         <span className="font-medium text-gray-400 text-sm text-center">p/ mês</span>
         <span className="py-5 font-medium text-gray-400 whitespace-pre text-sm text-center">
