@@ -5,10 +5,10 @@ export default function Home() {
     <div className="flex m-auto place-items-center">
       <Image
         className="dark:invert"
-        alt="Next.js Logo"
-        src="/next.svg"
-        width={180}
-        height={37}
+        alt="Reco Logo"
+        src="/reco.svg"
+        width={700}
+        height={700}
         priority
       />
     </div>
