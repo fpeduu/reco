@@ -10,6 +10,11 @@ const config: Config = {
     extend: {
       fontFamily: {
         sans: ['var(--font-visbycf)']
+      },
+      colors: {
+        primary: "#f23322",
+        secondary: "#0d0d0d",
+        tertiary: "#e4e4e4",
       }
     },
   },
