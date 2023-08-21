@@ -1,8 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Acordo } from "@/models/Acordos";
 import ProposalCard from "../ProposalCard/proposal-card";
+import ProposalPodiumLoading from "../ProposalLoading/proposal-loading";
+
 import Styles from "./proposal-podium.module.scss";
 
 interface ProposalPodiumProps {
@@ -15,6 +17,16 @@ export default function ProposalPodium({
   changeProposal
 }: ProposalPodiumProps) {
   const [selectedCardID, setSelectedCardID] = useState<number>();
+
+  function choosedPolicy(proposal: Acordo) {
+    if (proposal.status === "Aceito") {
+      setSelectedCardID(proposal.id);
+    }
+  }
+
+  useEffect(() => {
+    proposals.forEach(choosedPolicy);
+  }, [proposals]);
 
   function proposalsSorted(): Array<[number, Acordo]> {
     const middleIndex = Math.floor(proposals.length / 2);
@@ -40,11 +52,17 @@ export default function ProposalPodium({
 
   return (
     <div className={Styles.cardWrapper}>
-      {proposalsSorted().map(([position, proposal]) => (
+      {proposals.length === 0 && [2, 1, 3].map((id) => (
+        <div key={id}
+          className="w-1/5 flex flex-col items-center justify-center">
+            <ProposalPodiumLoading priority={id}/>
+        </div>
+      ))}
+      {proposalsSorted().map(([priority, proposal]) => (
         <ProposalCard
           key={proposal.id}
           proposal={proposal}
-          position={position}
+          priority={priority}
           onSelected={handleCardClick}
           isSelected={selectedCardID === proposal.id}
         />

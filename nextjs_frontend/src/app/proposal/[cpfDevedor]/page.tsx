@@ -8,6 +8,8 @@ import { useEffect, useState } from "react";
 import { serverURL } from "@/config";
 import Link from "next/link";
 
+const BASE_URL = `${serverURL}/api/proposal`;
+
 interface ProposalPageProps {
   params: {
     cpfDevedor: string;
@@ -15,7 +17,7 @@ interface ProposalPageProps {
 }
 
 async function fetchProposals(devedorCPF: string) {
-  return (await fetch(`${serverURL}/api/proposal/${devedorCPF}/`)
+  return (await fetch(`${BASE_URL}/${devedorCPF}/`)
     .then((response) => response.json())
     .catch((error) => {
       console.error(error);
@@ -23,40 +25,54 @@ async function fetchProposals(devedorCPF: string) {
     })) as Acordo[];
 }
 
-async function chooseProposal(devedorCPF: string, acordo: Acordo) {
-  const proposalChoosed: boolean = await fetch(
-    `${serverURL}/proposal/api/${devedorCPF}/`,
-    {
-      method: "POST",
-      body: JSON.stringify(acordo),
-    }
-  )
+async function generateNewProposals(devedorCPF: string) {
+  const newProposals = (await fetch(`${BASE_URL}/${devedorCPF}/`, {
+    method: "POST",
+  })
+    .then((response) => response.json())
+    .catch((error) => {
+      console.error(error);
+      return [] as Acordo[];
+    })) as Acordo[];
+  return newProposals;
+}
+
+async function chooseProposal(devedorCPF: string, acordoID: number) {
+  const successfull = await fetch(`${BASE_URL}/${devedorCPF}/`, {
+    method: "PUT",
+    body: JSON.stringify({ acordoID }),
+  })
     .then((response) => response.ok)
     .catch((error) => {
       console.error(error);
       return false;
     });
-  return proposalChoosed;
+  return successfull;
 }
 
 export default function ProposalPage({ params }: ProposalPageProps) {
   const [proposals, setProposals] = useState<Acordo[]>([] as Acordo[]);
   const [selectedProposal, setSelectedProposal] = useState<Acordo>();
 
+  async function fetchPreviousProposals() {
+    const previousProposals = await fetchProposals(params.cpfDevedor);
+    setProposals(previousProposals);
+  }
+
   async function fetchNewProposals() {
-    const newProposals = await fetchProposals(params.cpfDevedor);
+    const newProposals = await generateNewProposals(params.cpfDevedor);
     setProposals(newProposals);
   }
 
   useEffect(() => {
-    fetchNewProposals();
+    fetchPreviousProposals();
   }, []);
 
   async function handleFinishProposal() {
     if (!selectedProposal) return;
     const proposalSelected = await chooseProposal(
       params.cpfDevedor,
-      selectedProposal
+      selectedProposal.id
     );
     if (proposalSelected) {
       alert("Proposta selecionada com sucesso!");
