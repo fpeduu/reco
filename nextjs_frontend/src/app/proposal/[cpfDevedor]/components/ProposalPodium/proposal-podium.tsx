@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { Acordo } from "@/models/Acordos";
 import ProposalCard from "../ProposalCard/proposal-card";
+import ProposalPodiumLoading from "../ProposalLoading/proposal-loading";
+
 import Styles from "./proposal-podium.module.scss";
 
 interface ProposalPodiumProps {
@@ -50,6 +52,12 @@ export default function ProposalPodium({
 
   return (
     <div className={Styles.cardWrapper}>
+      {proposals.length === 0 && [2, 1, 3].map((id) => (
+        <div key={id}
+          className="w-1/5 flex flex-col items-center justify-center">
+            <ProposalPodiumLoading priority={id}/>
+        </div>
+      ))}
       {proposalsSorted().map(([priority, proposal]) => (
         <ProposalCard
           key={proposal.id}
