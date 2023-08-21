@@ -1,6 +1,7 @@
 import type { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
+import { serverURL } from "@/config";
 
 export const options: NextAuthOptions = {
   providers: [
@@ -15,16 +16,13 @@ export const options: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/auth`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(credentials),
-          }
-        );
+        const response = await fetch(`${serverURL}/api/auth`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(credentials),
+        });
         const user = await response.json();
 
         if (user) {
