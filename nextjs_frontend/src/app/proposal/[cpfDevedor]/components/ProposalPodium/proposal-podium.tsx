@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Acordo } from "@/models/Acordos";
 import ProposalCard from "../ProposalCard/proposal-card";
 import Styles from "./proposal-podium.module.scss";
@@ -15,6 +15,16 @@ export default function ProposalPodium({
   changeProposal
 }: ProposalPodiumProps) {
   const [selectedCardID, setSelectedCardID] = useState<number>();
+
+  function choosedPolicy(proposal: Acordo) {
+    if (proposal.status === "Aceito") {
+      setSelectedCardID(proposal.id);
+    }
+  }
+
+  useEffect(() => {
+    proposals.forEach(choosedPolicy);
+  }, [proposals]);
 
   function proposalsSorted(): Array<[number, Acordo]> {
     const middleIndex = Math.floor(proposals.length / 2);
