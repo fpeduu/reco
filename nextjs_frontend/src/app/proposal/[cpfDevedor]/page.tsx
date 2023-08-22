@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import Image from "next/image";
 import ProposalPodium from "./components/ProposalPodium/proposal-podium";
@@ -8,38 +8,41 @@ import { useEffect, useState } from "react";
 import { serverURL } from "@/config";
 import Link from "next/link";
 
-const BASE_URL = `${serverURL}/proposal/api`
+const BASE_URL = `${serverURL}/api/proposal`;
 
 interface ProposalPageProps {
   params: {
     cpfDevedor: string;
-  }
+  };
 }
 
 async function fetchProposals(devedorCPF: string) {
-  return await fetch(`${BASE_URL}/${devedorCPF}/`)
+  return (await fetch(`${BASE_URL}/${devedorCPF}/`)
     .then((response) => response.json())
     .catch((error) => {
       console.error(error);
       return [] as Acordo[];
-    }) as Acordo[];
+    })) as Acordo[];
 }
 
 async function generateNewProposals(devedorCPF: string) {
-  const newProposals = await fetch(`${BASE_URL}/${devedorCPF}/`, {
+  const newProposals = (await fetch(`${BASE_URL}/${devedorCPF}/`, {
     method: "POST",
-  }).then((response) => response.json()).catch((error) => {
-    console.error(error);
-    return [] as Acordo[];
-  }) as Acordo[];
+  })
+    .then((response) => response.json())
+    .catch((error) => {
+      console.error(error);
+      return [] as Acordo[];
+    })) as Acordo[];
   return newProposals;
 }
 
 async function chooseProposal(devedorCPF: string, acordoID: number) {
   const successfull = await fetch(`${BASE_URL}/${devedorCPF}/`, {
     method: "PUT",
-    body: JSON.stringify({ acordoID })
-  }).then((response) => response.ok)
+    body: JSON.stringify({ acordoID }),
+  })
+    .then((response) => response.ok)
     .catch((error) => {
       console.error(error);
       return false;
@@ -68,13 +71,15 @@ export default function ProposalPage({ params }: ProposalPageProps) {
   async function handleFinishProposal() {
     if (!selectedProposal) return;
     const proposalSelected = await chooseProposal(
-      params.cpfDevedor, selectedProposal.id);
+      params.cpfDevedor,
+      selectedProposal.id
+    );
     if (proposalSelected) {
       alert("Proposta selecionada com sucesso!");
     } else {
       alert("Erro ao selecionar proposta!");
     }
-  };
+  }
 
   function handleSelectProposal(proposal: Acordo) {
     setSelectedProposal(proposal);
@@ -91,8 +96,8 @@ export default function ProposalPage({ params }: ProposalPageProps) {
         </h2>
         <p className="w-2/3 font-normal text-gray-500 text-center">
           <span>
-            A seguir, estão sendo apresentadas na tela as diferentes opções de acordos que
-            se adequam a sua situação. <br />
+            A seguir, estão sendo apresentadas na tela as diferentes opções de
+            acordos que se adequam a sua situação. <br />
             Por favor,&nbsp;
           </span>
           <span className="font-semibold">selecione o acordo</span>
@@ -104,8 +109,7 @@ export default function ProposalPage({ params }: ProposalPageProps) {
         />
       </div>
       <div className="w-full py-20 px-5 flex items-center justify-center flex-wrap-reverse gap-5">
-        <Link href="/"
-          className="w-12 mr-auto inline-flex gap-5 items-center">
+        <Link href="/" className="w-12 mr-auto inline-flex gap-5 items-center">
           <Image
             src="/icons/vector_stroke.svg"
             className="dark:invert"
@@ -116,11 +120,8 @@ export default function ProposalPage({ params }: ProposalPageProps) {
           <span>Voltar</span>
         </Link>
         <div className="mx-10 lg:mx-0 flex justify-center items-center gap-10">
-          <button onClick={fetchNewProposals}>
-            Gerar novas propostas
-          </button>
-          <button onClick={handleFinishProposal}
-            disabled={!selectedProposal}>
+          <button onClick={fetchNewProposals}>Gerar novas propostas</button>
+          <button onClick={handleFinishProposal} disabled={!selectedProposal}>
             Determinar Proposta
           </button>
         </div>
