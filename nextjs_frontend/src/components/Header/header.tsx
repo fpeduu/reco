@@ -1,8 +1,17 @@
+"use client"
+
+import { useSession, signIn, signOut } from "next-auth/react"
 import Image from 'next/image'
 
 export default function Header() {
-    function isAuthenticated() {
-        return false;
+    const { data: session } = useSession();
+
+    function handleLogin() {
+        signIn();
+    }
+
+    function handleLogout() {
+        signOut();
     }
 
     return (
@@ -23,7 +32,7 @@ export default function Header() {
                 </a>
             </span>
             <span className='flex place-items-center gap-2 font-semibold'>
-                {isAuthenticated() ? <>
+                {session ? <>
                     <Image
                         src="/icons/logout.svg"
                         className="invert"
@@ -31,11 +40,11 @@ export default function Header() {
                         width={24}
                         height={24}
                     />
-                    <button className="underline">
+                    <button className="underline" onClick={handleLogout}>
                         Sair
                     </button>
                 </>:<>
-                    <button className="underline">
+                    <button className="underline" onClick={handleLogin}>
                         Entrar
                     </button>
                     <button className="bg-primary rounded-full py-2 px-10 ml-6">
