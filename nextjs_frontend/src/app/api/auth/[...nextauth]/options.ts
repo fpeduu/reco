@@ -12,10 +12,14 @@ export const options: NextAuthOptions = {
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        email: { label: "Email", type: "text", placeholder: "nome@email.com" },
+        email: {
+          label: "Email",
+          type: "text",
+          placeholder: "nome@email.com"
+        },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials) {
+      async authorize(credentials: any) {
         const response = await fetch(`${serverURL}/api/auth`, {
           method: "POST",
           headers: {
@@ -25,11 +29,7 @@ export const options: NextAuthOptions = {
         });
         const user = await response.json();
 
-        if (user) {
-          return user;
-        } else {
-          return null;
-        }
+        if (user) return user;
       },
     }),
   ],
