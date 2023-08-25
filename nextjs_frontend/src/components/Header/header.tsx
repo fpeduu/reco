@@ -1,17 +1,21 @@
 "use client"
 
-import { useSession, signIn, signOut } from "next-auth/react"
-import Image from 'next/image'
+import { useSession, signIn, signOut } from "next-auth/react";
+import Image from 'next/image';
 
 export default function Header() {
     const { data: session } = useSession();
 
     function handleLogin() {
-        signIn();
+        signIn(undefined, {
+            callbackUrl: '/tenants/'
+        });
     }
 
     function handleLogout() {
-        signOut();
+        signOut({
+            callbackUrl: '/'
+        })
     }
 
     return (
