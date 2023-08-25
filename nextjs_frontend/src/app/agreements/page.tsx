@@ -4,7 +4,6 @@ import { Devedor } from "@/models/Devedores";
 import { Acordo } from "@/models/Acordos";
 import AgreementList from "./components/AgreementList/agreement-list";
 import { Condominio } from "@/models/Condominios";
-import DebtorList from "./components/DebtorList/debtor-list";
 
 const BASE_URL = `${serverURL}/api/agreements`;
 
@@ -45,13 +44,6 @@ export default async function AgreementsPage() {
       <h1 className="my-10 text-3xl font-bold leading-10">
         Boas-vindas, {"Usuário"}! {/*get username from session*/}
       </h1>
-      <div className="mb-10">
-        <div className="mb-3 flex items-center justify-between">
-          <h2 className="font-bold text-2xl">Lista de Inadimplentes</h2>
-          <span>Total ({debtors.length})</span>
-        </div>
-        <DebtorList debtors={debtors} condominiums={condominiums} />
-      </div>
       <div>
         <div className="mb-3 flex items-center justify-between">
           <h2 className="font-bold text-2xl">Acordos Realizados</h2>

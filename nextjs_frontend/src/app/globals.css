@@ -21,3 +21,7 @@ body {
   display: flex;
   flex-direction: column;
 }
+
+.containerLayout {
+  @apply w-full min-h-screen p-10 lg:px-32 lg:py-10 bg-tertiary;
+}
