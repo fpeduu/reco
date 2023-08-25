@@ -8,11 +8,11 @@
   }
 
   ul li {
-    @apply pl-7 py-2 bg-[url(/icons/check_circle.svg)]
+    @apply pl-7 pt-1 bg-[url(/icons/check_circle.svg)]
            bg-no-repeat bg-left;
   }
 
-  ~button[data-selected="false"] {
+  ~ button[data-selected="false"] {
     @apply bg-white border border-neutral-400
             text-neutral-400 font-medium;
   }
