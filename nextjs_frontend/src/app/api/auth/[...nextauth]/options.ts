@@ -33,6 +33,15 @@ export const options: NextAuthOptions = {
       },
     }),
   ],
+  callbacks: {
+    async session({ session, token, user }) {
+      if (session.user) {
+        session.user.name = "Roberto";
+      }
+      
+      return session
+    }
+  }
 };
 
 export default options;

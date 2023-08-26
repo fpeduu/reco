@@ -9,7 +9,7 @@ interface Credentials {
 export async function POST(req: NextRequest) {
   const credentials: Credentials = await req.json()
   const user = {
-    nome: "Lipe",
+    name: "Roberto",
     email: credentials.email,
   };
 

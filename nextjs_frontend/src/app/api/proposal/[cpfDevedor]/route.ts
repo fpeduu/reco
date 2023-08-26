@@ -30,8 +30,6 @@ function createRandomAcordo(cpfDevedor: string, usuarioEmail: string,
 }
 
 function createRandomAcordoList(cpfDevedor: string) {
-  // const cpfDevedor = String(faker.number.int())
-  //                 .padStart(11, "0").slice(0, 11)
   const minimumValue = faker.number.float({
     min: 100, max: 10000, precision: 2
   });
