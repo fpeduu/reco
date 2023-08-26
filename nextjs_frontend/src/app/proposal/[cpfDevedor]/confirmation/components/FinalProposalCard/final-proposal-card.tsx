@@ -16,13 +16,13 @@ export default function FinalProposalCard({ proposal }: FinalProposalCardProps) 
 
   return (
     <div className={Styles.finalProposalCard}>
-      <span className="font-medium mb-1">Acordo Gerado:</span>
-      <span className="font-bold text-4xl">R$ {installmentValue()}</span>
-      <span className="font-medium text-sm text-center">p/ mês</span>
-      <span className="py-5 font-medium whitespace-pre text-sm text-center">
+      <span className="font-medium text-xl mb-1">Acordo Gerado:</span>
+      <span className="font-bold text-6xl">R$ {installmentValue()}</span>
+      <span className="font-medium text-center">p/ mês</span>
+      <span className="py-5 font-medium whitespace-pre text-center">
         {proposal.descricao}
       </span>
-      <ul className="font-medium text-sm">
+      <ul className="font-medium">
         <li>Valor: {proposal.valor} reais</li>
         <li>Parcela dividida: {proposal.qtdParcelas} meses</li>
         <li>Pagamento: Mensalmente</li>
