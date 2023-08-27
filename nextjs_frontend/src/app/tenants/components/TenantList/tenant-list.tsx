@@ -20,16 +20,13 @@ const statusList: string[] = [
   "3 meses ou mais de atraso",
 ]
 
-const condomiunsList: string[] = [
-  "Todos",
-]
-
 const tenantsPerPage = 7;
 
 export default function TenantList({
   tenants
 }: TenantListProps) {
   const [filteredTenants, setFilteredTenants] = useState<Condomino[]>(tenants);
+  const [condomiunsList, setCondomiunsList] = useState<string[]>([]);
   const [page, setPage] = useState(1);
   const totalPageCount = Math.ceil(
     filteredTenants.length / tenantsPerPage);
@@ -38,6 +35,16 @@ export default function TenantList({
     // @ts-ignore
     import('preline');
   }, [])
+
+  useEffect(() => {
+    const condomiuns = tenants.map(
+      (tenant) => tenant.nomeCondominio);
+    const uniqueCondomiuns = condomiuns.filter(
+      (condominium, index) => {
+      return condomiuns.indexOf(condominium) === index;
+    });
+    setCondomiunsList(["Todos", ...uniqueCondomiuns]);
+  }, [tenants]);
 
   function handleSearch(search: string) {
     if (search === "") {
