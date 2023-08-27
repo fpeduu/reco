@@ -1,10 +1,12 @@
 "use client";
 
-import { Condomino } from "@/models/Devedores";
 import DebtorCard from "../DebtorCard/debtor-card";
+import { useEffect, useState } from "react";
+
+import { Condomino } from "@/models/Devedores";
 import Search from "@/components/Search/search";
 import Dropdown from "@/components/Dropdown/dropdown";
-import { useEffect } from "react";
+import Paginator from "@/components/Paginator/paginator";
 
 interface TenantListProps {
   tenants: Condomino[];
@@ -22,14 +24,63 @@ const condomiunsList: string[] = [
   "Todos",
 ]
 
-export default function TenantList({ tenants }: TenantListProps) {
+const tenantsPerPage = 7;
+
+export default function TenantList({
+  tenants
+}: TenantListProps) {
+  const [filteredTenants, setFilteredTenants] = useState<Condomino[]>(tenants);
+  const [page, setPage] = useState(1);
+  const totalPageCount = Math.ceil(
+    filteredTenants.length / tenantsPerPage);
+
   useEffect(() => {
     // @ts-ignore
     import('preline');
   }, [])
 
   function handleSearch(search: string) {
-    console.log(search);
+    if (search === "") {
+      return setFilteredTenants(tenants);
+    }
+    const searchLower = search.toLowerCase();
+    setFilteredTenants(tenants.filter((tenant) => {
+      return tenant.nome.toLowerCase().includes(searchLower);
+    }));
+    setPage(1);
+  }
+
+  function handlePagination() {
+    return filteredTenants.slice((page - 1) * tenantsPerPage,
+                                page * tenantsPerPage);
+  }
+
+  function handleFilterChange(title: string, option: string) {
+    if (title === "Condomínio") {
+      if (option === "Todos") {
+        return setFilteredTenants(tenants);
+      }
+      setFilteredTenants(tenants.filter((tenant) => {
+        return tenant.nomeCondominio === option;
+      }));
+    } else if (title === "Meses de atraso") {
+      if (option === "Todos") {
+        return setFilteredTenants(tenants);
+      }
+      setFilteredTenants(tenants.filter((tenant) => {
+        switch (option) {
+          case "Em dia":
+            return tenant.mensalidadesAtrasadas === 0;
+          case "1 mês de atraso":
+            return tenant.mensalidadesAtrasadas === 1;
+          case "2 meses de atraso":
+            return tenant.mensalidadesAtrasadas === 2;
+          case "3 meses ou mais de atraso":
+            return tenant.mensalidadesAtrasadas >= 3;
+        }
+      }));
+    }
+    setPage(1);
   }
   
   return (
@@ -39,16 +90,18 @@ export default function TenantList({ tenants }: TenantListProps) {
         <span className="text-neutral-400 text-sm font-medium">
           Filtros:
         </span>
-        <Dropdown title="Condomínio" options={condomiunsList}/>
-        <Dropdown title="Meses de atraso" options={statusList}/>
+        <Dropdown
+          title="Condomínio"
+          options={condomiunsList}
+          onChange={handleFilterChange}
+        />
+        <Dropdown
+          title="Meses de atraso"
+          options={statusList}
+          onChange={handleFilterChange}
+        />
       </div>
-      <span className="hidden"> {/* Sem isso não renderiza as cores */}
-        <span className="w-5 h-5 rounded-full bg-status-0"/>
-        <span className="w-5 h-5 rounded-full bg-status-1"/>
-        <span className="w-5 h-5 rounded-full bg-status-2"/>
-        <span className="w-5 h-5 rounded-full bg-status-3"/>
-      </span>
-      {tenants.map((tanant) => (
+      {handlePagination().map((tanant) => (
         <DebtorCard
           key={tanant.cpf}
           debtorCPF={tanant.cpf}
@@ -57,6 +110,11 @@ export default function TenantList({ tenants }: TenantListProps) {
           lateTuitions={tanant.mensalidadesAtrasadas}
         />
       ))}
+      <Paginator
+        currentPage={page}
+        onPageChange={setPage}
+        pageLimit={totalPageCount}
+      />
     </div>
   );
 }

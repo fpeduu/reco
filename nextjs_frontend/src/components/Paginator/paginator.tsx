@@ -1,32 +1,25 @@
-"use client";
-
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
 
 interface PaginatorProps {
   onPageChange: (page: number) => void;
-  limit: number;
+  currentPage: number;
+  pageLimit: number;
 }
 
 export default function Paginator({
   onPageChange,
-  limit
+  currentPage,
+  pageLimit
 }: PaginatorProps) {
-  const [page, setPage] = useState(1);
-
-  useEffect(() => {
-    onPageChange(page);
-  }, [page]);
-
   function handlePreviousPage() {
-    if (page > 1) {
-      setPage(page - 1);
+    if (currentPage > 1) {
+      onPageChange(currentPage - 1);
     }
   }
 
   function handleNextPage() {
-    if (page < limit) {
-      setPage(page + 1);
+    if (currentPage < pageLimit) {
+      onPageChange(currentPage + 1);
     }
   }
 
@@ -46,7 +39,7 @@ export default function Paginator({
         />
       </button>
       <span className="px-1 py-1 font-semibold text-2xl">
-        {page}
+        {currentPage}
       </span>
       <button
         className="bg-secondary rounded-r-lg py-3 px-5"

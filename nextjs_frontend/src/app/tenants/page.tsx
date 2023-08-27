@@ -30,6 +30,12 @@ export default async function AgreementsPage() {
         </div>
         <TenantList tenants={tenants} />
       </div>
+      <span className="hidden"> {/* Sem isso não renderiza as cores */}
+        <span className="w-5 h-5 rounded-full bg-status-0"/>
+        <span className="w-5 h-5 rounded-full bg-status-1"/>
+        <span className="w-5 h-5 rounded-full bg-status-2"/>
+        <span className="w-5 h-5 rounded-full bg-status-3"/>
+      </span>
     </div>
   );
 }
