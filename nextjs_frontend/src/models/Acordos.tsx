@@ -3,14 +3,19 @@ import mongoose from "mongoose";
 export interface Acordo {
   id: number;
   usuarioEmail: string;
-  devedorCpf: string;
+  cpfDevedor: string;
   dataAcordo?: Date;
-  status: string;
+  status: "ACEITO PELAS PARTES" | "NEGADO PELO INADIMPLENTE" | "EM ANÁLISE";
   valor: number;
   juros: number;
   diaPagamento: number;
   qtdParcelas: number;
   descricao: string;
+}
+
+export interface AcordoIdentificado extends Acordo {
+  nomeDevedor: string;
+  nomeCondominio: string;
 }
 
 const AcordoSchema = new mongoose.Schema({
@@ -22,7 +27,7 @@ const AcordoSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  devedorCpf: {
+  cpfDevedor: {
     type: String,
     required: true
   },
