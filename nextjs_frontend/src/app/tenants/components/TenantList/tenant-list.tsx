@@ -17,42 +17,42 @@ const statusList: string[] = [
   "Em dia",
   "1 mês de atraso",
   "2 meses de atraso",
-  "3 meses ou mais de atraso",
-]
+  "3 meses ou mais de atraso"
+];
 
-const condomiunsList: string[] = [
-  "Todos",
-]
+const condomiunsList: string[] = ["Todos"];
 
 const tenantsPerPage = 7;
 
-export default function TenantList({
-  tenants
-}: TenantListProps) {
+export default function TenantList({ tenants }: TenantListProps) {
   const [filteredTenants, setFilteredTenants] = useState<Condomino[]>(tenants);
   const [page, setPage] = useState(1);
-  const totalPageCount = Math.ceil(
-    filteredTenants.length / tenantsPerPage);
+  const totalPageCount = Math.ceil(filteredTenants.length / tenantsPerPage);
 
   useEffect(() => {
     // @ts-ignore
-    import('preline');
-  }, [])
+    import("preline");
+  }, []);
 
   function handleSearch(search: string) {
     if (search === "") {
       return setFilteredTenants(tenants);
     }
     const searchLower = search.toLowerCase();
-    setFilteredTenants(tenants.filter((tenant) => {
-      return tenant.nome.toLowerCase().includes(searchLower);
-    }));
+
+    setFilteredTenants(
+      tenants.filter((tenant) => {
+        return (
+          tenant.nome.toLowerCase().includes(searchLower) ||
+          tenant.cpf.includes(searchLower)
+        );
+      })
+    );
     setPage(1);
   }
 
   function handlePagination() {
-    return filteredTenants.slice((page - 1) * tenantsPerPage,
-                                page * tenantsPerPage);
+    return filteredTenants.slice((page - 1) * tenantsPerPage, page * tenantsPerPage);
   }
 
   function handleFilterChange(title: string, option: string) {
@@ -60,36 +60,38 @@ export default function TenantList({
       if (option === "Todos") {
         return setFilteredTenants(tenants);
       }
-      setFilteredTenants(tenants.filter((tenant) => {
-        return tenant.nomeCondominio === option;
-      }));
+      setFilteredTenants(
+        tenants.filter((tenant) => {
+          return tenant.nomeCondominio === option;
+        })
+      );
     } else if (title === "Meses de atraso") {
       if (option === "Todos") {
         return setFilteredTenants(tenants);
       }
-      setFilteredTenants(tenants.filter((tenant) => {
-        switch (option) {
-          case "Em dia":
-            return tenant.mensalidadesAtrasadas === 0;
-          case "1 mês de atraso":
-            return tenant.mensalidadesAtrasadas === 1;
-          case "2 meses de atraso":
-            return tenant.mensalidadesAtrasadas === 2;
-          case "3 meses ou mais de atraso":
-            return tenant.mensalidadesAtrasadas >= 3;
-        }
-      }));
+      setFilteredTenants(
+        tenants.filter((tenant) => {
+          switch (option) {
+            case "Em dia":
+              return tenant.mensalidadesAtrasadas === 0;
+            case "1 mês de atraso":
+              return tenant.mensalidadesAtrasadas === 1;
+            case "2 meses de atraso":
+              return tenant.mensalidadesAtrasadas === 2;
+            case "3 meses ou mais de atraso":
+              return tenant.mensalidadesAtrasadas >= 3;
+          }
+        })
+      );
     }
     setPage(1);
   }
-  
+
   return (
     <div className="flex flex-col items-center justify-between gap-5">
-      <Search onSearch={handleSearch}/>
+      <Search onSearch={handleSearch} />
       <div className="flex justify-end items-center w-full gap-5">
-        <span className="text-neutral-400 text-sm font-medium">
-          Filtros:
-        </span>
+        <span className="text-neutral-400 text-sm font-medium">Filtros:</span>
         <Dropdown
           title="Condomínio"
           options={condomiunsList}
@@ -110,11 +112,7 @@ export default function TenantList({
           lateTuitions={tanant.mensalidadesAtrasadas}
         />
       ))}
-      <Paginator
-        currentPage={page}
-        onPageChange={setPage}
-        pageLimit={totalPageCount}
-      />
+      <Paginator currentPage={page} onPageChange={setPage} pageLimit={totalPageCount} />
     </div>
   );
 }
