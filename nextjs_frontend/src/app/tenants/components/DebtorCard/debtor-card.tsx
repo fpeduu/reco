@@ -14,25 +14,7 @@ export default function DebtorCard({
   lateTuitions,
   debtorName,
   debtorCPF,
-  chosen,
 }: DebtorCardProps) {
-  const queryParams = {
-    condominiumName,
-    lateTuitions,
-    debtorName,
-    debtorCPF,
-    chosen,
-  };
-
-  const queryString = Object.keys(queryParams)
-    .map(
-      (key) =>
-        `${key}=${encodeURIComponent(
-          queryParams[key as keyof typeof queryParams]
-        )}`
-    )
-    .join("&");
-
   function getStatusColor(lateTuitions: number) {
     if (lateTuitions > 3) lateTuitions = 3;
     return `bg-status-${lateTuitions}`;
@@ -46,11 +28,11 @@ export default function DebtorCard({
           {condominiumName.toUpperCase()}
         </span>
       </div>
-      <div className="w-3/12">
+      <div className="w-24">
         <p className="font-medium">CPF:</p>
         <span className="text-xs font-medium">{debtorCPF}</span>
       </div>
-      <div className="w-3/12">
+      <div className="w-44">
         <p className="font-medium">Status:</p>
         <div className="flex items-center gap-1 text-xs font-medium">
           <span
@@ -64,19 +46,14 @@ export default function DebtorCard({
           </span>
         </div>
       </div>
-      {!chosen && (
-        <div className="w-2/12 flex items-center justify-end">
-          <Link
-            className="w-1/2 py-3 px-5 mr-10 rounded-xl text-white text-xs font-medium text-center bg-gray-950"
-            href={{
-              pathname: `${serverURL}/tenants/${debtorName}`,
-              query: queryParams,
-            }}
-          >
-            Iniciar Acordo
-          </Link>
-        </div>
-      )}
+      <div className="w-36 flex items-center justify-end">
+        <Link
+          className="w-full py-3 px-5 rounded-xl text-white
+                     text-xs font-semibold text-center bg-gray-950"
+          href={`${serverURL}/proposal/${debtorCPF}`}>
+          Iniciar Acordo
+        </Link>
+      </div>
     </div>
   );
 }

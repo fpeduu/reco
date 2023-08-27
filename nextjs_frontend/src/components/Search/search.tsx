@@ -10,11 +10,16 @@ interface SearchProps {
 
 export default function Search({ onSearch }: SearchProps) {
   const [search, setSearch] = useState("");
-  const onDebouncedSearch = useCallback(debounce(onSearch, 500), []);
+  const onDebouncedSearch = useCallback(debounce(onSearch, 200), []);
 
   function handleSearch(event: React.ChangeEvent<HTMLInputElement>) {
-    onDebouncedSearch(search);
-    setSearch(event.target.value)
+    const value = event.target.value;
+    if (value === "") {
+      onSearch("");
+    } else {
+      onDebouncedSearch(search);
+    }
+    setSearch(value);
   }
 
   function handleClearSearch() {
