@@ -1,19 +1,40 @@
 "use client";
 import DebtorCard from "../components/DebtorCard/debtor-card";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { serverURL } from "@/config";
+import { useEffect, useState } from "react";
 
 interface QueryParameters {
-  params: {
-    condominiumName: string;
-    lateTuitions: number;
-    debtorName: string;
-    debtorCPF: string;
-  };
+  condominiumName: string;
+  lateTuitions: number;
+  debtorName: string;
+  debtorCPF: string;
 }
 
-export default function ConfirmationPage({ params }: QueryParameters) {
+export default function ConfirmationPage() {
   const router = useRouter();
+  const [queryParams, setQueryParams] = useState<QueryParameters>({
+    condominiumName: "",
+    lateTuitions: 0,
+    debtorName: "",
+    debtorCPF: "",
+  });
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const parsedQueryParams: QueryParameters = {
+      condominiumName: searchParams.get("condominiumName") || "",
+      lateTuitions: Number(searchParams.get("lateTuitions")) || 0,
+      debtorName: searchParams.get("debtorName") || "",
+      debtorCPF: searchParams.get("debtorCPF") || "",
+    };
+
+    setQueryParams(parsedQueryParams);
+  }, [searchParams]);
+
+  useEffect(() => {
+    console.log(queryParams);
+  }, []);
 
   return (
     <div className="containerLayout">
@@ -25,10 +46,10 @@ export default function ConfirmationPage({ params }: QueryParameters) {
           Você selecionou o seguinte inadimplente:
         </h2>
         <DebtorCard
-          debtorCPF={params.debtorCPF}
-          debtorName={params.debtorName}
-          condominiumName={params.condominiumName}
-          lateTuitions={params.lateTuitions}
+          debtorCPF={queryParams.debtorCPF}
+          debtorName={queryParams.debtorName}
+          condominiumName={queryParams.condominiumName}
+          lateTuitions={queryParams.lateTuitions}
           chosen={true}
         />
         <h2 className="text-xl font-medium leading-10">
@@ -37,7 +58,7 @@ export default function ConfirmationPage({ params }: QueryParameters) {
         <div className="flex flex-row justify-center gap-5 max-w-lg	">
           <button
             onClick={() =>
-              router.push(`${serverURL}/proposal/${params.debtorCPF}`)
+              router.push(`${serverURL}/proposal/${queryParams.debtorCPF}`)
             }
             className="w-1/2 py-3 px-2 rounded-full text-tertiary text-s font-medium text-center bg-secondary"
           >

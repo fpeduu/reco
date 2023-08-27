@@ -16,6 +16,23 @@ export default function DebtorCard({
   debtorCPF,
   chosen,
 }: DebtorCardProps) {
+  const queryParams = {
+    condominiumName,
+    lateTuitions,
+    debtorName,
+    debtorCPF,
+    chosen,
+  };
+
+  const queryString = Object.keys(queryParams)
+    .map(
+      (key) =>
+        `${key}=${encodeURIComponent(
+          queryParams[key as keyof typeof queryParams]
+        )}`
+    )
+    .join("&");
+
   function getStatusColor(lateTuitions: number) {
     if (lateTuitions > 3) lateTuitions = 3;
     return `bg-status-${lateTuitions}`;
@@ -51,7 +68,10 @@ export default function DebtorCard({
         <div className="w-2/12 flex items-center justify-end">
           <Link
             className="w-1/2 py-3 px-5 mr-10 rounded-xl text-white text-xs font-medium text-center bg-gray-950"
-            href={`${serverURL}/proposal/${debtorCPF}`}
+            href={{
+              pathname: `${serverURL}/tenants/${debtorName}`,
+              query: queryParams,
+            }}
           >
             Iniciar Acordo
           </Link>
