@@ -112,15 +112,8 @@ export default function TenantList({ tenants }: TenantListProps) {
           onChange={handleFilterChange}
         />
       </div>
-      {handlePagination().map((tanant) => (
-        <DebtorCard
-          key={tanant.cpf}
-          debtorCPF={tanant.cpf}
-          debtorName={tanant.nome}
-          condominiumName={tanant.nomeCondominio}
-          lateTuitions={tanant.mensalidadesAtrasadas}
-          chosen={false}
-        />
+      {handlePagination().map((tenant) => (
+        <DebtorCard key={tenant.cpf} tenant={tenant}/>
       ))}
       <Paginator
         currentPage={page}

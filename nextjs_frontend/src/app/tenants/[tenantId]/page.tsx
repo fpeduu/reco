@@ -1,40 +1,21 @@
 "use client";
-import DebtorCard from "../components/DebtorCard/debtor-card";
-import { useRouter, useSearchParams } from "next/navigation";
-import { serverURL } from "@/config";
-import { useEffect, useState } from "react";
 
-interface QueryParameters {
-  condominiumName: string;
-  lateTuitions: number;
-  debtorName: string;
-  debtorCPF: string;
-}
+import DebtorCard from "../components/DebtorCard/debtor-card";
+import { useRouter } from "next/navigation";
+import { serverURL } from "@/config";
+import { useProposalContext } from "@/contexts/ProposalContext";
 
 export default function ConfirmationPage() {
   const router = useRouter();
-  const [queryParams, setQueryParams] = useState<QueryParameters>({
-    condominiumName: "",
-    lateTuitions: 0,
-    debtorName: "",
-    debtorCPF: "",
-  });
-  const searchParams = useSearchParams();
+  const { debtor } = useProposalContext();
 
-  useEffect(() => {
-    const parsedQueryParams: QueryParameters = {
-      condominiumName: searchParams.get("condominiumName") || "",
-      lateTuitions: Number(searchParams.get("lateTuitions")) || 0,
-      debtorName: searchParams.get("debtorName") || "",
-      debtorCPF: searchParams.get("debtorCPF") || "",
-    };
+  function handleStartAgreement() {
+    router.push(`${serverURL}/proposal/${debtor.cpf}`);
+  }
 
-    setQueryParams(parsedQueryParams);
-  }, [searchParams]);
-
-  useEffect(() => {
-    console.log(queryParams);
-  }, []);
+  function handleRefuseAgreement() {
+    router.back();
+  }
 
   return (
     <div className="containerLayout">
@@ -45,29 +26,21 @@ export default function ConfirmationPage() {
         <h2 className="text-xl font-medium leading-10">
           Você selecionou o seguinte inadimplente:
         </h2>
-        <DebtorCard
-          debtorCPF={queryParams.debtorCPF}
-          debtorName={queryParams.debtorName}
-          condominiumName={queryParams.condominiumName}
-          lateTuitions={queryParams.lateTuitions}
-          chosen={true}
-        />
+        <DebtorCard tenant={debtor}/>
         <h2 className="text-xl font-medium leading-10">
-          É com esta pessoa que deseja iniciar o acordo?{" "}
+          É com esta pessoa que deseja iniciar o acordo?
         </h2>
-        <div className="flex flex-row justify-center gap-5 max-w-lg	">
+        <div className="flex flex-row justify-center place-items-center gap-5 w-full">
           <button
-            onClick={() =>
-              router.push(`${serverURL}/proposal/${queryParams.debtorCPF}`)
-            }
-            className="w-1/2 py-3 px-2 rounded-full text-tertiary text-s font-medium text-center bg-secondary"
-          >
+            onClick={handleStartAgreement}
+            className="w-1/2 py-3 px-2 rounded-full text-tertiary
+                       text-s font-medium text-center bg-secondary">
             Sim, iniciar acordo
           </button>
           <button
-            onClick={() => router.back()}
-            className="w-1/2 py-3 px-2 rounded-full text-tertiary text-s font-medium text-center bg-[#ADADAD]"
-          >
+            onClick={handleRefuseAgreement}
+            className="w-1/2 py-3 px-2 rounded-full text-tertiary
+                       text-s font-medium text-center bg-[#ADADAD]">
             Não, escolher outra
           </button>
         </div>

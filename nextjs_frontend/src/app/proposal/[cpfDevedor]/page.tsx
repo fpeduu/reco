@@ -8,7 +8,6 @@ import { useEffect, useState } from "react";
 import { serverURL } from "@/config";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useChoosenProposalContext } from "./contexts/ChoosenProposalContext";
 
 const BASE_URL = `${serverURL}/api/proposal`;
 
@@ -54,7 +53,6 @@ async function chooseProposal(devedorCPF: string, acordoID: number) {
 
 export default function ProposalPage({ params }: ProposalPageProps) {
   const router = useRouter();
-  const { setChoosenProposal } = useChoosenProposalContext();
   const [proposals, setProposals] = useState<Acordo[]>([] as Acordo[]);
   const [selectedProposal, setSelectedProposal] = useState<Acordo>();
 
@@ -76,7 +74,6 @@ export default function ProposalPage({ params }: ProposalPageProps) {
     if (!selectedProposal) return;
     const proposalSelected = await chooseProposal(params.cpfDevedor, selectedProposal.id);
     if (proposalSelected) {
-      setChoosenProposal(selectedProposal);
       router.push(`${params.cpfDevedor}/confirmation`);
     } else {
       alert("Erro ao selecionar proposta!");
