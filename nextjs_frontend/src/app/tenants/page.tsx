@@ -5,13 +5,13 @@ import AuthTitle from "@/components/AuthTItle/auth-title";
 import TenantList from "./components/TenantList/tenant-list";
 
 async function fetchTenants() {
-  return await fetch(`${serverURL}/api/tenants/`)
+  return (await fetch(`${serverURL}/api/tenants/`)
     .then((response) => response.json())
     .catch((error) => {
       console.error(error);
       return [] as Condomino[];
-    }) as Condomino[];
-};
+    })) as Condomino[];
+}
 
 export default async function AgreementsPage() {
   const tenants = await fetchTenants();
@@ -28,7 +28,8 @@ export default async function AgreementsPage() {
         <span>Total ({tenants.length})</span>
       </div>
       <TenantList tenants={tenants} />
-      <span className="hidden"> {/* Sem isso não renderiza as cores */}
+      <span className="hidden">
+        {/* Sem isso não renderiza as cores */}
         <span className="w-5 h-5 rounded-full bg-status-0"/>
         <span className="w-5 h-5 rounded-full bg-status-1"/>
         <span className="w-5 h-5 rounded-full bg-status-2"/>
