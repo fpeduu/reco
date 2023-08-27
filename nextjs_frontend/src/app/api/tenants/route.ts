@@ -49,5 +49,7 @@ export async function GET() {
   for (let i = 0; i < faker.number.int({ min: 1, max: 10 }); i++) {
     tenantList.push(...createRandomTenantList());
   }
-  return NextResponse.json(tenantList);
+  const sortedTenantList = tenantList.sort((a, b) =>
+    b.mensalidadesAtrasadas - a.mensalidadesAtrasadas);
+  return NextResponse.json(sortedTenantList);
 }

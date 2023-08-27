@@ -27,9 +27,8 @@ export default function TenantList({
 }: TenantListProps) {
   const [filteredTenants, setFilteredTenants] = useState<Condomino[]>(tenants);
   const [condomiunsList, setCondomiunsList] = useState<string[]>([]);
+  const totalPageCount = Math.ceil(filteredTenants.length / tenantsPerPage);
   const [page, setPage] = useState(1);
-  const totalPageCount = Math.ceil(
-    filteredTenants.length / tenantsPerPage);
 
   useEffect(() => {
     // @ts-ignore
