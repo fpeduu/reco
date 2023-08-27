@@ -26,6 +26,8 @@ export default function AgreementList({ agreements }: AgreementListProps) {
   const [filteredAgreements, setFilteredAgreements] = 
           useState<AcordoIdentificado[]>(agreements);
   const [condomiunsList, setCondomiunsList] = useState<string[]>([]);
+  const [condominium, setCondominium] = useState<string>("Todos");
+  const [status, setStatus] = useState<string>("Todos");
   const [page, setPage] = useState(1);
   const totalPageCount = Math.ceil(filteredAgreements.length
                                    / agreementsPerPage);
@@ -40,6 +42,21 @@ export default function AgreementList({ agreements }: AgreementListProps) {
     setCondomiunsList(["Todos", ...uniqueCondomiuns]);
   }, [agreements]);
 
+  useEffect(() => {
+    setFilteredAgreements(agreements.filter((agreement) => {
+      const condominiumFilter = condominium === "Todos" ||
+                                agreement.nomeCondominio === condominium;
+      const statusFilter = status === "Todos" ||
+                            (status === "Aceito" &&
+                              agreement.status === "ACEITO PELAS PARTES") ||
+                            (status === "Negado" &&
+                              agreement.status === "NEGADO PELO INADIMPLENTE") ||
+                            (status === "Em análise" &&
+                              agreement.status === "EM ANÁLISE");
+      return condominiumFilter && statusFilter;
+    }));
+  }, [condominium, status, agreements]);
+
   function handleSearch(search: string) {
     if (search === "") {
       return setFilteredAgreements(agreements);
@@ -53,26 +70,9 @@ export default function AgreementList({ agreements }: AgreementListProps) {
 
   function handleFilterChange(title: string, option: string) {
     if (title === "Condomínio") {
-      if (option === "Todos") {
-        return setFilteredAgreements(agreements);
-      }
-      setFilteredAgreements(agreements.filter((tenant) => {
-        return tenant.nomeCondominio === option;
-      }));
-    } else if (title === "Status do acordo") {
-      if (option === "Todos") {
-        return setFilteredAgreements(agreements);
-      }
-      setFilteredAgreements(agreements.filter((tenant) => {
-        switch (option) {
-          case "Aceito":
-            return tenant.status === "ACEITO PELAS PARTES";
-          case "Negado":
-            return tenant.status === "NEGADO PELO INADIMPLENTE";
-          default:
-            return tenant.status === "EM ANÁLISE";
-        }
-      }));
+      setCondominium(option);
+    } else {
+      setStatus(option);
     }
     setPage(1);
   }

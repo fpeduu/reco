@@ -25,8 +25,11 @@ const tenantsPerPage = 7;
 export default function TenantList({ tenants }: TenantListProps) {
   const [filteredTenants, setFilteredTenants] = useState<Condomino[]>(tenants);
   const [condomiunsList, setCondomiunsList] = useState<string[]>([]);
-  const totalPageCount = Math.ceil(filteredTenants.length / tenantsPerPage);
+  const [condominium, setCondominium] = useState<string>("Todos");
+  const [status, setStatus] = useState<string>("Todos");
   const [page, setPage] = useState(1);
+
+  const totalPageCount = Math.ceil(filteredTenants.length / tenantsPerPage);
 
   useEffect(() => {
     // @ts-ignore
@@ -42,6 +45,23 @@ export default function TenantList({ tenants }: TenantListProps) {
     });
     setCondomiunsList(["Todos", ...uniqueCondomiuns]);
   }, [tenants]);
+
+  useEffect(() => {
+    setFilteredTenants(tenants.filter((tenant) => {
+      const condominiumFilter = condominium === "Todos" ||
+                                tenant.nomeCondominio === condominium;
+      const statusFilter = status === "Todos" ||
+                           (status === "Em dia" &&
+                            tenant.mensalidadesAtrasadas === 0) ||
+                           (status === "1 mês de atraso" &&
+                            tenant.mensalidadesAtrasadas === 1) ||
+                           (status === "2 meses de atraso" &&
+                            tenant.mensalidadesAtrasadas === 2) ||
+                           (status === "3 meses ou mais de atraso" &&
+                            tenant.mensalidadesAtrasadas >= 3);
+      return condominiumFilter && statusFilter;
+    }));
+  }, [status, condominium, tenants]);
 
   function handleSearch(search: string) {
     if (search === "") {
@@ -61,37 +81,15 @@ export default function TenantList({ tenants }: TenantListProps) {
   }
 
   function handlePagination() {
-    return filteredTenants.slice((page - 1) * tenantsPerPage, page * tenantsPerPage);
+    return filteredTenants.slice((page - 1) * tenantsPerPage,
+                                 page * tenantsPerPage);
   }
 
   function handleFilterChange(title: string, option: string) {
     if (title === "Condomínio") {
-      if (option === "Todos") {
-        return setFilteredTenants(tenants);
-      }
-      setFilteredTenants(
-        tenants.filter((tenant) => {
-          return tenant.nomeCondominio === option;
-        })
-      );
-    } else if (title === "Meses de atraso") {
-      if (option === "Todos") {
-        return setFilteredTenants(tenants);
-      }
-      setFilteredTenants(
-        tenants.filter((tenant) => {
-          switch (option) {
-            case "Em dia":
-              return tenant.mensalidadesAtrasadas === 0;
-            case "1 mês de atraso":
-              return tenant.mensalidadesAtrasadas === 1;
-            case "2 meses de atraso":
-              return tenant.mensalidadesAtrasadas === 2;
-            case "3 meses ou mais de atraso":
-              return tenant.mensalidadesAtrasadas >= 3;
-          }
-        })
-      );
+      setCondominium(option);
+    } else {
+      setStatus(option);
     }
     setPage(1);
   }
@@ -100,7 +98,9 @@ export default function TenantList({ tenants }: TenantListProps) {
     <div className="flex flex-col items-center justify-between gap-5">
       <Search onSearch={handleSearch} />
       <div className="flex justify-end items-center w-full gap-5">
-        <span className="text-neutral-400 text-sm font-medium">Filtros:</span>
+        <span className="text-neutral-400 text-sm font-medium">
+          Filtros:
+        </span>
         <Dropdown
           title="Condomínio"
           options={condomiunsList}
@@ -121,7 +121,11 @@ export default function TenantList({ tenants }: TenantListProps) {
           lateTuitions={tanant.mensalidadesAtrasadas}
         />
       ))}
-      <Paginator currentPage={page} onPageChange={setPage} pageLimit={totalPageCount} />
+      <Paginator
+        currentPage={page}
+        onPageChange={setPage}
+        pageLimit={totalPageCount}
+      />
     </div>
   );
 }

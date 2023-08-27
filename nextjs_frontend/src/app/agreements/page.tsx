@@ -1,4 +1,3 @@
-import Styles from "./agreements-page.module.scss";
 import { serverURL } from "@/config";
 
 import { AcordoIdentificado } from "@/models/Acordos";
@@ -21,7 +20,7 @@ export default async function AgreementsPage() {
   const agreements = await fetchAgreements();
 
   return (
-    <div className={Styles.agreementsPage}>
+    <div className="containerLayout">
       <AuthTitle
         subtitle="Confira os acordos já realizados"
       />
