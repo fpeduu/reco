@@ -1,13 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { serverURL } from "@/config";
+import { useEffect } from "react";
 
 interface AgreementCardProps {
   debtorName: string;
   debtorCPF: string;
   condominiumName: string;
-  agreementStatus: string;
-  agreementProposalPage: string | null;
+  agreementStatus: "ACEITO PELAS PARTES" | "NEGADO PELO INADIMPLENTE" | "EM ANÁLISE";
 }
 
 export default function AgreementCard({
@@ -15,8 +15,14 @@ export default function AgreementCard({
   debtorCPF,
   condominiumName,
   agreementStatus,
-  agreementProposalPage
 }: AgreementCardProps) {
+  const hasDocument = agreementStatus === "ACEITO PELAS PARTES";
+
+  useEffect(() => {
+    // @ts-ignore
+    import('preline');
+  }, [])
+
   function setStatusStyle(status: string) {
     switch (status) {
       case "ACEITO PELAS PARTES":
@@ -24,7 +30,7 @@ export default function AgreementCard({
       case "NEGADO PELO INADIMPLENTE":
         return "flex items-center gap-1 text-red-600 text-xs font-medium";
       default:
-        return "flex items-center gap-1 text-green-600 text-xs font-medium";
+        return "flex items-center gap-1 text-gray-600 text-xs font-medium";
     }
   }
 
@@ -35,7 +41,7 @@ export default function AgreementCard({
       case "NEGADO PELO INADIMPLENTE":
         return "/icons/red_check_circle.svg";
       default:
-        return "/icons/green_check_circle.svg";
+        return "/icons/loading.svg";
     }
   }
 
@@ -52,6 +58,8 @@ export default function AgreementCard({
         <div className={setStatusStyle(agreementStatus)}>
           <Image
             src={setStatusImage(agreementStatus)}
+            className={agreementStatus === "EM ANÁLISE" ?
+                       "animate-spin text-secondary" : ""}
             alt="check circle"
             width={20}
             height={20}
@@ -63,32 +71,28 @@ export default function AgreementCard({
         <p className="font-medium">Documento:</p>
         <Link
           className={`w-fit flex items-center gap-1 text-xs font-medium cursor-default ${
-            !agreementProposalPage ? "text-neutral-400" : "underline hover:cursor-pointer"
+            !hasDocument ? "text-neutral-400" : "underline hover:cursor-pointer"
           }`}
           href={
-            agreementProposalPage ? `${serverURL}/proposal/${agreementProposalPage}` : ""
+            hasDocument ? `${serverURL}/proposal/${debtorCPF}` : ""
           }>
           <Image
             src={`/icons/magnifying_glass${
-              !agreementProposalPage ? "_inactive" : ""
+              !hasDocument ? "_inactive" : ""
             }.svg`}
             alt="magnifying glass"
             width={12}
             height={12}
           />
           <span className="pt-1">
-            {agreementProposalPage ? "VISUALIZAR" : "NÃO HÁ DOCUMENTO"}
+            {hasDocument ? "VISUALIZAR" : "NÃO HÁ DOCUMENTO"}
           </span>
         </Link>
       </div>
-      <div className="w-2/12 flex items-center justify-end">
+      <div className="w-24 flex items-center justify-end">
         <Link
-          className={`w-1/2 py-3 px-5 mr-10 rounded-xl text-white text-xs font-medium text-center cursor-default ${
-            agreementProposalPage ? "bg-gray-950 hover:cursor-pointer" : "bg-gray-400"
-          }`}
-          href={
-            agreementProposalPage ? `${serverURL}/proposal/${agreementProposalPage}` : ""
-          }>
+          className="w-full py-3 px-5 rounded-xl text-white text-xs font-medium text-center cursor-default bg-gray-950 hover:cursor-pointer"
+          href={`${serverURL}/proposal/${debtorCPF}/`}>
           Acessar
         </Link>
       </div>
