@@ -7,6 +7,10 @@ export interface Devedor {
   condominioCnpj: string;
 }
 
+export interface Condomino extends Devedor {
+  nomeCondominio: string;
+}
+
 const DevedorSchema = new mongoose.Schema({
   cpf: String,
   nome: String,

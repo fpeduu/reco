@@ -5,33 +5,29 @@ import { connectToDatabase } from "@/middlewares/mongodb";
 
 function createRandomAcordo(cpfDevedor: string, usuarioEmail: string, 
                             minimumValue: number) { 
-  const value = faker.number.float({
+  const valor = faker.number.float({
     min: minimumValue / 10, max: minimumValue * 2, precision: 2
   })
 
   const chance = faker.number.int({ max: 100 });
-  const gain = (value / minimumValue * 100).toFixed(2);
+  const gain = (valor / minimumValue * 100).toFixed(2);
   const chanceTxt = `${chance}% de chance de aceitação.`
   const gainTxt = `Retorno de ${gain}% ao condomínio.`
 
   const newAcordo: Acordo =  {
     id: faker.number.int(),
-    devedorCpf: cpfDevedor,
-    usuarioEmail: usuarioEmail,
-    status: "Pendente",
-    valor: value,
-    juros: faker.number.float({ min: 0, max: 1, precision: 2 }),
+    status: "EM ANÁLISE",
+    cpfDevedor, usuarioEmail, valor,
+    descricao: `${chanceTxt}\n${gainTxt}`,
     diaPagamento: faker.number.int({ min: 1, max: 31 }),
     qtdParcelas: faker.number.int({ min: 1, max: 12 * 5 }),
-    descricao: `${chanceTxt}\n${gainTxt}`
+    juros: faker.number.float({ min: 0, max: 1, precision: 2 }),
   }
 
   return newAcordo;
 }
 
 function createRandomAcordoList(cpfDevedor: string) {
-  // const cpfDevedor = String(faker.number.int())
-  //                 .padStart(11, "0").slice(0, 11)
   const minimumValue = faker.number.float({
     min: 100, max: 10000, precision: 2
   });
@@ -49,9 +45,7 @@ export async function GET(req: NextRequest) {
   connectToDatabase();
 
   const cpfDevedor = req.nextUrl.href.split("/").pop() as string;
-  const acordoList: Acordo[] = await Acordos.find(
-    { devedorCpf: cpfDevedor }
-  );
+  const acordoList: Acordo[] = await Acordos.find({ cpfDevedor });
   if (acordoList.length > 0) return NextResponse.json(acordoList);
 
   return POST(req);
@@ -67,8 +61,8 @@ export async function PUT(req: NextRequest) {
   const { acordoID }: { acordoID: number } = await req.json();
 
   const previousAcordo = await Acordos.findOneAndUpdate({
-    devedorCpf: cpfDevedor, id: acordoID
-  }, { $set: { status: "Aceito" } });
+    cpfDevedor, id: acordoID
+  }, { $set: { status: "ACEITO PELAS PARTES" } });
 
   return NextResponse.json(previousAcordo);
 }
@@ -81,7 +75,7 @@ export async function POST(req: NextRequest) {
 
   const cpfDevedor = req.nextUrl.href.split("/").pop() as string;
   const newAcordos: Acordo[] = createRandomAcordoList(cpfDevedor);
-  const wasDeleted = await Acordos.deleteMany({ devedorCpf: cpfDevedor });
+  const wasDeleted = await Acordos.deleteMany({ cpfDevedor: cpfDevedor });
   if (wasDeleted) {
     const savedAcordos = await Acordos.create(newAcordos);
     return NextResponse.json(savedAcordos);
