@@ -68,7 +68,7 @@ export default function ProposalPage({ params }: ProposalPageProps) {
 
   useEffect(() => {
     fetchPreviousProposals();
-  }, []);
+  }, [fetchPreviousProposals]);
 
   async function handleFinishProposal() {
     if (!selectedProposal) return;

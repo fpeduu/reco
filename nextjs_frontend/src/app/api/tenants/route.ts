@@ -18,14 +18,14 @@ function formatCnpj(cnpj: string) {
 }
 
 function createRandomTenant(
-  condominioCnpj: string,
+  cnpjCondominio: string,
   condominioName: string
 ): Condomino {
   const cpfDevedor = formatCpf(String(faker.number.int())
     .padStart(11, "0").slice(0, 11));
 
   return {
-    condominioCnpj: condominioCnpj,
+    cnpjCondominio: cnpjCondominio,
     nomeCondominio: condominioName,
     cpf: cpfDevedor,
     nome: faker.person.fullName(),

@@ -19,7 +19,7 @@ export default function ProposalPodium({
   const [selectedCardID, setSelectedCardID] = useState<number>();
 
   function choosedPolicy(proposal: Acordo) {
-    if (proposal.status === "Aceito") {
+    if (proposal.status === "ACEITO PELAS PARTES") {
       setSelectedCardID(proposal.id);
     }
   }
