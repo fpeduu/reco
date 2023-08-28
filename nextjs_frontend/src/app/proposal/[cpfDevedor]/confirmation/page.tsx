@@ -53,7 +53,7 @@ export default async function ConfirmationPage({
             </span>
             em nosso sistema, você pode acessar o documento em
             <span className="font-extrabold">
-              &nbsp;"Histórico"&nbsp;
+              &nbsp;&quot;Histórico&quot;&nbsp;
             </span>
             no menu superior.
           </p>

@@ -14,5 +14,5 @@ const CondominioSchema = new mongoose.Schema({
   administradorEmail: String,
 });
 
-export default mongoose.models.Condominiums ||
-               mongoose.model("Condominiums", CondominioSchema);
+export default mongoose.models.Condominios ||
+               mongoose.model("Condominios", CondominioSchema);
