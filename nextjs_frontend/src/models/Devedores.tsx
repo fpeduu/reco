@@ -4,7 +4,7 @@ export interface Devedor {
   cpf: string;
   nome: string;
   mensalidadesAtrasadas: number;
-  condominioCnpj: string;
+  cnpjCondominio: string;
 }
 
 export interface Condomino extends Devedor {
@@ -15,7 +15,7 @@ const DevedorSchema = new mongoose.Schema({
   cpf: String,
   nome: String,
   mensalidadesAtrasadas: Number,
-  condominioCnpj: String,
+  cnpjCondominio: String,
 });
 
 export default mongoose.models.Devedores ||
