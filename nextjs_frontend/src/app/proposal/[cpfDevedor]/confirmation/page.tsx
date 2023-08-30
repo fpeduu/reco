@@ -1,7 +1,10 @@
+"use client";
+
 import Link from "next/link";
 import { serverURL } from "@/config";
 import { Acordo } from "@/models/Acordos";
 import FinalProposalCard from "./components/FinalProposalCard/final-proposal-card";
+import { downloadAgreement } from "@/services/agreementGenerator";
 
 async function fetchProposal(cpfDevedor: string) {
   return (await fetch(`${serverURL}/api/agreements/${cpfDevedor}/`)
@@ -9,8 +12,7 @@ async function fetchProposal(cpfDevedor: string) {
     .catch((error) => {
       console.error(error);
       return {} as Acordo;
-    }
-  )) as Acordo;
+    })) as Acordo;
 }
 
 interface ConfirmationPageProps {
@@ -20,22 +22,20 @@ interface ConfirmationPageProps {
 }
 
 export default async function ConfirmationPage({
-  params
+  params,
 }: ConfirmationPageProps) {
   const proposal = await fetchProposal(params.cpfDevedor);
 
   return (
     <div className="containerLayout">
       <div className="pt-10 flex justify-between">
-        <div className="w-7/12 px-10 flex flex-col justify-between
-                        gap-10 text-lg font-medium">
-          <h1 className="text-4xl font-bold">
-            Falta pouco!
-          </h1>
+        <div
+          className="w-7/12 px-10 flex flex-col justify-between
+                        gap-10 text-lg font-medium"
+        >
+          <h1 className="text-4xl font-bold">Falta pouco!</h1>
           <p>
-            <span className="font-extrabold">
-              Parabéns!&nbsp;
-            </span>
+            <span className="font-extrabold">Parabéns!&nbsp;</span>
             Uma proposta foi aprovada!
           </p>
           <p className="text-justify">
@@ -48,9 +48,7 @@ export default async function ConfirmationPage({
               &nbsp;também ficará salvo em nosso sistema&nbsp;
             </span>
             para ser acessado quando quiser. Caso você estiver
-            <span className="font-extrabold">
-              &nbsp;autenticado&nbsp;
-            </span>
+            <span className="font-extrabold">&nbsp;autenticado&nbsp;</span>
             em nosso sistema, você pode acessar o documento em
             <span className="font-extrabold">
               &nbsp;&quot;Histórico&quot;&nbsp;
@@ -61,7 +59,9 @@ export default async function ConfirmationPage({
             <Link
               href=""
               className="w-56 px-10 py-5 rounded-full bg-red-600
-                       text-white text-center font-semibold">
+                    text-white text-center font-semibold"
+              onClick={() => downloadAgreement(0)}
+            >
               Fazer Download
             </Link>
           </div>
