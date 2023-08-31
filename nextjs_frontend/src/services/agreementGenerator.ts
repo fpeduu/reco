@@ -184,6 +184,26 @@ Segunda testemunha
     color: rgb(0, 0, 0),
   });
 
+  const imageBytes = await fetch("/reco.png").then((response) =>
+    response.arrayBuffer()
+  );
+  const image = await pdfDoc.embedPng(imageBytes);
+  const imageDims = image.scale(0.1);
+
+  page.drawImage(image, {
+    x: width - imageDims.width - 10,
+    y: 10,
+    width: imageDims.width,
+    height: imageDims.height,
+  });
+
+  secondPage.drawImage(image, {
+    x: width - imageDims.width - 10,
+    y: 10,
+    width: imageDims.width,
+    height: imageDims.height,
+  });
+
   const pdfBytes = await pdfDoc.save();
 
   return pdfBytes;
