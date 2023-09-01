@@ -32,16 +32,16 @@ export default function ConfirmationPage() {
         </h2>
         <div className="flex flex-row justify-center place-items-center gap-5 w-full">
           <button
-            onClick={handleStartAgreement}
-            className="w-1/2 py-3 px-2 rounded-full text-tertiary
-                       text-s font-medium text-center bg-secondary">
-            Sim, iniciar acordo
-          </button>
-          <button
             onClick={handleRefuseAgreement}
             className="w-1/2 py-3 px-2 rounded-full text-tertiary
                        text-s font-medium text-center bg-[#ADADAD]">
             Não, escolher outra
+          </button>
+          <button
+            onClick={handleStartAgreement}
+            className="w-1/2 py-3 px-2 rounded-full text-tertiary
+                       text-s font-medium text-center bg-secondary">
+            Sim, iniciar acordo
           </button>
         </div>
       </div>
