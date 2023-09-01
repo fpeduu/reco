@@ -20,6 +20,14 @@ const statusList: string[] = [
   "3 meses ou mais de atraso"
 ];
 
+const profileList: string[] = [
+  "Todos",
+  "Nunca atrasa",
+  "Atrasa por pouco tempo",
+  "Atrasa por algum tempo",
+  "Atrasa por muito tempo",
+]
+
 const tenantsPerPage = 7;
 
 export default function TenantList({ tenants }: TenantListProps) {
@@ -88,6 +96,8 @@ export default function TenantList({ tenants }: TenantListProps) {
   function handleFilterChange(title: string, option: string) {
     if (title === "Condomínio") {
       setCondominium(option);
+    } else if (title === "Perfil")  {
+      setStatus(option);
     } else {
       setStatus(option);
     }
@@ -104,6 +114,11 @@ export default function TenantList({ tenants }: TenantListProps) {
         <Dropdown
           title="Condomínio"
           options={condomiunsList}
+          onChange={handleFilterChange}
+        />
+        <Dropdown
+          title="Perfil"
+          options={profileList}
           onChange={handleFilterChange}
         />
         <Dropdown

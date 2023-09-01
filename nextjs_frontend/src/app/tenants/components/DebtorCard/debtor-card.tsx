@@ -18,6 +18,19 @@ export default function DebtorCard({ tenant }: DebtorCardProps) {
     return `bg-status-${lateTuitions}`;
   }
 
+  function getProfileText() {
+    switch (tenant.mensalidadesAtrasadas) {
+      case 0:
+        return "Nunca atrasa";
+      case 1:
+        return "Atrasa por pouco tempo";
+      case 2:
+        return "Atrasa por algum tempo";
+      default:
+        return "Atrasa por muito tempo";
+    }
+  }
+
   function handleStartAgreement() {
     context.setDebtor(tenant);
   }
@@ -39,15 +52,20 @@ export default function DebtorCard({ tenant }: DebtorCardProps) {
         </span>
       </div>
       <div className="w-44">
-        <p className="font-medium">Status:</p>
+        <p className="font-medium">Perfil:</p>
         <div className="flex items-center gap-1 text-xs font-medium">
-          <span
-            className={`w-5 h-5 rounded-full
+          <span className={`w-5 h-5 rounded-full
                           ${getStatusColor()}`}
           />
+          {getProfileText()}
+        </div>
+      </div>
+      <div className="w-44">
+        <p className="font-medium">Atraso:</p>
+        <div className="flex items-center gap-1 text-xs font-medium">
           <span className="pt-1">
             {tenant.mensalidadesAtrasadas > 0
-              ? `${tenant.mensalidadesAtrasadas} meses de atraso`
+              ? `${tenant.mensalidadesAtrasadas} dias de atraso`
               : "Nenhum atraso"}
           </span>
         </div>
