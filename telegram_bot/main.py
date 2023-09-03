@@ -1,7 +1,7 @@
 from config import BOT_TOKEN, SITE_URL
 from models import MemoryAgreement
-from chatbot_utils import *
 from messages import *
+from utils import *
 from api import *
 import telebot
 
