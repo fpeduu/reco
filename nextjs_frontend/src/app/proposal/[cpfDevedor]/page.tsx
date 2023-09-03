@@ -74,7 +74,7 @@ export default function ProposalPage({ params }: ProposalPageProps) {
     if (!selectedProposal) return;
     const proposalSelected = await chooseProposal(params.cpfDevedor, selectedProposal.id);
     if (proposalSelected) {
-      router.push(`${params.cpfDevedor}/confirmation`);
+      router.push(`/proposal/${params.cpfDevedor}/confirmation`);
     } else {
       alert("Erro ao selecionar proposta!");
     }

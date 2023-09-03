@@ -5,13 +5,16 @@ interface FinalProposalCardProps {
   proposal: Acordo;
 }
 
-export default function FinalProposalCard({ proposal }: FinalProposalCardProps) {
+export default function FinalProposalCard({
+  proposal
+}: FinalProposalCardProps) {
   function formatJuros(juros: number) {
     return juros !== 0 ? `${juros * 100}%` : "Sem taxa de juros";
   }
 
   function installmentValue() {
-    return (proposal.valor / proposal.qtdParcelas).toFixed(2).replace(".", ",");
+    return (proposal.valor / proposal.qtdParcelas)
+            .toFixed(2).replace(".", ",");
   }
 
   return (
