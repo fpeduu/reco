@@ -1,239 +1,175 @@
-from chatbot.chatbot_utils import *
-from database import get_debtor_and_condominium
-from dotenv import load_dotenv
-from pydantic import BaseModel
-import os
+from config import BOT_TOKEN, SITE_URL
+from models import MemoryAgreement
+from chatbot_utils import *
+from messages import *
+from api import *
 import telebot
-import httpx
 
+chats_memory: dict[str, MemoryAgreement] = dict()
+bot = telebot.TeleBot(BOT_TOKEN)
 
-load_dotenv()
-
-# initial config
-def get_chat_bot():
-    config = {**os.environ}
-    BOT_TOKEN = config["TELEGRAM_BOT_TOKEN"]
-    return telebot.TeleBot(BOT_TOKEN)
-
-bot = get_chat_bot()
-
-
-# models
-class UserAgreement(BaseModel):
-    editing: bool
-    installments: int
-    entry: float
-    total_value: float
-    max_installments: int
-    min_entry: float
-
-class UserData(BaseModel):
-    user: dict
-    condominium: dict
-    agreement: UserAgreement
-
-
-# fectchs
-SERVER_URL = os.environ["SERVER_URL"]
-
-def fetch_user_conditions(debtor_cpf: str):
-    response = httpx.get(f"{SERVER_URL}/items/{debtor_cpf}/")
-    return response.json()
-
-def fetch_user_agreement(debtor_cpf: str):
-    if debtor_cpf == "0":
-        return None
-    
-    return {
-        "id": 1,
-        "usuarioEmail": "abc@gmail.com",
-        "cpfDevedor": debtor_cpf,
-        "dataAcordo": "2021-10-10T00:00:00Z",
-        "status": "EM ANÁLISE",
-        "valor": 1560.43,
-        "juros": 1,
-        "diaPagamento": 5,
-        "entrada": 0.3 * 1560.43,
-        "qtdParcelas": 6,
-        "descricao": "acordo 1",
-    }
-
-def update_user_agreement(user_data: dict):
-    pass
-
-# data
-commands = {
-    "help": "Mostra os comandos disponíveis",
-    "start": "Inicia o bot",
-    "acordo": "Inicia um novo acordo"
-}
-
-user_data = {}
-
-
-# handlers
-
-#start command handler
 @bot.message_handler(commands=['start'])
-def handle_start(message):
-    bot.send_message(message.chat.id, f"Olá, {message.from_user.first_name}\nDigite /help para ver os comandos disponíveis.")
+def handler_0_start_conversation(message):
+    chat_id: int = message.chat.id
 
+    debitor_cpf = extract_debitor_cpf(message.text)
+    if debitor_cpf is None:
+        return bot.send_message(chat_id, NO_CPF_MSG)
 
-# help command handler
-@bot.message_handler(commands=['help'])
-def send_help(message):
-    bot.send_message(message.chat.id,
-        "Comandos disponíveis:\n" + "\n".join([f"/{command} - {description}" for command, description in commands.items()]))
+    infos = fetch_debitor_infos(debitor_cpf)
+    if infos is None:
+        return bot.send_message(chat_id, DEBTOR_NOT_FOUND_MSG)
 
+    reply_msg = NEW_DEBTOR_INFOS_MSG.format(infos.debtor_name,
+                                            infos.condominium_name,
+                                            infos.total_debt_value,
+                                            infos.late_days
+                                            ).replace(",", ".")
+    message_data = bot.send_message(chat_id, reply_msg, 
+                                    reply_markup=start_redo_markup)
 
-# acordo command handlers
-@bot.message_handler(commands=['acordo'])
-# get the user cpf to start the agreement
-def get_user_cpf(message):
-    bot.send_message(message.chat.id, "Por favor, digite seu CPF:")
-    bot.register_next_step_handler_by_chat_id(message.chat.id, get_user_conditions)
+    message_id = message_data.json["message_id"]
+    chats_memory[chat_id] = MemoryAgreement(**infos.model_dump(), 
+                                            message_id=message_id)
 
-# get user conditions from the IA
-def get_user_conditions(message):
-    global user_data
-    debtor_cpf = message.text
+@bot.callback_query_handler(func=lambda call: "start" in call.data)
+def callback_1_fetch_minimum(call):
+    global chats_memory
 
-    if debtor_cpf == "cancelar":
-        bot.send_message(message.chat.id, "Operação cancelada.")
-        return
+    chat_id: int = call.message.chat.id
+    user_data = chats_memory.get(chat_id)
+    if user_data is None: return bot.send_message(chat_id, ECHO_MSG)
 
-    try:
-        user_conditions = fetch_user_conditions(debtor_cpf)
-    except:
-        bot.send_message(message.chat.id, "Não foi possível identificar o CPF informado. Por favor, tente novamente.")
-        bot.register_next_step_handler_by_chat_id(message.chat.id, get_user_conditions)
-        return
-    
-    debtor, condominium = get_debtor_and_condominium(debtor_cpf)
-    get_agreement(user_data, message.chat.id, debtor, condominium, user_conditions)
+    debtor_cpf = user_data.debtor_cpf
+    response = fetch_debitor_minimum_limit(debtor_cpf)
+    if response is None:
+        return bot.answer_callback_query(call.id, ERROR_MSG)
 
-# start the agreement
-def get_agreement(user_data: dict, chat_id: int, debtor, condominium, user_conditions):
-    user_data[chat_id] = UserData(
-        user=debtor,
-        condominium=condominium,
-        agreement=UserAgreement(
-            editing=False,
-            installments=1,
-            entry=0,
-            total_value=0,
-            max_installments=0,
-            min_entry=0
-        )
-    ).model_dump()
+    total_debt = user_data.total_debt_value
+    user_data.max_installments = response.max_installments
+    user_data.min_entry_percent = response.min_entry_percent / 100
+    user_data.installments = int(response.max_installments / 2)
+    user_data.entry = total_debt * user_data.min_entry_percent * 2
 
-    user_agreement = fetch_user_agreement(debtor["cpf"])
-    if user_agreement is not None:
-        min_entry = 0.01 * user_conditions["entrada"] * user_agreement["valor"]
-        user_data[chat_id]["agreement"] = UserAgreement(
-            editing=False,
-            installments=min(user_agreement["qtdParcelas"], user_conditions["parcelamento"]),
-            entry=max(user_agreement["entrada"], min_entry),
-            total_value=user_agreement["valor"],
-            max_installments=user_conditions["parcelamento"],
-            min_entry=min_entry
-        ).model_dump()
-        send_agreement_redo_markup(bot, chat_id)
-    else:
-        debt_value = debtor["mensalidadesAtrasadas"] * condominium["valorMensalidade"]
-        min_entry = 0.01 * user_conditions["entrada"] * debt_value
-        user_data[chat_id]["agreement"] = UserAgreement(
-            editing=True,
-            installments=1,
-            entry=min_entry,
-            total_value=debt_value,
-            max_installments=user_conditions["parcelamento"],
-            min_entry=min_entry
-        ).model_dump()
-        start_agreement(bot, chat_id, user_data)
+    message_id = user_data.message_id
+    reply_msg = ASK_ENTRY_MSG.format(user_data.entry).replace(",", ".")
+    bot.edit_message_text(reply_msg, chat_id, message_id, 
+                          reply_markup=entry_markup)
 
-# end the agreement
-def handle_user_agreement(chat_id):
-    try:
-        update_user_agreement(user_data[chat_id])
-        bot.send_message(chat_id, f"""Acordo definido:
-    Entrada:{user_data[chat_id]['agreement']['entry']:.2f}
-    Parcelas:{user_data[chat_id]['agreement']['installments']}""")
-    except Exception as e:
-        print(e)
-
-
-# redo agreement markup callback handler
-@bot.callback_query_handler(func=lambda call: "redo" in call.data)
-def handle_redo_agreement(call):
-    global user_data
-
-    match call.data:
-        case "redo_sim":
-            start_agreement(bot, call.message.chat.id, user_data)
-        case "redo_nao":
-            bot.send_message(call.message.chat.id, "Ok, então vamos continuar com o acordo atual.")
-
-
-# entry markup callback handler
 @bot.callback_query_handler(func=lambda call: "entry" in call.data)
-def handle_entry(call):
-    global user_data
-    cur_user_data = user_data[call.message.chat.id]
-    agreement_total = cur_user_data["agreement"]["total_value"]
-    min_entry = cur_user_data["agreement"]["min_entry"]
+def callback_2_handle_entry(call):
+    global chats_memory
 
-    match call.data:
-        case "entry_decrease_1":
-            decrease_entry(cur_user_data, 1, min_entry)
-        case "entry_decrease_10":
-            decrease_entry(cur_user_data, 10, min_entry)
-        case "entry_decrease_100":
-            decrease_entry(cur_user_data, 100, min_entry)
-        case "entry_increase_1":
-            increase_entry(cur_user_data, 1, agreement_total)
-        case "entry_increase_10":
-            increase_entry(cur_user_data, 10, agreement_total)
-        case "entry_increase_100":
-            increase_entry(cur_user_data, 100, agreement_total)
-        case "entry_confirmar":
-            cur_user_data["agreement"]["editing"] = False
+    chat_id: int = call.message.chat.id
+    user_data = chats_memory.get(chat_id)
+    if user_data is None: return bot.send_message(chat_id, ECHO_MSG)
 
-    new_entry = cur_user_data["agreement"]["entry"]
-    editing = cur_user_data["agreement"]["editing"]
+    entry = user_data.entry
+    message_id = user_data.message_id
+    agreement_total = user_data.total_debt_value
+    min_entry = user_data.min_entry_percent * agreement_total
 
-    send_entry_markup(bot, editing, new_entry, call.message.chat.id, call.message.message_id,
-                        get_agreement_installments, bot, call.message.chat.id, user_data)
+    if call.data == "entry_confirmar":
+        max_installments = user_data.max_installments / 2
+        reply_msg = ASK_INSTALLMENTS_MSG.format(int(max_installments))
+        return bot.edit_message_text(reply_msg, chat_id, message_id,
+                                     reply_markup=installments_markup)
 
+    _, action, value = call.data.split("_")
+    value = int(value) if action == "increase" else int(value) * -1
 
-# installments markup callback handler
+    new_entry = max(min(entry + value, agreement_total), min_entry)
+    if new_entry == entry:
+        return bot.answer_callback_query(call.id, MAX_LIMIT_MSG)
+
+    user_data.entry = new_entry
+    reply_msg = ASK_ENTRY_MSG.format(new_entry).replace(",", ".")
+    bot.edit_message_text(reply_msg, chat_id, message_id, 
+                          reply_markup=entry_markup)
+
 @bot.callback_query_handler(func=lambda call: "installments" in call.data)
-def handle_installments(call):
-    global user_data
-    cur_user_data = user_data[call.message.chat.id]
-    max_installments = cur_user_data["agreement"]["max_installments"]
+def callback_3_handle_installments(call):
+    global chats_memory
 
-    match call.data:
-        case "installments_decrease":
-            decrease_installments(cur_user_data)
-        case "installments_increase":
-            increase_installments(cur_user_data, max_installments)
-        case "installments_confirmar":
-            cur_user_data["agreement"]["editing"] = False
+    chat_id: int = call.message.chat.id
+    user_data = chats_memory.get(chat_id)
+    if user_data is None: return bot.send_message(chat_id, ECHO_MSG)
 
-    new_installments = cur_user_data["agreement"]["installments"]
-    editing = cur_user_data["agreement"]["editing"]
+    message_id = user_data.message_id
+    if call.data == "installments_confirmar":
+        entry = user_data.entry
+        installments = user_data.installments
+        reply_msg = ASK_CONFIRMATION_MSG.format(entry, installments)
+        return bot.edit_message_text(reply_msg, chat_id, message_id,
+                                     reply_markup=confirmation_markup)
 
-    send_installments_markup(bot, editing, new_installments, call.message.chat.id, call.message.message_id,
-                            handle_user_agreement, call.message.chat.id)
+    if "increase" in call.data:
+        new_installments = user_data.installments + 1
+    else:
+        new_installments = user_data.installments - 1
 
+    max_installments = user_data.max_installments
+    new_installments = max(1, min(new_installments, max_installments))
+    if user_data.installments == new_installments:
+        return bot.answer_callback_query(call.id, MAX_LIMIT_MSG)
 
-# other messages handler
+    user_data.installments = new_installments
+    reply_msg = ASK_INSTALLMENTS_MSG.format(new_installments)
+    return bot.edit_message_text(reply_msg, chat_id, message_id,
+                                 reply_markup=installments_markup)
+
+@bot.callback_query_handler(func=lambda call: "confirmation" in call.data)
+def callback_4_handle_confirmation(call):
+    global chats_memory
+
+    chat_id: int = call.message.chat.id
+    user_data = chats_memory.get(chat_id)
+    if user_data is None: return bot.send_message(chat_id, ECHO_MSG)
+
+    entry = user_data.entry
+    message_id = user_data.message_id
+    installments = user_data.installments
+    if call.data == "confirmation_yes":
+        debtor_cpf = user_data.debtor_cpf
+        post_agreement(debtor_cpf, entry, installments)
+
+        url_link = f"{SITE_URL}/proposal/{debtor_cpf}/confirmation/"
+        reply_markup = get_confirmation_markup(url_link)
+        reply_msg = FINISH_AGREEMENT_MSG.format(url_link)
+        return bot.edit_message_text(reply_msg, chat_id, message_id,
+                                     reply_markup=reply_markup)
+
+    return bot.edit_message_text(RETRY_AGREEMENT_MSG, chat_id, message_id,
+                                 reply_markup=modification_markup)
+
+@bot.callback_query_handler(func=lambda call: "modification" in call.data)
+def callback_5_handle_modification(call):
+    global chats_memory
+
+    chat_id: int = call.message.chat.id
+    user_data = chats_memory.get(chat_id)
+    if user_data is None: return bot.send_message(chat_id, ECHO_MSG)
+
+    entry = user_data.entry
+    message_id = user_data.message_id
+    installments = user_data.installments
+
+    if call.data == "modification_entry":
+        reply_msg = ASK_ENTRY_MSG.format(entry)
+        return bot.edit_message_text(reply_msg, chat_id, message_id,
+                                     reply_markup=start_redo_markup)
+    
+    elif call.data == "modification_installments":
+        reply_msg = ASK_INSTALLMENTS_MSG.format(installments)
+        return bot.edit_message_text(reply_msg, chat_id, message_id,
+                                     reply_markup=installments_markup)
+    
+    reply_msg = ASK_CONFIRMATION_MSG.format(entry, installments)
+    return bot.edit_message_text(reply_msg, chat_id, message_id,
+                                 reply_markup=confirmation_markup)
+
 @bot.message_handler(func=lambda message: True)
 def echo_all(message):
-    bot.send_message(message.chat.id,
-        "Sinto muito, não entendi o que você quis dizer. Tente digitar /help para ver os comandos disponíveis.")
+    bot.send_message(message.chat.id, ECHO_MSG)
 
-
-# bot start
 bot.infinity_polling()
