@@ -1,40 +1,11 @@
-import { Acordo } from "@/models/Acordos";
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
+import { Acordo } from "@/models/Acordos";
+import { Devedor } from "@/models/Devedores";
+import { Condominio } from "@/models/Condominios";
 
-async function generateAgreement(id: number) {
-  // o id vai indicar qual acordo buscar no bd
-  // const acordo = await getAgreement(id);
-  const acordo: Acordo = {
-    id: 1,
-    usuarioEmail: "José Eduardo",
-    cpfDevedor: "12345678910",
-    dataAcordo: new Date(),
-    status: "ACEITO PELAS PARTES",
-    valor: 1000,
-    juros: 0.1,
-    diaPagamento: 10,
-    qtdParcelas: 20,
-    descricao: "Acordo de teste",
-  };
-
-  const condominio = {
-    nome: "Bom Condomínio",
-    cnpj: "12345678910",
-    rua: "Rua legal",
-    numero: "123",
-    bairro: "Tamarineira",
-    cidade: "Recife",
-    uf: "PE",
-    cep: "12345678",
-  };
-
-  const devedor = {
-    nome: "José Eduardo",
-    cpf: "12345678910",
-    rg: "123456789",
-    apt: "321",
-  };
-
+async function generateAgreement(
+  devedor: Devedor, acordo: Acordo, condominio: Condominio
+) {
   const pdfDoc = await PDFDocument.create();
   const timesBoldFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
   const timesRomanFont = await pdfDoc.embedFont(StandardFonts.TimesRoman);
@@ -73,44 +44,27 @@ async function generateAgreement(id: number) {
     lastPaymentMonth % 12
   }/${lastPaymentYear}`;
 
+  const totalDebit = (acordo.valor * (1 + acordo.juros))
+  const totalDebitString = totalDebit.toLocaleString("pt-br");
+  const debitMonths = ["01/01/2021", "01/02/2021", "01/03/2021"];
+  const debitMonthsString = debitMonths.join(", ");
+  const debitMonth = (totalDebit / acordo.qtdParcelas).toLocaleString("pt-br");
   const content = `
 CREDOR:
 
-${condominio.nome}, inscrito no CNPJ sob nº ${condominio.cnpj}, situado à Rua ${
-    condominio.rua
-  }, n.º ${condominio.numero}, ${condominio.bairro}, ${condominio.cidade} –  ${
-    condominio.uf
-  }, CEP ${condominio.cep}.
+${condominio.nome}, inscrito no CNPJ sob nº ${condominio.cnpj}, situado à ${condominio.address}.
 
 DEVEDOR(A):
 
-${devedor.nome}, portador(a) da carteira de identidade nº ${Number(
-    devedor.rg
-  ).toLocaleString("pt-br")}, inscrita no CPF sob o nº ${
-    devedor.cpf
-  }, residente e domiciliada à Rua ${condominio.rua}, nº ${
-    condominio.numero
-  }, ${condominio.bairro}, ${condominio.cidade} – ${condominio.uf}.
+${devedor.nome}, portador(a) da carteira de identidade nº ${devedor.rg}, inscrita no CPF sob o nº ${devedor.cpf}, residente e domiciliada à ${condominio.address}.
 
-APARTAMENTO: ${devedor.apt}
+APARTAMENTO: ${devedor.apartamento}
 
 CLÁUSULAS E CONDIÇÕES:
 
-1. O(A) DEVEDOR(A) declara e confessa a dívida de R$ ${(
-    acordo.valor *
-    (1 + acordo.juros)
-  ).toLocaleString(
-    "pt-br"
-  )} referente as cotas condominiais vencidas nas seguintes datas: 01/01/2021, 01/02/2021, 01/03/2021, com o acréscimo das multas, juros de mora, calculados até a presente data, conforme planilha em anexo.
+1. O(A) DEVEDOR(A) declara e confessa a dívida de R$ ${totalDebitString} referente as cotas condominiais vencidas nas seguintes datas: ${debitMonthsString}, com o acréscimo das multas, juros de mora, calculados até a presente data, conforme planilha em anexo.
 
-2. No intuito de viabilizar a regularização do pagamento das cotas condominiais, o CREDOR receberá do(a) DEVEDOR(A), a sobredita importância em ${
-    acordo.qtdParcelas
-  } parcelas mensais sucessivas de R$ ${(
-    (acordo.valor * (1 + acordo.juros)) /
-    acordo.qtdParcelas
-  ).toLocaleString(
-    "pt-br"
-  )}, vencendo-se a primeira no dia ${firstPaymentDay} e a última em ${lastPaymentDay}, cujos pagamentos deverão ser realizados através de boletos bancários a serem emitidos pelo condomínio ou sua administradora.
+2. No intuito de viabilizar a regularização do pagamento das cotas condominiais, o CREDOR receberá do(a) DEVEDOR(A), a sobredita importância em ${acordo.qtdParcelas} parcelas mensais sucessivas de R$ ${debitMonth}, vencendo-se a primeira no dia ${firstPaymentDay} e a última em ${lastPaymentDay}, cujos pagamentos deverão ser realizados através de boletos bancários a serem emitidos pelo condomínio ou sua administradora.
 
 3. O presente acordo não implica novação da dívida, mas tão somente numa liberalidade do CREDOR na forma de recebimento de seu crédito.
 
@@ -204,16 +158,18 @@ Segunda testemunha
     height: imageDims.height,
   });
 
-  const pdfBytes = await pdfDoc.save();
-
-  return pdfBytes;
+  return await pdfDoc.save();
 }
 
-export async function downloadAgreement(id: number) {
-  const pdfBytes = await generateAgreement(id);
+export async function downloadAgreement(
+  devedor: Devedor, acordo: Acordo, condominio: Condominio
+) {
+  const pdfBytes = await generateAgreement(
+    devedor, acordo, condominio
+  );
   const blob = new Blob([pdfBytes], { type: "application/pdf" });
   const link = document.createElement("a");
   link.href = window.URL.createObjectURL(blob);
-  link.download = `acordo_${id}.pdf`;
+  link.download = `acordo_${devedor.cpf}.pdf`;
   link.click();
 }

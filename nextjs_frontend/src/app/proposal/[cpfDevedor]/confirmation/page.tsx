@@ -1,18 +1,23 @@
-"use client";
-
-import Link from "next/link";
 import { serverURL } from "@/config";
-import { Acordo } from "@/models/Acordos";
 import FinalProposalCard from "./components/FinalProposalCard/final-proposal-card";
-import { downloadAgreement } from "@/services/agreementGenerator";
+import DownloadButton from "./components/DownloadButton/download-button";
+
+import { Acordo } from "@/models/Acordos";
+import { Devedor } from "@/models/Devedores";
+import { Condominio } from "@/models/Condominios";
+
+interface fetchProposalData {
+  acordo: Acordo;
+  devedor: Devedor;
+  condominio: Condominio;
+}
 
 async function fetchProposal(cpfDevedor: string) {
-  return (await fetch(`${serverURL}/api/agreements/${cpfDevedor}/`)
+  return await fetch(`${serverURL}/api/agreements/${cpfDevedor}/`)
     .then((response) => response.json())
     .catch((error) => {
       console.error(error);
-      return {} as Acordo;
-    })) as Acordo;
+    }) as fetchProposalData;
 }
 
 interface ConfirmationPageProps {
@@ -55,19 +60,14 @@ export default async function ConfirmationPage({
             </span>
             no menu superior.
           </p>
-          <div className="mt-32 mb-10 flex items-center justify-evenly">
-            <Link
-              href=""
-              className="w-56 px-10 py-5 rounded-full bg-red-600
-                    text-white text-center font-semibold"
-              onClick={() => downloadAgreement(0)}
-            >
-              Fazer Download
-            </Link>
-          </div>
+          <DownloadButton
+            condominio={proposal.condominio}
+            devedor={proposal.devedor}
+            acordo={proposal.acordo}
+          />
         </div>
         <div className="w-5/12 flex justify-center">
-          <FinalProposalCard proposal={proposal} />
+          <FinalProposalCard proposal={proposal.acordo} />
         </div>
       </div>
     </div>
