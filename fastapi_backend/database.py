@@ -3,7 +3,8 @@ from dotenv import load_dotenv
 import os
 
 def get_database():
-    config = {**load_dotenv(), **os.environ}
+    load_dotenv()
+    config = {**os.environ}
     CONNECTION_STRING = config["MONGODB_URI"]
     client = MongoClient(CONNECTION_STRING)
     
