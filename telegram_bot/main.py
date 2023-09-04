@@ -133,7 +133,7 @@ def callback_4_handle_confirmation(call):
         debtor_cpf = user_data.debtor_cpf
         post_agreement(debtor_cpf, entry, installments)
 
-        url_link = f"{SITE_URL}/proposal/{debtor_cpf}/confirmation/"
+        url_link = f"{SITE_URL}/proposal/{debtor_cpf}/"
         reply_markup = get_confirmation_markup(url_link)
         reply_msg = FINISH_AGREEMENT_MSG.format(url_link)
         return bot.edit_message_text(reply_msg, chat_id, message_id,
