@@ -49,11 +49,11 @@ export default function Header() {
                         width={24}
                         height={24}
                     />
-                    <button className="underline" onClick={handleLogout}>
+                    <button onClick={handleLogout}>
                         Sair
                     </button>
                 </>:<>
-                    <button className="underline" onClick={handleLogin}>
+                    <button onClick={handleLogin}>
                         Entrar
                     </button>
                     <button className="bg-primary rounded-full py-2 px-10 ml-6">

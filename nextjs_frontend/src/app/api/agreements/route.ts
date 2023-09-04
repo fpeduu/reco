@@ -1,39 +1,31 @@
-import { AcordoIdentificado } from "@/models/Acordos";
+import { Acordo, AcordoIdentificado, StatusType } from "@/models/Acordos";
 import { NextResponse } from "next/server";
 import { faker } from '@faker-js/faker/locale/pt_BR';
+import { generateCPF, createRandomAcordo } from "@/services/randomizer";
 
-function formatCpf(cpf: string) {
-  return cpf.slice(0, 3) + "." +
-          cpf.slice(3, 6) + "." +
-          cpf.slice(6, 9) + "-" +
-          cpf.slice(9, 11);
-}
-
-function createRandomAgreement(condominioName: string): AcordoIdentificado {
-  const cpfDevedor = formatCpf(String(faker.number.int())
-    .padStart(11, "0").slice(0, 11));
-  
-  const randomStatus: "NEGADO PELO INADIMPLENTE" | "ACEITO PELAS PARTES"
-    | "EM ANÁLISE" = faker.helpers.arrayElement([
+function enrichAcordo(
+  condominioName: string,
+  acordo: Acordo
+): AcordoIdentificado {
+  const randomStatus: StatusType = faker.helpers.arrayElement([
     "NEGADO PELO INADIMPLENTE",
     "ACEITO PELAS PARTES",
     "EM ANÁLISE"
   ]);
 
   return {
-    id: faker.number.int(),
-    usuarioEmail: faker.internet.email(),
-    cpfDevedor: cpfDevedor,
+    ...acordo,
     status: randomStatus,
-    descricao: faker.lorem.sentence(),
     nomeCondominio: condominioName,
+    usuarioEmail: faker.internet.email(),
     nomeDevedor: faker.person.fullName(),
-    dataAcordo: faker.date.past(),
-    valor: faker.number.float({ min: 100, max: 1000, precision: 2 }),
-    juros: faker.number.float({ min: 0, max: 10, precision: 2 }),
-    diaPagamento: faker.number.int({ min: 1, max: 28 }),
-    qtdParcelas: faker.number.int({ min: 1, max: 12 })
   }
+}
+
+function createRandomAgreement(condominioName: string): AcordoIdentificado {
+  const cpfDevedor = generateCPF();
+  const acordo = createRandomAcordo(cpfDevedor);
+  return enrichAcordo(condominioName, acordo);
 }
 
 function createRandomAgreementList() {

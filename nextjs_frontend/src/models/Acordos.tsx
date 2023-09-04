@@ -1,11 +1,14 @@
 import mongoose from "mongoose";
 
+export type StatusType = "NEGADO PELO INADIMPLENTE"
+                        | "ACEITO PELAS PARTES" | "EM ANÁLISE";
+
 export interface Acordo {
   id: number;
   usuarioEmail: string;
   cpfDevedor: string;
   dataAcordo?: Date;
-  status: "ACEITO PELAS PARTES" | "NEGADO PELO INADIMPLENTE" | "EM ANÁLISE";
+  status: StatusType;
   valor: number;
   juros: number;
   diaPagamento: number;
