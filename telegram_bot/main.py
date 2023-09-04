@@ -56,7 +56,7 @@ def callback_1_fetch_minimum(call):
     bot.edit_message_text(reply_msg, chat_id, message_id, 
                           reply_markup=entry_markup)
 
-@bot.callback_query_handler(func=lambda call: "entry" in call.data)
+@bot.callback_query_handler(func=lambda call: "entry_" in call.data)
 def callback_2_handle_entry(call):
     global chats_memory
 
@@ -87,7 +87,7 @@ def callback_2_handle_entry(call):
     bot.edit_message_text(reply_msg, chat_id, message_id, 
                           reply_markup=entry_markup)
 
-@bot.callback_query_handler(func=lambda call: "installments" in call.data)
+@bot.callback_query_handler(func=lambda call: "installments_" in call.data)
 def callback_3_handle_installments(call):
     global chats_memory
 
@@ -157,7 +157,7 @@ def callback_5_handle_modification(call):
     if call.data == "modification_entry":
         reply_msg = ASK_ENTRY_MSG.format(entry)
         return bot.edit_message_text(reply_msg, chat_id, message_id,
-                                     reply_markup=start_redo_markup)
+                                     reply_markup=entry_markup)
     
     elif call.data == "modification_installments":
         reply_msg = ASK_INSTALLMENTS_MSG.format(installments)

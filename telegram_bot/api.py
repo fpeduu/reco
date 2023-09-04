@@ -23,10 +23,8 @@ def fetch_debitor_minimum_limit(debtor_cpf: str) -> PaymentCondition:
 
 def post_agreement(debtor_cpf: str, entry: float, installments: int):
     try:
-        response = httpx.post(f"{SERVER_URL}/agreement/{debtor_cpf}/", {
-            "entry": entry,
-            "installments": installments,
-        })
+        response = httpx.post(f"{SERVER_URL}/agreement/{debtor_cpf}/",
+            json = { "entry": entry, "installments": installments })
         return response.json()
     except:
         traceback.print_exc()

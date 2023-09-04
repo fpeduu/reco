@@ -17,6 +17,10 @@ class PaymentCondition(BaseModel):
     max_installments: int
     min_entry_percent: float
 
+class Agreement(BaseModel):
+    entry: float
+    installments: int
+
 @app.get("/debtor/{debtor_cpf}/")
 def fetch_debtor_infos(debtor_cpf: str):
     infos = get_debtor_infos(debtor_cpf)
@@ -40,5 +44,7 @@ def fetch_payment_from_cpf(debtor_cpf: str):
     return PaymentCondition(**conditions)
 
 @app.post("/agreement/{debtor_cpf}/")
-def post_agreement(debtor_cpf: str, entry: float, installments: int):
+def post_agreement(debtor_cpf: str, agreement: Agreement):
+    entry = agreement.entry
+    installments = agreement.installments
     return create_agreement(debtor_cpf, entry, installments)
