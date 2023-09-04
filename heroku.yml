@@ -2,6 +2,6 @@ build:
   docker:
     server: fastapi_backend/Dockerfile
     telegram: telegram_bot/Dockerfile
-  run:
-    server: uvicorn main:app --host 0.0.0.0 --port $PORT
-    telegram: python main.py
+run:
+  server: uvicorn main:app --host=0.0.0.0 --port=${PORT}
+  telegram: python main.py
