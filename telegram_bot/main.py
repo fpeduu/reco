@@ -1,4 +1,4 @@
-from config import BOT_TOKEN, SITE_URL, PORT, SECRET, WEBHOOK_URL
+from config import BOT_TOKEN, SITE_URL, PORT, SECRET, HEROKU_APP_NAME
 from models import MemoryAgreement
 from messages import *
 from utils import *
@@ -176,5 +176,6 @@ bot.run_webhooks(
     listen="0.0.0.0",
     port=PORT,
     secret_token=SECRET,
-    webhook_url=WEBHOOK_URL
+    webhook_url="https://{}.herokuapp.com/{}".format(HEROKU_APP_NAME,
+                                                     BOT_TOKEN)
 )
