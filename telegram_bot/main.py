@@ -1,4 +1,4 @@
-from config import BOT_TOKEN, SITE_URL
+from config import BOT_TOKEN, SITE_URL, PORT, SECRET, WEBHOOK_URL
 from models import MemoryAgreement
 from messages import *
 from utils import *
@@ -172,4 +172,9 @@ def callback_5_handle_modification(call):
 def echo_all(message):
     bot.send_message(message.chat.id, ECHO_MSG)
 
-bot.infinity_polling()
+bot.run_webhooks(
+    listen="0.0.0.0",
+    port=PORT,
+    secret_token=SECRET,
+    webhook_url=WEBHOOK_URL
+)
