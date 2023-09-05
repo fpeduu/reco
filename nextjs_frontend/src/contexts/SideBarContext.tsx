@@ -14,7 +14,7 @@ interface SideBarProviderProps {
 export const SideBarContext = createContext<SidebarContext | null>(null);
 
 export function SideBarProvider({ children }: SideBarProviderProps) {
-  const [hideSideBar, setHideSideBar] = useState<boolean>(false);
+  const [hideSideBar, setHideSideBar] = useState<boolean>(true);
 
   return (
     <SideBarContext.Provider value={{ hideSideBar, setHideSideBar }}>

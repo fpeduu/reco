@@ -1,11 +1,26 @@
 .sidebar {
-  @apply w-72 flex flex-col justify-start px-3 py-10 bg-white gap-16;
+  @apply z-10 w-64 h-full fixed sm:static flex flex-col justify-start px-3 pt-24 bg-white gap-16 
+    overflow-hidden shadow sm:shadow-none;
+
+  .navitem {
+    @apply w-full flex items-center rounded-xl p-3 gap-3 
+      hover:bg-red-600 hover:bg-opacity-20;
+
+    &.active {
+      @apply bg-red-600 text-white hover:bg-opacity-100;
+    }
+  }
 }
 
-.navitem {
-  @apply w-full flex items-center rounded-xl p-3 gap-3 hover:bg-red-600 hover:bg-opacity-20;
-}
+.sidebarSmall {
+  @apply z-10 w-16 h-full fixed sm:static flex flex-col justify-start px-2 pt-28 bg-white gap-16 overflow-hidden;
 
-.active {
-  @apply bg-red-600 text-white hover:bg-opacity-100;
+  .navitem {
+    @apply w-full h-11 flex justify-center items-center rounded-xl p-1 gap-3 
+      hover:bg-red-600 hover:bg-opacity-20;
+
+    &.active {
+      @apply bg-red-600 text-white hover:bg-opacity-100;
+    }
+  }
 }

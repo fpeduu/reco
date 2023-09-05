@@ -25,14 +25,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <NextAuthProvider>
           <ProposalProvider>
             <SideBarProvider>
-              <div className="flex min-h-screen">
+              <Header />
+              <div className="w-full flex">
                 <SideBar />
-                <div className="w-full">
-                  <Header />
-                  <main className="flex flex-col items-center justify-between">
-                    {children}
-                  </main>
-                </div>
+                <main className="w-full min-h-screen ml-16 sm:ml-0 pt-20 flex flex-col items-center justify-between">
+                  {children}
+                </main>
               </div>
               <Footer />
             </SideBarProvider>
