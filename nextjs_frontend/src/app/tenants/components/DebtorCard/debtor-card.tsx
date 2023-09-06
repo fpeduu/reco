@@ -54,18 +54,18 @@ export default function DebtorCard({ tenant, isModal }: DebtorCardProps) {
       <TenantModal open={modalOpen} onClose={closeModal} tenantInfo={tenant} />
       <div className="flex flex-col items-start gap-1 w-2/12">
         <span className="font-semibold text-xl">{tenant.nome}</span>
-        <span className="text-xs text-neutral-400 font-medium">
+        {/* <span className="text-xs text-neutral-400 font-medium">
           {tenant.cpf}
-        </span>
+        </span> */}
       </div>
       <div className="w-2/12">
-        <p className="font-semibold">Local:</p>
-        <span className="text-xs font-oblique ">{tenant.nomeCondominio}</span>
+        <p className="font-semibold">CPF:</p>
+        <span className="text-xs font-oblique ">{tenant.cpf}</span>
       </div>
       <div className="w-44 pb-1">
-        <p className="font-semibold">Status:</p>
+        <p className="font-semibold">Local:</p>
         <div className="flex items-center gap-1 pt-1 text-xs font-oblique">
-          {getProfileText()}
+          {tenant.nomeCondominio}
         </div>
       </div>
       <div className="w-44 pb-1">
