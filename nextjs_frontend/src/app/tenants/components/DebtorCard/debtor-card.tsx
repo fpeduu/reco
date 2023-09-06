@@ -60,17 +60,11 @@ export default function DebtorCard({ tenant, isModal }: DebtorCardProps) {
       </div>
       <div className="w-2/12">
         <p className="font-semibold">Local:</p>
-        <span className="text-xs font-oblique uppercase ">
-          {tenant.nomeCondominio}
-        </span>
+        <span className="text-xs font-oblique ">{tenant.nomeCondominio}</span>
       </div>
       <div className="w-44 pb-1">
         <p className="font-semibold">Status:</p>
         <div className="flex items-center gap-1 pt-1 text-xs font-oblique">
-          {/* <span
-            className={`w-5 h-5 rounded-full
-                          ${getStatusColor()}`}
-          /> */}
           {getProfileText()}
         </div>
       </div>
@@ -85,13 +79,13 @@ export default function DebtorCard({ tenant, isModal }: DebtorCardProps) {
         </div>
       </div>
       {!isModal && (
-        <div className="w-36 flex items-center justify-end">
+        <div className="w-60 flex items-center justify-end">
           <button
-            className="w-full py-3 px-5 rounded-md text-white
+            className="w-full h-10  rounded-md text-white
                      text-s font-semibold text-center bg-primary"
             onClick={handleStartAgreement}
           >
-            Iniciar Acordo
+            Iniciar Negociação
           </button>
         </div>
       )}
