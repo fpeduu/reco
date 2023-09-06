@@ -18,22 +18,18 @@ export default async function AgreementsPage() {
 
   return (
     <div className="containerLayout">
-      <AuthTitle
-        subtitle="Confira os inadimplentes e realize novos acordos"
-      />
+      {/* <AuthTitle subtitle="Confira os inadimplentes e realize novos acordos" /> */}
       <div className="mb-3 flex items-center justify-between">
-        <h2 className="font-bold text-2xl">
-          Lista de Condôminos
-        </h2>
+        <h2 className="font-bold text-2xl">Lista de Condôminos</h2>
         <span>Total ({tenants.length})</span>
       </div>
       <TenantList tenants={tenants} />
       <span className="hidden">
         {/* Sem isso não renderiza as cores */}
-        <span className="w-5 h-5 rounded-full bg-status-0"/>
-        <span className="w-5 h-5 rounded-full bg-status-1"/>
-        <span className="w-5 h-5 rounded-full bg-status-2"/>
-        <span className="w-5 h-5 rounded-full bg-status-3"/>
+        <span className="w-5 h-5 rounded-full bg-status-0" />
+        <span className="w-5 h-5 rounded-full bg-status-1" />
+        <span className="w-5 h-5 rounded-full bg-status-2" />
+        <span className="w-5 h-5 rounded-full bg-status-3" />
       </span>
     </div>
   );
