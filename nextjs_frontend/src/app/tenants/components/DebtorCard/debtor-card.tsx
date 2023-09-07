@@ -51,12 +51,9 @@ export default function DebtorCard({ tenant, isModal }: DebtorCardProps) {
     <div
       className={`w-full py-4 px-8 flex flex-wrap items-center justify-between rounded-xl shadow ${bgColorClass}`}
     >
-      <TenantModal open={modalOpen} onClose={closeModal} tenantInfo={tenant} />
+      <TenantModal open={modalOpen} onClose={closeModal} />
       <div className="flex flex-col items-start gap-1 w-2/12">
         <span className="font-semibold text-xl">{tenant.nome}</span>
-        {/* <span className="text-xs text-neutral-400 font-medium">
-          {tenant.cpf}
-        </span> */}
       </div>
       <div className="w-2/12">
         <p className="font-semibold">CPF:</p>
