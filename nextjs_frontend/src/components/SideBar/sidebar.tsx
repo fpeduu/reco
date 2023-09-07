@@ -57,7 +57,7 @@ export default function SideBar() {
                     width={22}
                     height={23}
                   />
-                  {!hideSideBar && <span>Histórico</span>}
+                  {!hideSideBar && <span>Negociações</span>}
                 </Link>
               </li>
             )}
