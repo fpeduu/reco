@@ -20,14 +20,6 @@ const statusList: string[] = [
   "3 meses ou mais de atraso"
 ];
 
-const profileList: string[] = [
-  "Todos",
-  "Nunca atrasa",
-  "Atrasa por pouco tempo",
-  "Atrasa por algum tempo",
-  "Atrasa por muito tempo"
-];
-
 const tenantsPerPage = 7;
 
 export default function TenantList({ tenants }: TenantListProps) {
