@@ -1,16 +1,14 @@
 import { Acordo, AcordoIdentificado, StatusType } from "@/models/Acordos";
 import { NextResponse } from "next/server";
-import { faker } from '@faker-js/faker/locale/pt_BR';
+import { faker } from "@faker-js/faker/locale/pt_BR";
 import { generateCPF, createRandomAcordo } from "@/services/randomizer";
 
-function enrichAcordo(
-  condominioName: string,
-  acordo: Acordo
-): AcordoIdentificado {
+function enrichAcordo(condominioName: string, acordo: Acordo): AcordoIdentificado {
   const randomStatus: StatusType = faker.helpers.arrayElement([
-    "NEGADO PELO INADIMPLENTE",
-    "ACEITO PELAS PARTES",
-    "EM ANÁLISE"
+    "Aguardando inadimplente",
+    "Conversa iniciada",
+    "Valor reserva alcançado",
+    "Negociação concluída"
   ]);
 
   return {
@@ -18,8 +16,8 @@ function enrichAcordo(
     status: randomStatus,
     nomeCondominio: condominioName,
     usuarioEmail: faker.internet.email(),
-    nomeDevedor: faker.person.fullName(),
-  }
+    nomeDevedor: faker.person.fullName()
+  };
 }
 
 function createRandomAgreement(condominioName: string): AcordoIdentificado {
@@ -30,9 +28,9 @@ function createRandomAgreement(condominioName: string): AcordoIdentificado {
 
 function createRandomAgreementList() {
   const condominioName = faker.company.name();
-  return faker.helpers.multiple(() => createRandomAgreement(
-    condominioName
-  ), { count: { min: 1, max: 10 }});
+  return faker.helpers.multiple(() => createRandomAgreement(condominioName), {
+    count: { min: 1, max: 10 }
+  });
 }
 
 export async function GET() {
@@ -40,7 +38,6 @@ export async function GET() {
   for (let i = 0; i < faker.number.int({ min: 1, max: 10 }); i++) {
     agreementList.push(...createRandomAgreementList());
   }
-  const sortedAgreementList = agreementList.sort(
-    (a, b) => b.valor - a.valor);
+  const sortedAgreementList = agreementList.sort((a, b) => b.valor - a.valor);
   return NextResponse.json(sortedAgreementList);
 }
