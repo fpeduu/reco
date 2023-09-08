@@ -94,9 +94,36 @@ export default function Home() {
       <section id="userGuide" className="w-full max-h-fit bg-tertiary">
         <div className="flex flex-col items-center m-16">
           <h1 className="text-7xl">Como funciona?</h1>
-          <div>
-            <div>
-              <div className="rounded-full text-tertiary bg-primary">1</div>
+          <div className="flex flex-col gap-5 mt-5 md:flex-row lg:gap-10 ">
+            <div className={Styles.userGuideStep}>
+              <div>1</div>
+
+              <p>Escolha o condômino que deseja realizar uma negociação</p>
+            </div>
+            <div className="relative top-12 right-12 hidden md:block lg:right-[105px] lg:top-10">
+              <div className={`${Styles.horizontalLine} `}></div>
+            </div>
+            <div className="relative left-[50%] md:hidden">
+              <div className={Styles.verticalLine}></div>
+            </div>
+            <div className={Styles.userGuideStep}>
+              <div>2</div>
+              <p>
+                Aguarde nossa tecnologia gerar as melhores propostas para seu
+                acordo
+              </p>
+            </div>
+            <div className="relative top-12 right-12 hidden md:block lg:right-[105px] lg:top-10">
+              <div className={`${Styles.horizontalLine} `}></div>
+            </div>
+            <div className="relative left-[50%] md:hidden">
+              <div className={Styles.verticalLine}></div>
+            </div>
+            <div className={Styles.userGuideStep}>
+              <div>3</div>
+              <p>
+                Determine a proposta desejada <br /> e feche a negociação
+              </p>
             </div>
           </div>
         </div>
