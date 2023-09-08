@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Styles from "./landing.module.scss";
 
 export default function Home() {
   return (
@@ -31,13 +32,13 @@ export default function Home() {
       </section>
       {/* SECTION Features*/}
       <section id="features" className="w-full max-h-fit bg-tertiary">
-        <div className="flex p-20">
-          <div className="flex flex-wrap gap-5 items-center justify-center">
+        <div className="flex p-20 ">
+          <div className="flex flex-wrap gap-5 items-center justify-center my-10">
             <h2 className="text-7xl md:text-8xl md:min-w-[550px]">
               <strong className="text-primary">reco</strong> <br />
               te oferece:
             </h2>
-            <div className="flex flex-wrap items-center justify-center bg-secondary rounded-xl text-tertiary p-6 gap-5 md:min-w-[550px] min-h-[150px] shadow-md md:h-[150px] md:justify-start divide-x">
+            <div className={Styles.featureCard}>
               <Image
                 className="dark:invert"
                 alt="brain analysis icon"
@@ -46,15 +47,15 @@ export default function Home() {
                 height={80}
                 priority
               />
-              <div className="flex flex-col gap-2 px-5 max-w-[300px]">
-                <h5 className="text-xl">Análises avançadas</h5>
-                <p className="text-[13px] leading-6">
+              <div>
+                <h5>Análises avançadas</h5>
+                <p>
                   Nossa Inteligência Artificial fornece as melhores propostas às
                   suas negociações.
                 </p>
               </div>
             </div>
-            <div className="flex flex-wrap items-center justify-center bg-secondary rounded-xl text-tertiary p-6 gap-5 md:min-w-[550px] min-h-[150px] shadow-md md:h-[150px] md:justify-start divide-x">
+            <div className={Styles.featureCard}>
               <Image
                 className="dark:invert"
                 alt="laptopicon"
@@ -63,14 +64,14 @@ export default function Home() {
                 height={80}
                 priority
               />
-              <div className="flex flex-col gap-2 px-5 max-w-[300px]">
-                <h5 className="text-xl">Automatização</h5>
-                <p className="text-[13px] leading-6">
+              <div>
+                <h5>Automatização</h5>
+                <p>
                   Todo o processo é automático e programado para sua satisfação.
                 </p>
               </div>
             </div>
-            <div className="flex flex-wrap items-center justify-center bg-secondary rounded-xl text-tertiary p-8 gap-5 md:min-w-[550px] min-h-[150px] shadow-md md:h-[150px] md:justify-start divide-x">
+            <div className={Styles.featureCard}>
               <Image
                 className="dark:invert"
                 alt="security icon"
@@ -79,12 +80,23 @@ export default function Home() {
                 height={70}
                 priority
               />
-              <div className="flex flex-col gap-2 px-5 max-w-[300px]">
-                <h5 className="text-xl">Sistema Seguro</h5>
-                <p className="text-[13px] leading-6">
+              <div>
+                <h5>Sistema Seguro</h5>
+                <p>
                   Tranquilize-se! Seus dados estarão bem seguros e armazenados.
                 </p>
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      {/* SECTION USER GUIDE */}
+      <section id="userGuide" className="w-full max-h-fit bg-tertiary">
+        <div className="flex flex-col items-center m-16">
+          <h1 className="text-7xl">Como funciona?</h1>
+          <div>
+            <div>
+              <div className="rounded-full text-tertiary bg-primary">1</div>
             </div>
           </div>
         </div>
