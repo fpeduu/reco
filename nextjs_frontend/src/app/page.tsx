@@ -91,9 +91,9 @@ export default function Home() {
         </div>
       </section>
       {/* SECTION USER GUIDE */}
-      <section id="userGuide" className="w-full max-h-fit bg-tertiary">
+      <section id="userGuide" className="w-full max-h-fit bg-tertiary ">
         <div className="flex flex-col items-center p-16 mb-20">
-          <h1 className="text-7xl font-medium">Como funciona?</h1>
+          <h2 className="text-7xl font-medium">Como funciona?</h2>
           <div className="flex flex-col gap-5 mt-5 md:flex-row lg:gap-10 ">
             <div className={Styles.userGuideStep}>
               <div>1</div>
@@ -130,15 +130,15 @@ export default function Home() {
       </section>
       {/* SECTION DEPOSITIONS */}
       <section id="depositions" className="w-full max-h-fit bg-primary">
-        <div className="flex flex-col items-center p-16 ">
-          <h1 className="text-7xl text-tertiary font-medium">
+        <div className="flex flex-col items-center  p-16 ">
+          <h2 className="text-7xl text-tertiary font-medium">
             O que nossos clientes estão dizendo?
-          </h1>
+          </h2>
           <p className="tracking-wider leading-7  text-center text-tertiary">
             Veja o que alguns de nossos clientes estão comentando sobre suas
             experiências na Reco.
           </p>
-          <div className="flex flex-wrap mt-16 gap-16 lg:gap-6">
+          <div className="flex flex-wrap justify-center mt-16 gap-16 lg:gap-6">
             <div className={Styles.depositionCard}>
               <div>
                 <Image
@@ -193,8 +193,85 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      <section></section>
+      {/* PRICING SECTION */}
+      <section id="pricing" className="w-full max-h-fit bg-tertiary ">
+        <div className="flex flex-wrap p-16">
+          <div className="w-[350px]">
+            <h2 className="text-7xl text-justify font-medium">Planos</h2>
+            <p className="text-justify text-lg text-secondary font-medium">
+              Conheça os planos da nossa plataforma! <br /> <br />O plano Básico
+              é descomplicado, ideal para conhecer a plataforma. Já o plano
+              Premium oferece recursos avançados e suporte especializado para
+              acordos justos e sustentáveis.
+            </p>
+            <h4 className="font-medium text-2xl mt-5">Métodos de pagamento</h4>
+            <div className="flex flex-wrap gap-9 mt-4 justify-center md:justify-start">
+              <Image
+                className="dark:invert"
+                alt="paypal icon"
+                src="/icons/paypal.svg"
+                width={35}
+                height={35}
+                priority
+              />
+              <Image
+                className="dark:invert"
+                alt="pix icon"
+                src="/icons/pix.svg"
+                width={40}
+                height={40}
+                priority
+              />
+              <Image
+                className="dark:invert"
+                alt="visa icon"
+                src="/icons/visa.svg"
+                width={50}
+                height={50}
+                priority
+              />
+              <Image
+                className="dark:invert"
+                alt="mastercard icon"
+                src="/icons/mastercard.svg"
+                width={40}
+                height={40}
+                priority
+              />
+            </div>
+          </div>
+          <div className={Styles.pricingCard}>
+            <h3>Básico</h3>
+            <div>
+              <h3>
+                R$40,00 <small>/ mês</small>
+              </h3>
+              <ul>
+                <li>Acordos limitados;</li>
+                <li>xxxxxxxxxxxxx</li>
+                <li>xxxxxxxxxxx</li>
+                <li>xxxxxxxxxxxxxxxx</li>
+              </ul>
+              <button>Começar</button>
+            </div>
+          </div>
+          <div className={Styles.pricingCard}>
+            <h3>Básico</h3>
+            <div>
+              <h3>
+                R$40,00 <small>/ mês</small>
+              </h3>
+              <ul>
+                <li>Acordos limitados;</li>
+                <li>xxxxxxxxxxxxx</li>
+                <li>xxxxxxxxxxx</li>
+                <li>xxxxxxxxxxxxxxxx</li>
+              </ul>
+              <button>Começar</button>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
