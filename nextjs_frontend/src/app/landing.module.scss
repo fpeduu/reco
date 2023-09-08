@@ -1,15 +1,15 @@
 .featureCard {
-  @apply flex flex-wrap items-center justify-center bg-secondary rounded-xl text-tertiary p-6 gap-5 md:min-w-[550px] min-h-[150px] shadow-md md:h-[150px] md:justify-start divide-x;
+  @apply flex flex-wrap items-center justify-center bg-secondary rounded-2xl text-tertiary p-6 gap-5 md:min-w-[550px] min-h-[150px] shadow-md md:h-[150px] md:justify-start divide-x;
 
   div {
     @apply flex flex-col gap-2 px-5 max-w-[300px];
 
     h5 {
-      @apply text-xl;
+      @apply text-xl font-medium;
     }
 
     p {
-      @apply text-[13px] leading-6;
+      @apply text-[13px] leading-6 font-medium;
     }
   }
 }
@@ -22,7 +22,24 @@
   }
 
   p {
-    @apply max-w-2xl tracking-wider leading-7 max-w-xs text-center text-secondary;
+    @apply max-w-2xl tracking-wider leading-7 max-w-xs text-center font-medium text-secondary;
+  }
+}
+
+.depositionCard {
+  @apply flex flex-col flex-wrap items-center justify-center bg-tertiary rounded-2xl p-8 shadow-lg;
+
+  div {
+    @apply rounded-full w-[80px] h-[80px] bg-white overflow-hidden relative bottom-2 -mt-14 shadow-lg;
+  }
+  h6 {
+    @apply tracking-wide text-lg text-center text-secondary font-medium;
+  }
+  p {
+    @apply tracking-wide text-sm text-center text-secondary font-medium;
+  }
+  small {
+    @apply tracking-wide text-sm text-center text-secondary max-w-xs italic mt-5;
   }
 }
 
