@@ -3,17 +3,8 @@ import Styles from "./landing.module.scss";
 
 export default function Home() {
   return (
-    // <div className="flex m-auto place-items-center">
-    //   <Image
-    //     className="dark:invert"
-    //     alt="Reco Logo"
-    //     src="/reco.svg"
-    //     width={700}
-    //     height={700}
-    //     priority
-    //   />
-    // </div>
     <div className="flex flex-col w-full max-h-fit">
+      {/* HOME SECTION */}
       <section id="home" className="w-full max-h-fit bg-secondary">
         <div className="text-tertiary p-16 flex flex-col gap-4 mb-4 items-center lg:items-start">
           <h1 className="text-7xl font-medium">Boas-vindas à Reco!</h1>
@@ -30,7 +21,7 @@ export default function Home() {
           </button>
         </div>
       </section>
-      {/* SECTION Features*/}
+      {/* FEATURES SECTION*/}
       <section id="features" className="w-full max-h-fit bg-tertiary">
         <div className="flex p-20 ">
           <div className="flex flex-wrap gap-5 items-center justify-center my-10">
@@ -195,8 +186,8 @@ export default function Home() {
       </section>
       {/* PRICING SECTION */}
       <section id="pricing" className="w-full max-h-fit bg-tertiary ">
-        <div className="flex flex-wrap p-16">
-          <div className="w-[350px]">
+        <div className="flex flex-wrap items-center justify-center gap-20 p-16 my-20">
+          <div className="w-[350px] ">
             <h2 className="text-7xl text-justify font-medium">Planos</h2>
             <p className="text-justify text-lg text-secondary font-medium">
               Conheça os planos da nossa plataforma! <br /> <br />O plano Básico
@@ -248,7 +239,7 @@ export default function Home() {
               </h3>
               <ul>
                 <li>Acordos limitados;</li>
-                <li>xxxxxxxxxxxxx</li>
+                <li>xxxxxxxxxx</li>
                 <li>xxxxxxxxxxx</li>
                 <li>xxxxxxxxxxxxxxxx</li>
               </ul>
@@ -256,16 +247,16 @@ export default function Home() {
             </div>
           </div>
           <div className={Styles.pricingCard}>
-            <h3>Básico</h3>
+            <h3>Premium</h3>
             <div>
               <h3>
-                R$40,00 <small>/ mês</small>
+                R$89,00 <small>/ mês</small>
               </h3>
               <ul>
-                <li>Acordos limitados;</li>
-                <li>xxxxxxxxxxxxx</li>
-                <li>xxxxxxxxxxx</li>
+                <li>Acordos ilimitados;</li>
                 <li>xxxxxxxxxxxxxxxx</li>
+                <li>xxxxxxxxx</li>
+                <li>xxxxxxxxxxxxxxxxxxx</li>
               </ul>
               <button>Começar</button>
             </div>
