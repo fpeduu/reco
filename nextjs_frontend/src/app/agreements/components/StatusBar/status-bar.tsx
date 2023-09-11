@@ -59,7 +59,7 @@ export default function StatusBar({ status }: StatusBarProps) {
       <span className={"self-end " + textColor}>{status}</span>
       <span className="w-full relative">
         <span className="w-full h-2 absolute z-0 rounded-full bg-gray-500" />
-        <span className={barLength + " h-2 z-10 absolute rounded-full " + barColor} />
+        <span className={barLength + " h-2 z-1 absolute rounded-full " + barColor} />
       </span>
     </>
   );

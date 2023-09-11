@@ -23,6 +23,8 @@ export default function AgreementsPage() {
 
   useEffect(() => {
     fetchAgreements().then((agreements) => setAgreements(agreements));
+    // @ts-ignore
+    import("preline");
   }, []);
 
   const inProgressAgreements = agreements.filter((agreement) => {
