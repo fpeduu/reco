@@ -20,7 +20,7 @@ export default function Header() {
     }
 
     return (
-        <div className='flex justify-around bg-secondary p-2 h-24 text-tertiary'>
+        <div className='flex justify-between px-16 bg-secondary p-2 h-24 text-tertiary'>
             <span className='flex place-items-center gap-8 font-semibold'>
                 <Link href="/">
                     <Image
