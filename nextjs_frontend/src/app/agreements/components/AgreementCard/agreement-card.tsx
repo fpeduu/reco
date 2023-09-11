@@ -7,7 +7,10 @@ interface AgreementCardProps {
   debtorName: string;
   debtorCPF: string;
   condominiumName: string;
-  agreementStatus: "ACEITO PELAS PARTES" | "NEGADO PELO INADIMPLENTE" | "EM ANÁLISE";
+  agreementStatus:
+    | "ACEITO PELAS PARTES"
+    | "NEGADO PELO INADIMPLENTE"
+    | "EM ANÁLISE";
 }
 
 export default function AgreementCard({
@@ -20,8 +23,8 @@ export default function AgreementCard({
 
   useEffect(() => {
     // @ts-ignore
-    import('preline');
-  }, [])
+    import("preline");
+  }, []);
 
   function setStatusStyle(status: string) {
     switch (status) {
@@ -50,7 +53,7 @@ export default function AgreementCard({
       <div className="flex flex-col items-start gap-1 w-4/12">
         <span className="font-extrabold text-xl">{debtorName}</span>
         <span className="text-xs text-neutral-400 font-medium">
-          {condominiumName.toUpperCase()}
+          {condominiumName}
         </span>
       </div>
       <div className="w-3/12">
@@ -58,8 +61,11 @@ export default function AgreementCard({
         <div className={setStatusStyle(agreementStatus)}>
           <Image
             src={setStatusImage(agreementStatus)}
-            className={agreementStatus === "EM ANÁLISE" ?
-                       "animate-spin text-secondary" : ""}
+            className={
+              agreementStatus === "EM ANÁLISE"
+                ? "animate-spin text-secondary"
+                : ""
+            }
             alt="check circle"
             width={20}
             height={20}
@@ -73,9 +79,8 @@ export default function AgreementCard({
           className={`w-fit flex items-center gap-1 text-xs font-medium cursor-default ${
             !hasDocument ? "text-neutral-400" : "underline hover:cursor-pointer"
           }`}
-          href={
-            hasDocument ? `${serverURL}/proposal/${debtorCPF}` : ""
-          }>
+          href={hasDocument ? `${serverURL}/proposal/${debtorCPF}` : ""}
+        >
           <Image
             src={`/icons/magnifying_glass${
               !hasDocument ? "_inactive" : ""
@@ -92,7 +97,8 @@ export default function AgreementCard({
       <div className="w-24 flex items-center justify-end">
         <Link
           className="w-full py-3 px-5 rounded-xl text-white text-xs font-medium text-center cursor-default bg-gray-950 hover:cursor-pointer"
-          href={`${serverURL}/proposal/${debtorCPF}/`}>
+          href={`${serverURL}/proposal/${debtorCPF}/`}
+        >
           Acessar
         </Link>
       </div>

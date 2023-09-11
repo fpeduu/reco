@@ -10,9 +10,9 @@ export default function AuthTitle({ subtitle }: { subtitle?: string }) {
       <h1 className="text-3xl font-extrabold leading-10">
         Boas-vindas, {session?.user?.name}!
       </h1>
-      {subtitle && <h2 className="text-xl font-medium leading-10">
-        {subtitle}
-      </h2>}
+      {subtitle && (
+        <h2 className="text-xl font-medium leading-10">{subtitle}</h2>
+      )}
     </div>
-  )
+  );
 }
