@@ -10,9 +10,10 @@ import { useState } from "react";
 interface DebtorCardProps {
   tenant: Condomino;
   isModal: boolean;
+  isInteractive: boolean;
 }
 
-export default function DebtorCard({ tenant, isModal }: DebtorCardProps) {
+export default function DebtorCard({ tenant, isModal, isInteractive }: DebtorCardProps) {
   const context = useProposalContext();
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -29,8 +30,7 @@ export default function DebtorCard({ tenant, isModal }: DebtorCardProps) {
 
   return (
     <div
-      className={`w-full py-4 px-8 flex flex-wrap items-center justify-between rounded-xl shadow ${bgColorClass}`}
-    >
+      className={`w-full py-4 px-8 flex flex-wrap items-center justify-between rounded-xl shadow ${bgColorClass}`}>
       <TenantModal open={modalOpen} onClose={closeModal} />
       <div className="flex flex-col items-start gap-1 w-2/12">
         <span className="font-semibold text-xl">{tenant.nome}</span>
@@ -55,13 +55,12 @@ export default function DebtorCard({ tenant, isModal }: DebtorCardProps) {
           </span>
         </div>
       </div>
-      {!isModal && (
+      {isInteractive && (
         <div className="w-60 flex items-center justify-end">
           <button
             className="w-full h-10  rounded-md text-white
                      text-s font-semibold text-center bg-primary"
-            onClick={handleStartAgreement}
-          >
+            onClick={handleStartAgreement}>
             Iniciar Negociação
           </button>
         </div>
