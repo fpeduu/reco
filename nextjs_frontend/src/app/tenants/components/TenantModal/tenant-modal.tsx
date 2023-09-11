@@ -4,7 +4,7 @@ import { useProposalContext } from "@/contexts/ProposalContext";
 import { Condomino } from "@/models/Devedores";
 import { useRouter } from "next/navigation";
 import React from "react";
-import DebtorCard from "../DebtorCard/debtor-card";
+import DebtorCard from "@/components/DebtorCard/debtor-card";
 
 interface TenantInfo {
   name: string;

@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import { serverURL } from "@/config";
-import { useProposalContext } from "../../../../contexts/ProposalContext";
-import { Condomino } from "../../../../models/Devedores";
-import TenantModal from "../TenantModal/tenant-modal";
+import { useProposalContext } from "../../contexts/ProposalContext";
+import { Condomino } from "../../models/Devedores";
+import TenantModal from "../../app/tenants/components/TenantModal/tenant-modal";
 import { useState } from "react";
 
 interface DebtorCardProps {

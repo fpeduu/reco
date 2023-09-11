@@ -1,6 +1,6 @@
 "use client";
 
-import DebtorCard from "../DebtorCard/debtor-card";
+import DebtorCard from "@/components/DebtorCard/debtor-card";
 import { useEffect, useState } from "react";
 
 import { Condomino } from "@/models/Devedores";
