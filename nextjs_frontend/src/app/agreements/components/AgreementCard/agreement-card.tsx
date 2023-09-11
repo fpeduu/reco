@@ -7,8 +7,7 @@ interface AgreementCardProps {
 }
 
 export default function AgreementCard({ agreement }: AgreementCardProps) {
-  const isConcluded = agreement.status === "Negociação concluída";
-  const linkPath = isConcluded ? `/proposal/${agreement.cpfDevedor}` : `#`;
+  const linkPath = `/agreements/${agreement.cpfDevedor}`;
 
   return (
     <Link className="w-1/3 p-5 cursor-pointer" href={linkPath}>
