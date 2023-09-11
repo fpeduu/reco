@@ -1,0 +1,141 @@
+.featureCard {
+  @apply flex flex-wrap items-center justify-center bg-secondary rounded-2xl text-tertiary p-6 gap-5 md:min-w-[550px] min-h-[150px] shadow-md md:h-[150px] md:justify-start divide-x;
+
+  div {
+    @apply flex flex-col gap-2 px-5 max-w-[300px];
+
+    h5 {
+      @apply text-xl font-medium;
+    }
+
+    p {
+      @apply text-[13px] leading-6 font-medium;
+    }
+  }
+}
+
+.userGuideStep {
+  @apply flex flex-col items-center justify-center gap-5 w-full;
+
+  div {
+    @apply flex items-center justify-center rounded-full text-tertiary bg-primary w-28 h-28 text-6xl pt-3;
+  }
+
+  p {
+    @apply max-w-2xl tracking-wider leading-7 max-w-xs text-center font-medium text-secondary;
+  }
+}
+
+.depositionCard {
+  @apply flex flex-col flex-wrap items-center justify-center bg-tertiary rounded-2xl p-8 shadow-lg;
+
+  div {
+    @apply rounded-full w-[80px] h-[80px] bg-white overflow-hidden relative bottom-2 -mt-14 shadow-lg;
+  }
+  h6 {
+    @apply tracking-wide text-lg text-center text-secondary font-medium;
+  }
+  p {
+    @apply tracking-wide text-sm text-center text-secondary font-medium;
+  }
+  small {
+    @apply tracking-wide text-sm text-center text-secondary max-w-xs italic mt-5;
+  }
+}
+
+.pricingCard {
+  @apply flex flex-col w-72 divide-y divide-tertiary bg-secondary text-tertiary rounded-2xl shadow-lg p-6;
+
+  h3 {
+    @apply font-medium text-3xl my-5 text-center;
+    small {
+      @apply text-sm font-normal;
+    }
+  }
+
+  div {
+    @apply flex flex-col flex-wrap justify-center items-center;
+  }
+  ul {
+    @apply text-sm list-none text-center leading-loose tracking-wider;
+  }
+  button {
+    @apply bg-primary rounded-full w-36 p-4 text-sm mt-5 mb-5;
+  }
+}
+
+.horizontalLine {
+  width: 200px; /* Adjust the length of the line as needed */
+  height: 2px; /* Adjust the thickness of the line as needed */
+  background-color: #000; /* Adjust the line color as needed */
+  position: absolute;
+  margin: 20px 0; /* Adjust the margin as needed */
+
+  @media screen and (max-width: 767px) {
+    display: none;
+  }
+  @media screen and (max-width: 1024px) {
+    width: 100px;
+  }
+  /* Add dot/circle at the beginning of the line */
+  &::before {
+    content: "";
+    width: 10px; /* Adjust the dot/circle size as needed */
+    height: 10px; /* Adjust the dot/circle size as needed */
+    background-color: #000; /* Adjust the dot/circle color as needed */
+    border-radius: 50%;
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  /* Add dot/circle at the end of the line */
+  &::after {
+    content: "";
+    width: 10px; /* Adjust the dot/circle size as needed */
+    height: 10px; /* Adjust the dot/circle size as needed */
+    background-color: #000; /* Adjust the dot/circle color as needed */
+    border-radius: 50%;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translate(50%, -50%);
+  }
+}
+
+.verticalLine {
+  width: 2px; /* Adjust the thickness of the line as needed */
+  height: 150px; /* Adjust the height of the line as needed */
+  background-color: #000; /* Adjust the line color as needed */
+  position: relative;
+  margin: 20px 0; /* Adjust the margin as needed */
+  @media screen and (min-width: 768px) {
+    display: none;
+  }
+  /* Add dot/circle at the beginning of the line */
+  &::before {
+    content: "";
+    width: 10px; /* Adjust the dot/circle size as needed */
+    height: 10px; /* Adjust the dot/circle size as needed */
+    background-color: #000; /* Adjust the dot/circle color as needed */
+    border-radius: 50%;
+    position: absolute;
+    left: 50%;
+    top: 0;
+    transform: translate(-50%, -50%);
+  }
+
+  /* Add dot/circle at the end of the line */
+  &::after {
+    content: "";
+    width: 10px; /* Adjust the dot/circle size as needed */
+    height: 10px; /* Adjust the dot/circle size as needed */
+    background-color: #000; /* Adjust the dot/circle color as needed */
+    border-radius: 50%;
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translate(-50%, 50%);
+  }
+}

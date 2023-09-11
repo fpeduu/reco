@@ -9,7 +9,7 @@ import telebot
 
 chats_memory: dict[str, MemoryAgreement] = dict()
 bot = telebot.TeleBot(BOT_TOKEN, threaded=False)
-server = Flask(__name__)
+bot.delete_webhook()
 
 @bot.message_handler(commands=['start'])
 def handler_0_start_conversation(message):
@@ -175,20 +175,4 @@ def callback_5_handle_modification(call):
 def echo_all(message):
     bot.send_message(message.chat.id, ECHO_MSG)
 
-@server.route(f'/{BOT_TOKEN}/', methods=['POST'])
-def getMessage():
-    bot.process_new_updates([
-        telebot.types.Update.de_json(request.stream.read().decode("utf-8"))
-    ])
-    return "!", 200
-
-@server.route("/")
-def webhook():
-    bot.set_webhook(
-        url=f"https://{HEROKU_APP_NAME}.herokuapp.com/{BOT_TOKEN}",
-        secret_token=SECRET
-    )
-    return "!", 200
-
-if __name__ == "__main__":
-    server.run(host="0.0.0.0", port=PORT)
+bot.polling(none_stop=True)
