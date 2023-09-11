@@ -1,11 +1,12 @@
+"use client";
+
 import { serverURL } from "@/config";
-
 import { AcordoIdentificado } from "@/models/Acordos";
-
-import AuthTitle from "@/components/AuthTItle/auth-title";
 import AgreementList from "./components/AgreementList/agreement-list";
+import Search from "@/components/Search/search";
+import { useEffect, useState } from "react";
 
-const BASE_URL = `${serverURL}/api/agreements`;
+const BASE_URL = `${serverURL}/api/agreements/`;
 
 const fetchAgreements = async () => {
   return (await fetch(`${BASE_URL}`)
@@ -16,17 +17,41 @@ const fetchAgreements = async () => {
     })) as AcordoIdentificado[];
 };
 
-export default async function AgreementsPage() {
-  const agreements = await fetchAgreements();
+export default function AgreementsPage() {
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [agreements, setAgreements] = useState<AcordoIdentificado[]>([]);
+
+  useEffect(() => {
+    fetchAgreements().then((agreements) => setAgreements(agreements));
+    // @ts-ignore
+    import("preline");
+  }, []);
+
+  const inProgressAgreements = agreements.filter((agreement) => {
+    return agreement.status !== "Negociação concluída";
+  });
+
+  const endedAgreements = agreements.filter((agreement) => {
+    return agreement.status === "Negociação concluída";
+  });
 
   return (
-    <div className="containerLayout">
-      <AuthTitle subtitle="Confira os acordos já realizados" />
-      <div className="mb-3 flex items-center justify-between">
-        <h2 className="font-bold text-2xl">Acordos Realizados</h2>
-        <span>Total ({agreements.length})</span>
-      </div>
-      <AgreementList agreements={agreements} />
+    <div className="containerLayout flex flex-col gap-20">
+      <Search onSearch={setSearchQuery} />
+      <AgreementList
+        searchQuery={searchQuery}
+        agreements={inProgressAgreements}
+        title="Em andamento"
+        description="Confira suas negociações em andamento. Clique nos cards para mais informações."
+        filterByProgress={true}
+      />
+      <AgreementList
+        searchQuery={searchQuery}
+        agreements={endedAgreements}
+        title="Finalizadas"
+        description="Confira suas negociações finalizadas. Clique nos cards para mais informações."
+        filterByProgress={false}
+      />
     </div>
   );
 }

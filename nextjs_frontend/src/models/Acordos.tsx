@@ -1,7 +1,10 @@
 import mongoose from "mongoose";
 
-export type StatusType = "NEGADO PELO INADIMPLENTE"
-                        | "ACEITO PELAS PARTES" | "EM ANÁLISE";
+export type StatusType =
+  | "Aguardando inadimplente"
+  | "Conversa iniciada"
+  | "Valor reserva alcançado"
+  | "Negociação concluída";
 
 export interface Acordo {
   id: number;

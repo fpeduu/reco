@@ -1,119 +1,128 @@
 "use client";
 
+import Dropdown from "@/components/Dropdown/dropdown";
+import Paginator from "@/components/Paginator/paginator";
+import { StatusType, AcordoIdentificado } from "@/models/Acordos";
 import { useEffect, useState } from "react";
 import AgreementCard from "../AgreementCard/agreement-card";
 
-import { AcordoIdentificado } from "@/models/Acordos";
-
-import Search from "@/components/Search/search";
-import Dropdown from "@/components/Dropdown/dropdown";
-import Paginator from "@/components/Paginator/paginator";
-
 interface AgreementListProps {
+  searchQuery: string;
+  title: string;
+  description: string;
   agreements: AcordoIdentificado[];
+  filterByProgress: boolean;
 }
 
-const statusList: string[] = [
+const statusList: (StatusType | "Todos")[] = [
   "Todos",
-  "Aceito",
-  "Negado",
-  "Em análise",
-]
+  "Aguardando inadimplente",
+  "Conversa iniciada",
+  "Valor reserva alcançado"
+];
 
-const agreementsPerPage = 7;
+const agreementsPerPage = 6;
 
-export default function AgreementList({ agreements }: AgreementListProps) {
-  const [filteredAgreements, setFilteredAgreements] = 
-          useState<AcordoIdentificado[]>(agreements);
-  const [condomiunsList, setCondomiunsList] = useState<string[]>([]);
+export default function AgreementList({
+  searchQuery,
+  title,
+  description,
+  agreements,
+  filterByProgress
+}: AgreementListProps) {
+  const [filteredAgreements, setFilteredAgreements] =
+    useState<AcordoIdentificado[]>(agreements);
+
+  const [condominiums, setCondominiums] = useState<string[]>([]);
+
+  const [progress, setProgress] = useState<string>("Todos");
   const [condominium, setCondominium] = useState<string>("Todos");
-  const [status, setStatus] = useState<string>("Todos");
+
   const [page, setPage] = useState(1);
-  const totalPageCount = Math.ceil(filteredAgreements.length
-                                   / agreementsPerPage);
+
+  const totalPageCount = Math.ceil(filteredAgreements.length / agreementsPerPage);
 
   useEffect(() => {
-    const condomiuns = agreements.map(
-      (tenant) => tenant.nomeCondominio);
-    const uniqueCondomiuns = condomiuns.filter(
-      (condominium, index) => {
-      return condomiuns.indexOf(condominium) === index;
+    const condominiums = agreements.map((agreement) => agreement.nomeCondominio);
+    const uniqueCondomiuns = condominiums.filter((condominium, index) => {
+      return condominiums.indexOf(condominium) === index;
     });
-    setCondomiunsList(["Todos", ...uniqueCondomiuns]);
+    setCondominiums(["Todos", ...uniqueCondomiuns]);
   }, [agreements]);
 
   useEffect(() => {
-    setFilteredAgreements(agreements.filter((agreement) => {
-      const condominiumFilter = condominium === "Todos" ||
-                                agreement.nomeCondominio === condominium;
-      const statusFilter = status === "Todos" ||
-                            (status === "Aceito" &&
-                              agreement.status === "ACEITO PELAS PARTES") ||
-                            (status === "Negado" &&
-                              agreement.status === "NEGADO PELO INADIMPLENTE") ||
-                            (status === "Em análise" &&
-                              agreement.status === "EM ANÁLISE");
-      return condominiumFilter && statusFilter;
-    }));
-  }, [condominium, status, agreements]);
+    setFilteredAgreements(
+      agreements.filter((agreement) => {
+        const progressFilter = progress === "Todos" || agreement.status === progress;
+        const condominiumFilter =
+          condominium === "Todos" || agreement.nomeCondominio === condominium;
+        return (filterByProgress ? progressFilter : true) && condominiumFilter;
+      })
+    );
+  }, [condominium, agreements, filterByProgress, progress]);
+
+  useEffect(() => {
+    handleSearch(searchQuery);
+  }, [searchQuery]);
 
   function handleSearch(search: string) {
     if (search === "") {
       return setFilteredAgreements(agreements);
     }
     const searchLower = search.toLowerCase();
-    setFilteredAgreements(agreements.filter((agreement) => {
-      return agreement.nomeDevedor.toLowerCase().includes(searchLower);
-    }));
-    setPage(1);
-  }
 
-  function handleFilterChange(title: string, option: string) {
-    if (title === "Condomínio") {
-      setCondominium(option);
-    } else {
-      setStatus(option);
-    }
+    setFilteredAgreements(
+      agreements.filter((agreement) => {
+        return (
+          agreement.nomeDevedor.toLowerCase().includes(searchLower) ||
+          agreement.cpfDevedor.includes(searchLower)
+        );
+      })
+    );
     setPage(1);
   }
 
   function handlePagination() {
-    return filteredAgreements.slice((page - 1) * agreementsPerPage,
-                                    page * agreementsPerPage);
+    return filteredAgreements.slice(
+      (page - 1) * agreementsPerPage,
+      page * agreementsPerPage
+    );
+  }
+
+  function handleFilterChange(title: string, option: string) {
+    if (title === "Progresso") {
+      setProgress(option);
+    } else if (title === "Local") {
+      setCondominium(option);
+    }
+    setPage(1);
   }
 
   return (
-    <div className="flex flex-col items-center justify-between gap-5">
-      <Search onSearch={handleSearch}/>
-      <div className="flex justify-end items-center w-full gap-5">
-        <span className="text-neutral-400 text-sm font-medium">
-          Filtros:
-        </span>
-        <Dropdown
-          title="Condomínio"
-          options={condomiunsList}
-          onChange={handleFilterChange}
-        />
-        <Dropdown
-          title="Status do acordo"
-          options={statusList}
-          onChange={handleFilterChange}
-        />
+    <div className="w-full flex flex-col items-center justify-between gap-5">
+      <div className="w-full flex justify-between items-start">
+        <div className="flex flex-col gap-3">
+          <h1 className="text-4xl font-extrabold">{title}</h1>
+          <p className="text-lg font-medium">{description}</p>
+        </div>
+        <div className="flex justify-end items-center gap-5">
+          <span className="text-neutral-400 text-sm font-medium">Filtros:</span>
+          {filterByProgress && (
+            <Dropdown
+              title="Progresso"
+              options={statusList}
+              onChange={handleFilterChange}
+            />
+          )}
+          <Dropdown title="Local" options={condominiums} onChange={handleFilterChange} />
+        </div>
       </div>
-      {handlePagination().map((debtor) => (
-        <AgreementCard
-          key={debtor.id}
-          debtorCPF={debtor.cpfDevedor}
-          agreementStatus={debtor.status}
-          debtorName={debtor.nomeDevedor}
-          condominiumName={debtor.nomeCondominio}
-        />
-      ))}
-      <Paginator
-        currentPage={page}
-        onPageChange={setPage}
-        pageLimit={totalPageCount}
-      />
+      <div className="w-full flex flex-wrap">
+        {handlePagination().map((agreement) => (
+          <AgreementCard key={agreement.id} agreement={agreement} />
+        ))}
+      </div>
+      <Paginator currentPage={page} onPageChange={setPage} pageLimit={totalPageCount} />
     </div>
   );
 }

@@ -38,7 +38,7 @@ export default function DropDown({
                             duration cursor-pointer
                             hs-dropdown-open:opacity-100 opacity-0 hidden
                             min-w-[15rem] bg-white shadow-md rounded-lg
-                            p-2 mt-2 divide-y divide-gray-200">
+                            p-2 mt-2 divide-y divide-gray-200 z-10">
                 <div className="py-2 first:pt-0 last:pb-0 w-full">
                     {options.map((option) => (
                         <button key={option}
