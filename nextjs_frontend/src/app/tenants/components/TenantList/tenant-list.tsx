@@ -17,16 +17,8 @@ const statusList: string[] = [
   "Em dia",
   "1 mês de atraso",
   "2 meses de atraso",
-  "3 meses ou mais de atraso"
+  "3 meses ou mais de atraso",
 ];
-
-const profileList: string[] = [
-  "Todos",
-  "Nunca atrasa",
-  "Atrasa por pouco tempo",
-  "Atrasa por algum tempo",
-  "Atrasa por muito tempo",
-]
 
 const tenantsPerPage = 7;
 
@@ -45,30 +37,30 @@ export default function TenantList({ tenants }: TenantListProps) {
   }, []);
 
   useEffect(() => {
-    const condomiuns = tenants.map(
-      (tenant) => tenant.nomeCondominio);
-    const uniqueCondomiuns = condomiuns.filter(
-      (condominium, index) => {
+    const condomiuns = tenants.map((tenant) => tenant.nomeCondominio);
+    const uniqueCondomiuns = condomiuns.filter((condominium, index) => {
       return condomiuns.indexOf(condominium) === index;
     });
     setCondomiunsList(["Todos", ...uniqueCondomiuns]);
   }, [tenants]);
 
   useEffect(() => {
-    setFilteredTenants(tenants.filter((tenant) => {
-      const condominiumFilter = condominium === "Todos" ||
-                                tenant.nomeCondominio === condominium;
-      const statusFilter = status === "Todos" ||
-                           (status === "Em dia" &&
-                            tenant.mensalidadesAtrasadas === 0) ||
-                           (status === "1 mês de atraso" &&
-                            tenant.mensalidadesAtrasadas === 1) ||
-                           (status === "2 meses de atraso" &&
-                            tenant.mensalidadesAtrasadas === 2) ||
-                           (status === "3 meses ou mais de atraso" &&
-                            tenant.mensalidadesAtrasadas >= 3);
-      return condominiumFilter && statusFilter;
-    }));
+    setFilteredTenants(
+      tenants.filter((tenant) => {
+        const condominiumFilter =
+          condominium === "Todos" || tenant.nomeCondominio === condominium;
+        const statusFilter =
+          status === "Todos" ||
+          (status === "Em dia" && tenant.mensalidadesAtrasadas === 0) ||
+          (status === "1 mês de atraso" &&
+            tenant.mensalidadesAtrasadas === 1) ||
+          (status === "2 meses de atraso" &&
+            tenant.mensalidadesAtrasadas === 2) ||
+          (status === "3 meses ou mais de atraso" &&
+            tenant.mensalidadesAtrasadas >= 3);
+        return condominiumFilter && statusFilter;
+      })
+    );
   }, [status, condominium, tenants]);
 
   function handleSearch(search: string) {
@@ -89,15 +81,15 @@ export default function TenantList({ tenants }: TenantListProps) {
   }
 
   function handlePagination() {
-    return filteredTenants.slice((page - 1) * tenantsPerPage,
-                                 page * tenantsPerPage);
+    return filteredTenants.slice(
+      (page - 1) * tenantsPerPage,
+      page * tenantsPerPage
+    );
   }
 
   function handleFilterChange(title: string, option: string) {
     if (title === "Condomínio") {
       setCondominium(option);
-    } else if (title === "Perfil")  {
-      setStatus(option);
     } else {
       setStatus(option);
     }
@@ -108,17 +100,10 @@ export default function TenantList({ tenants }: TenantListProps) {
     <div className="flex flex-col items-center justify-between gap-5">
       <Search onSearch={handleSearch} />
       <div className="flex justify-end items-center w-full gap-5">
-        <span className="text-neutral-400 text-sm font-medium">
-          Filtros:
-        </span>
+        <span className="text-neutral-400 text-sm font-medium">Filtros:</span>
         <Dropdown
           title="Condomínio"
           options={condomiunsList}
-          onChange={handleFilterChange}
-        />
-        <Dropdown
-          title="Perfil"
-          options={profileList}
           onChange={handleFilterChange}
         />
         <Dropdown
@@ -128,13 +113,9 @@ export default function TenantList({ tenants }: TenantListProps) {
         />
       </div>
       {handlePagination().map((tenant) => (
-        <DebtorCard key={tenant.cpf} tenant={tenant}/>
+        <DebtorCard key={tenant.cpf} tenant={tenant} isModal={false} />
       ))}
-      <Paginator
-        currentPage={page}
-        onPageChange={setPage}
-        pageLimit={totalPageCount}
-      />
+      <Paginator currentPage={page} onPageChange={setPage} pageLimit={totalPageCount} />
     </div>
   );
 }

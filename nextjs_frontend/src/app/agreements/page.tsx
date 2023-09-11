@@ -21,16 +21,12 @@ export default async function AgreementsPage() {
 
   return (
     <div className="containerLayout">
-      <AuthTitle
-        subtitle="Confira os acordos já realizados"
-      />
+      <AuthTitle subtitle="Confira os acordos já realizados" />
       <div className="mb-3 flex items-center justify-between">
-        <h2 className="font-bold text-2xl">
-          Acordos Realizados
-        </h2>
+        <h2 className="font-bold text-2xl">Acordos Realizados</h2>
         <span>Total ({agreements.length})</span>
       </div>
-      <AgreementList agreements={agreements}/>
+      <AgreementList agreements={agreements} />
     </div>
   );
 }
