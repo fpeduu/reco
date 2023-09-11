@@ -29,6 +29,7 @@ Clone ou faça o download do repositório, e siga os passos abaixo:
 - TELEGRAM_BOT_TOKEN: Token do bot do Telegram, para envio de mensagens
 - SERVER_URL: URL do servidor (usualmente, https://localhost:8000)
 - SITE_URL: URL do site (usualmente, https://localhost:3000)
+- WEBHOOK_URL: URL do webhook (por exemplo o link do Heroku)
 
 #### As adicionando ao projeto:
 

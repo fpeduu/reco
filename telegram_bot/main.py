@@ -1,12 +1,15 @@
-from config import BOT_TOKEN, SITE_URL
+from config import BOT_TOKEN, SITE_URL, PORT, SECRET, HEROKU_APP_NAME
 from models import MemoryAgreement
 from messages import *
 from utils import *
 from api import *
+
+from flask import Flask,request
 import telebot
 
 chats_memory: dict[str, MemoryAgreement] = dict()
-bot = telebot.TeleBot(BOT_TOKEN)
+bot = telebot.TeleBot(BOT_TOKEN, threaded=False)
+bot.delete_webhook()
 
 @bot.message_handler(commands=['start'])
 def handler_0_start_conversation(message):
@@ -172,4 +175,4 @@ def callback_5_handle_modification(call):
 def echo_all(message):
     bot.send_message(message.chat.id, ECHO_MSG)
 
-bot.infinity_polling()
+bot.polling(none_stop=True)

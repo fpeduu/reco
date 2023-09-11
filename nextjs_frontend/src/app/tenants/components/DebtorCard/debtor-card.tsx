@@ -4,34 +4,50 @@ import Link from "next/link";
 import { serverURL } from "@/config";
 import { useProposalContext } from "../../../../contexts/ProposalContext";
 import { Condomino } from "../../../../models/Devedores";
+import TenantModal from "../TenantModal/tenant-modal";
+import { useState } from "react";
 
 interface DebtorCardProps {
   tenant: Condomino;
+  isModal: boolean;
 }
 
-export default function DebtorCard({ tenant }: DebtorCardProps) {
+export default function DebtorCard({ tenant, isModal }: DebtorCardProps) {
   const context = useProposalContext();
+  const [modalOpen, setModalOpen] = useState(false);
 
   function handleStartAgreement() {
     context.setDebtor(tenant);
+    setModalOpen(true);
   }
 
+  const closeModal = () => {
+    setModalOpen(false);
+  };
+
+  const bgColorClass = isModal ? "bg-tertiary" : "bg-white";
+
   return (
-    <div className="w-full py-4 px-8 flex items-center justify-between rounded-xl bg-white shadow">
+    <div
+      className={`w-full py-4 px-8 flex flex-wrap items-center justify-between rounded-xl shadow ${bgColorClass}`}
+    >
+      <TenantModal open={modalOpen} onClose={closeModal} />
       <div className="flex flex-col items-start gap-1 w-2/12">
-        <span className="font-extrabold text-xl">{tenant.nome}</span>
+        <span className="font-semibold text-xl">{tenant.nome}</span>
       </div>
-      <div className="w-24">
-        <p className="font-medium">CPF:</p>
-        <span className="text-xs font-medium">{tenant.cpf}</span>
+      <div className="w-2/12">
+        <p className="font-semibold">CPF:</p>
+        <span className="text-xs font-oblique ">{tenant.cpf}</span>
       </div>
-      <div className="w-52">
-        <p className="font-medium">Local:</p>
-        <span className="text-xs font-medium">{`Condomínio ${tenant.nomeCondominio}`}</span>
+      <div className="w-44 pb-1">
+        <p className="font-semibold">Local:</p>
+        <div className="flex items-center gap-1 pt-1 text-xs font-oblique">
+          {tenant.nomeCondominio}
+        </div>
       </div>
-      <div className="w-24">
-        <p className="font-medium">Atraso:</p>
-        <div className="flex items-center gap-1 text-xs font-medium">
+      <div className="w-44 pb-1">
+        <p className="font-semibold">Atraso:</p>
+        <div className="flex items-center gap-1 text-xs font-oblique">
           <span className="pt-1">
             {tenant.mensalidadesAtrasadas > 0
               ? `${tenant.mensalidadesAtrasadas} meses`
@@ -39,15 +55,17 @@ export default function DebtorCard({ tenant }: DebtorCardProps) {
           </span>
         </div>
       </div>
-      <div className="w-44 flex items-center justify-end">
-        <Link
-          className="w-full py-3 px-5 rounded-md text-white
-                     text-xs font-semibold text-center bg-red-600"
-          href={`${serverURL}/tenants/${tenant.cpf}/`}
-          onClick={handleStartAgreement}>
-          Iniciar Negociação
-        </Link>
-      </div>
+      {!isModal && (
+        <div className="w-60 flex items-center justify-end">
+          <button
+            className="w-full h-10  rounded-md text-white
+                     text-s font-semibold text-center bg-primary"
+            onClick={handleStartAgreement}
+          >
+            Iniciar Negociação
+          </button>
+        </div>
+      )}
     </div>
   );
 }

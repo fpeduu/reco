@@ -17,7 +17,7 @@ const statusList: string[] = [
   "Em dia",
   "1 mês de atraso",
   "2 meses de atraso",
-  "3 meses ou mais de atraso"
+  "3 meses ou mais de atraso",
 ];
 
 const tenantsPerPage = 7;
@@ -52,9 +52,12 @@ export default function TenantList({ tenants }: TenantListProps) {
         const statusFilter =
           status === "Todos" ||
           (status === "Em dia" && tenant.mensalidadesAtrasadas === 0) ||
-          (status === "1 mês de atraso" && tenant.mensalidadesAtrasadas === 1) ||
-          (status === "2 meses de atraso" && tenant.mensalidadesAtrasadas === 2) ||
-          (status === "3 meses ou mais de atraso" && tenant.mensalidadesAtrasadas >= 3);
+          (status === "1 mês de atraso" &&
+            tenant.mensalidadesAtrasadas === 1) ||
+          (status === "2 meses de atraso" &&
+            tenant.mensalidadesAtrasadas === 2) ||
+          (status === "3 meses ou mais de atraso" &&
+            tenant.mensalidadesAtrasadas >= 3);
         return condominiumFilter && statusFilter;
       })
     );
@@ -78,7 +81,10 @@ export default function TenantList({ tenants }: TenantListProps) {
   }
 
   function handlePagination() {
-    return filteredTenants.slice((page - 1) * tenantsPerPage, page * tenantsPerPage);
+    return filteredTenants.slice(
+      (page - 1) * tenantsPerPage,
+      page * tenantsPerPage
+    );
   }
 
   function handleFilterChange(title: string, option: string) {
@@ -107,7 +113,7 @@ export default function TenantList({ tenants }: TenantListProps) {
         />
       </div>
       {handlePagination().map((tenant) => (
-        <DebtorCard key={tenant.cpf} tenant={tenant} />
+        <DebtorCard key={tenant.cpf} tenant={tenant} isModal={false} />
       ))}
       <Paginator currentPage={page} onPageChange={setPage} pageLimit={totalPageCount} />
     </div>

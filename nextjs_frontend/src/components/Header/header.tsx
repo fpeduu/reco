@@ -11,7 +11,7 @@ export default function Header() {
 
   function handleLogin() {
     signIn(undefined, {
-      callbackUrl: "/tenants/"
+      callbackUrl: "/tenants/",
     });
   }
 
@@ -53,8 +53,10 @@ export default function Header() {
                   height={24}
                 />
               </div>
-              <button onClick={handleLogout} className="flex place-items-center gap-2">
-                <Image src="/icons/logout.svg" alt="Logout Logo" width={24} height={24} />
+              <button onClick={handleLogout}
+                      className="flex place-items-center gap-2">
+                <Image src="/icons/logout.svg" alt="Logout Logo"
+                       width={24} height={24} />
                 Sair
               </button>
             </>
