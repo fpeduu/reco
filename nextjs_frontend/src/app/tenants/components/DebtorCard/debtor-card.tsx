@@ -16,32 +16,12 @@ export default function DebtorCard({ tenant, isModal }: DebtorCardProps) {
   const context = useProposalContext();
   const [modalOpen, setModalOpen] = useState(false);
 
-  function getStatusColor() {
-    let lateTuitions = tenant.mensalidadesAtrasadas;
-    if (lateTuitions > 3) lateTuitions = 3;
-    return `bg-status-${lateTuitions}`;
-  }
-
-  function getProfileText() {
-    switch (tenant.mensalidadesAtrasadas) {
-      case 0:
-        return "Nunca atrasa";
-      case 1:
-        return "Atrasa por pouco tempo";
-      case 2:
-        return "Atrasa por algum tempo";
-      default:
-        return "Atrasa por muito tempo";
-    }
-  }
-
   function handleStartAgreement() {
     context.setDebtor(tenant);
     setModalOpen(true);
   }
 
   const closeModal = () => {
-    console.log("card", modalOpen);
     setModalOpen(false);
   };
 
@@ -70,7 +50,7 @@ export default function DebtorCard({ tenant, isModal }: DebtorCardProps) {
         <div className="flex items-center gap-1 text-xs font-oblique">
           <span className="pt-1">
             {tenant.mensalidadesAtrasadas > 0
-              ? `${tenant.mensalidadesAtrasadas} dias de atraso`
+              ? `${tenant.mensalidadesAtrasadas} meses`
               : "Nenhum atraso"}
           </span>
         </div>

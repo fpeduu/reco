@@ -20,14 +20,6 @@ const statusList: string[] = [
   "3 meses ou mais de atraso",
 ];
 
-const profileList: string[] = [
-  "Todos",
-  "Nunca atrasa",
-  "Atrasa por pouco tempo",
-  "Atrasa por algum tempo",
-  "Atrasa por muito tempo",
-];
-
 const tenantsPerPage = 7;
 
 export default function TenantList({ tenants }: TenantListProps) {
@@ -98,8 +90,6 @@ export default function TenantList({ tenants }: TenantListProps) {
   function handleFilterChange(title: string, option: string) {
     if (title === "Condomínio") {
       setCondominium(option);
-    } else if (title === "Perfil") {
-      setStatus(option);
     } else {
       setStatus(option);
     }
@@ -117,11 +107,6 @@ export default function TenantList({ tenants }: TenantListProps) {
           onChange={handleFilterChange}
         />
         <Dropdown
-          title="Perfil"
-          options={profileList}
-          onChange={handleFilterChange}
-        />
-        <Dropdown
           title="Meses de atraso"
           options={statusList}
           onChange={handleFilterChange}
@@ -130,11 +115,7 @@ export default function TenantList({ tenants }: TenantListProps) {
       {handlePagination().map((tenant) => (
         <DebtorCard key={tenant.cpf} tenant={tenant} isModal={false} />
       ))}
-      <Paginator
-        currentPage={page}
-        onPageChange={setPage}
-        pageLimit={totalPageCount}
-      />
+      <Paginator currentPage={page} onPageChange={setPage} pageLimit={totalPageCount} />
     </div>
   );
 }

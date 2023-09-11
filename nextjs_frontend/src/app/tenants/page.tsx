@@ -20,7 +20,7 @@ export default async function AgreementsPage() {
     <div className="containerLayout">
       <AuthTitle subtitle="Confira os inadimplentes e realize novos acordos" />
       <div className="mb-3 flex items-center justify-between">
-        <h2 className="font-bold text-2xl">Lista de Condôminos</h2>
+        <h2 className="font-bold text-2xl">Lista de Inadimplentes</h2>
         <span>Total ({tenants.length})</span>
       </div>
       <TenantList tenants={tenants} />
