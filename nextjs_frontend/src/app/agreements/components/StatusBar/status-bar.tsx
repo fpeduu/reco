@@ -5,18 +5,33 @@ interface StatusBarProps {
 }
 
 export default function StatusBar({ status }: StatusBarProps) {
-  function getStatusColor(status: StatusType) {
+  function getTextColor(status: StatusType) {
     switch (status) {
       case "Aguardando inadimplente":
-        return "-red-500";
+        return "text-red-500";
       case "Conversa iniciada":
-        return "-amber-500";
+        return "text-amber-500";
       case "Valor reserva alcançado":
-        return "-amber-500";
+        return "text-amber-500";
       case "Negociação concluída":
-        return "-emerald-500";
+        return "text-emerald-500";
       default:
-        return "-gray-500";
+        return "text-gray-500";
+    }
+  }
+
+  function getBarColor(status: StatusType) {
+    switch (status) {
+      case "Aguardando inadimplente":
+        return "bg-red-500";
+      case "Conversa iniciada":
+        return "bg-amber-500";
+      case "Valor reserva alcançado":
+        return "bg-amber-500";
+      case "Negociação concluída":
+        return "bg-emerald-500";
+      default:
+        return "bg-gray-500";
     }
   }
 
@@ -35,8 +50,8 @@ export default function StatusBar({ status }: StatusBarProps) {
     }
   }
 
-  const textColor = "text" + getStatusColor(status);
-  const barColor = "bg" + getStatusColor(status);
+  const textColor = getTextColor(status);
+  const barColor = getBarColor(status);
   const barLength = getBarLength(status);
 
   return (
