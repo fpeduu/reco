@@ -1,25 +1,11 @@
 import { StatusType, AcordoIdentificado } from "@/models/Acordos";
+import StatusBar from "../StatusBar/status-bar";
 
 interface AgreementCardProps {
   agreement: AcordoIdentificado;
 }
 
 export default function AgreementCard({ agreement }: AgreementCardProps) {
-  function getStatusColor(status: StatusType) {
-    switch (status) {
-      case "Aguardando inadimplente":
-        return "text-red-500";
-      case "Conversa iniciada":
-        return "text-amber-500";
-      case "Valor reserva alcançado":
-        return "text-amber-500";
-      case "Negociação concluída":
-        return "text-emerald-500";
-      default:
-        return "text-gray-500";
-    }
-  }
-
   return (
     <div className="w-1/3 p-5">
       <div className="p-5 flex flex-col rounded-lg text-sm bg-white">
@@ -29,9 +15,7 @@ export default function AgreementCard({ agreement }: AgreementCardProps) {
           <span className="font-semibold">Local:&nbsp;</span>
           {agreement.nomeCondominio}
         </span>
-        <span className={`self-end ${getStatusColor(agreement.status)}`}>
-          {agreement.status}
-        </span>
+        <StatusBar status={agreement.status} />
       </div>
     </div>
   );
