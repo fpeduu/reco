@@ -1,6 +1,6 @@
 import { serverURL } from "@/config";
 import FinalProposalCard from "./components/FinalProposalCard/final-proposal-card";
-import DownloadButton from "./components/DownloadButton/download-button";
+import DownloadButton from "@/components/DownloadButton/download-button";
 
 import { Acordo } from "@/models/Acordos";
 import { Devedor } from "@/models/Devedores";
@@ -13,11 +13,11 @@ interface fetchProposalData {
 }
 
 async function fetchProposal(cpfDevedor: string) {
-  return await fetch(`${serverURL}/api/agreements/${cpfDevedor}/`)
+  return (await fetch(`${serverURL}/api/agreements/${cpfDevedor}/`)
     .then((response) => response.json())
     .catch((error) => {
       console.error(error);
-    }) as fetchProposalData;
+    })) as fetchProposalData;
 }
 
 interface ConfirmationPageProps {
@@ -26,9 +26,7 @@ interface ConfirmationPageProps {
   };
 }
 
-export default async function ConfirmationPage({
-  params,
-}: ConfirmationPageProps) {
+export default async function ConfirmationPage({ params }: ConfirmationPageProps) {
   const proposal = await fetchProposal(params.cpfDevedor);
 
   return (
@@ -36,8 +34,7 @@ export default async function ConfirmationPage({
       <div className="pt-10 flex justify-between">
         <div
           className="w-7/12 px-10 flex flex-col justify-between
-                        gap-10 text-lg font-medium"
-        >
+                        gap-10 text-lg font-medium">
           <h1 className="text-4xl font-bold">Falta pouco!</h1>
           <p>
             <span className="font-extrabold">Parabéns!&nbsp;</span>
@@ -55,9 +52,7 @@ export default async function ConfirmationPage({
             para ser acessado quando quiser. Caso você estiver
             <span className="font-extrabold">&nbsp;autenticado&nbsp;</span>
             em nosso sistema, você pode acessar o documento em
-            <span className="font-extrabold">
-              &nbsp;&quot;Histórico&quot;&nbsp;
-            </span>
+            <span className="font-extrabold">&nbsp;&quot;Histórico&quot;&nbsp;</span>
             no menu superior.
           </p>
           <DownloadButton
