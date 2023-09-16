@@ -29,8 +29,7 @@ export default function DebtorCard({ tenant, isModal }: DebtorCardProps) {
 
   return (
     <div
-      className={`w-full py-4 px-8 flex flex-wrap items-center justify-between rounded-xl shadow ${bgColorClass}`}
-    >
+      className={`w-full py-4 px-8 flex flex-wrap items-center justify-between rounded-xl shadow ${bgColorClass}`}>
       <TenantModal open={modalOpen} onClose={closeModal} />
       <div className="flex flex-col items-start gap-1 w-2/12">
         <span className="font-semibold text-xl">{tenant.nome}</span>
@@ -60,9 +59,8 @@ export default function DebtorCard({ tenant, isModal }: DebtorCardProps) {
           <button
             className="w-full h-10  rounded-md text-white
                      text-s font-semibold text-center bg-primary"
-            onClick={handleStartAgreement}
-          >
-            Iniciar Negociação
+            onClick={handleStartAgreement}>
+            Iniciar negociação
           </button>
         </div>
       )}
