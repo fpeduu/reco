@@ -14,11 +14,7 @@ export default function Search({ onSearch }: SearchProps) {
 
   function handleSearch(event: React.ChangeEvent<HTMLInputElement>) {
     const value = event.target.value;
-    if (value === "") {
-      onSearch("");
-    } else {
-      onDebouncedSearch(search);
-    }
+    onDebouncedSearch(search);
     setSearch(value);
   }
 
@@ -30,12 +26,7 @@ export default function Search({ onSearch }: SearchProps) {
   return (
     <div className="flex items-center justify-between px-4 py-2 gap-5 bg-white rounded-lg border-neutral-200 border-2 w-full">
       <div className="flex items-center gap-5 w-full">
-        <Image
-          src="/icons/magnifying_glass.svg"
-          alt="search"
-          width={20}
-          height={20}
-        />
+        <Image src="/icons/magnifying_glass.svg" alt="search" width={20} height={20} />
         <input
           type="text"
           value={search}
@@ -44,9 +35,11 @@ export default function Search({ onSearch }: SearchProps) {
           placeholder="Pesquise pelo nome ou CPF do condômino"
         />
       </div>
-      <button className="w-20 px-4 py-2" onClick={handleClearSearch}>
-        Limpar
-      </button>
+      {search !== "" && (
+        <button className="w-20 px-4 py-2" onClick={handleClearSearch}>
+          Limpar
+        </button>
+      )}
     </div>
   );
 }
