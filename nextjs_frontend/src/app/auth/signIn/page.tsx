@@ -66,7 +66,7 @@ const SignIn = () => {
             Email
           </label>
           <input
-            className="w-full p-2 mb-4 border border-gray-300 shadow rounded-md"
+            className="w-full p-2 mb-4 border border-gray-300 shadow rounded-md h-12 hover:border-gray-400"
             type="email"
             name="email"
             id="email"
@@ -76,7 +76,7 @@ const SignIn = () => {
             Senha
           </label>
           <input
-            className="w-full p-2 mb-4 border border-gray-300 shadow rounded-md"
+            className="w-full p-2 mb-4 border border-gray-300 shadow rounded-md h-12 hover:border-gray-400"
             type="password"
             name="password"
             id="password"
@@ -86,9 +86,12 @@ const SignIn = () => {
             <input
               type="checkbox"
               id="rememberMe"
-              className="shadow hover:bg-tertiary md:h-5 md:w-5"
+              className="shadow hover:border-gray-400 md:h-5 md:w-5"
             />
-            <label htmlFor="rememberMe" className="ml-2 text-gray-700 text-sm">
+            <label
+              htmlFor="rememberMe"
+              className="ml-2 text-gray-700 text-sm pt-[2px]"
+            >
               Lembre de mim
             </label>
           </div>
