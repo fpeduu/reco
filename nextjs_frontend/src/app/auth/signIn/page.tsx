@@ -44,7 +44,7 @@ const SignIn = () => {
           <h1 className="text-3xl font-medium leading-10 md:text-6xl">
             Lorem ipsum dolor sit amet.{" "}
           </h1>
-          <h3 className="font-medium md:text-2xl">
+          <h3 className="font-medium text-xl md:text-2xl">
             Crie uma conta e comece a usar nosso serviço
           </h3>
         </div>
@@ -52,21 +52,21 @@ const SignIn = () => {
       <div className="w-full flex flex-col justify-center items-center md:w-1/2 bg-tertiary">
         <Image
           className="dark:invert"
-          alt="brain analysis icon"
-          src="/reco.svg"
-          width={180}
-          height={180}
+          alt="Reco Logo"
+          src="/reco.png"
+          width={160}
+          height={160}
           priority
         />
         <form className="w-4/6 ">
-          <h3 className="text-center font-medium mb-5 md:text-2xl">
+          <h3 className="text-center font-medium mb-5 text-xl md:text-2xl">
             Olá! que bom te ver de novo.
           </h3>
           <label htmlFor="email" className="font-medium">
             Email
           </label>
           <input
-            className="w-full p-2 mb-4 border border-gray-300 shadow rounded-md h-12 hover:border-gray-400"
+            className="w-full p-2 mb-5 border border-gray-300 shadow rounded-md h-12 hover:border-gray-400"
             type="email"
             name="email"
             id="email"
@@ -76,24 +76,35 @@ const SignIn = () => {
             Senha
           </label>
           <input
-            className="w-full p-2 mb-4 border border-gray-300 shadow rounded-md h-12 hover:border-gray-400"
+            className="w-full p-2 mb-5 border border-gray-300 shadow rounded-md h-12 hover:border-gray-400"
             type="password"
             name="password"
             id="password"
             placeholder="Digite sua senha"
           />
-          <div className="flex ">
-            <input
-              type="checkbox"
-              id="rememberMe"
-              className="shadow hover:border-gray-400 md:h-5 md:w-5"
-            />
-            <label
-              htmlFor="rememberMe"
-              className="ml-2 text-gray-700 text-sm pt-[2px]"
-            >
-              Lembre de mim
-            </label>
+          <div className="flex flex-wrap gap-1 md:gap-0">
+            <div className="md:w-1/2 flex ">
+              <input
+                type="checkbox"
+                id="rememberMe"
+                className="shadow hover:border-gray-400 md:h-5 md:w-5"
+              />
+              <label
+                htmlFor="rememberMe"
+                className="ml-2 text-sm font-medium pt-[2px]"
+              >
+                Lembre de mim
+              </label>
+            </div>
+            <div className="md:w-1/2 flex justify-end">
+              {" "}
+              <a
+                href="/forgot-password"
+                className="text-sm font-medium hover:underline pt-[2px]"
+              >
+                Esqueci minha senha
+              </a>
+            </div>
           </div>
         </form>
       </div>
