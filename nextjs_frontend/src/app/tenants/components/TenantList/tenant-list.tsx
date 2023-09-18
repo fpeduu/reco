@@ -1,6 +1,6 @@
 "use client";
 
-import DebtorCard from "../DebtorCard/debtor-card";
+import DebtorCard from "@/components/DebtorCard/debtor-card";
 import { useEffect, useState } from "react";
 
 import { Condomino } from "@/models/Devedores";
@@ -17,7 +17,7 @@ const statusList: string[] = [
   "Em dia",
   "1 mês de atraso",
   "2 meses de atraso",
-  "3 meses ou mais de atraso",
+  "3 meses ou mais de atraso"
 ];
 
 const tenantsPerPage = 7;
@@ -47,17 +47,13 @@ export default function TenantList({ tenants }: TenantListProps) {
   useEffect(() => {
     setFilteredTenants(
       tenants.filter((tenant) => {
-        const condominiumFilter =
-          condominium === "Todos" || tenant.nomeCondominio === condominium;
+        const condominiumFilter = condominium === "Todos" || tenant.nomeCondominio === condominium;
         const statusFilter =
           status === "Todos" ||
           (status === "Em dia" && tenant.mensalidadesAtrasadas === 0) ||
-          (status === "1 mês de atraso" &&
-            tenant.mensalidadesAtrasadas === 1) ||
-          (status === "2 meses de atraso" &&
-            tenant.mensalidadesAtrasadas === 2) ||
-          (status === "3 meses ou mais de atraso" &&
-            tenant.mensalidadesAtrasadas >= 3);
+          (status === "1 mês de atraso" && tenant.mensalidadesAtrasadas === 1) ||
+          (status === "2 meses de atraso" && tenant.mensalidadesAtrasadas === 2) ||
+          (status === "3 meses ou mais de atraso" && tenant.mensalidadesAtrasadas >= 3);
         return condominiumFilter && statusFilter;
       })
     );
@@ -71,24 +67,18 @@ export default function TenantList({ tenants }: TenantListProps) {
 
     setFilteredTenants(
       tenants.filter((tenant) => {
-        return (
-          tenant.nome.toLowerCase().includes(searchLower) ||
-          tenant.cpf.includes(searchLower)
-        );
+        return tenant.nome.toLowerCase().includes(searchLower) || tenant.cpf.includes(searchLower);
       })
     );
     setPage(1);
   }
 
   function handlePagination() {
-    return filteredTenants.slice(
-      (page - 1) * tenantsPerPage,
-      page * tenantsPerPage
-    );
+    return filteredTenants.slice((page - 1) * tenantsPerPage, page * tenantsPerPage);
   }
 
   function handleFilterChange(title: string, option: string) {
-    if (title === "Condomínio") {
+    if (title === "Local") {
       setCondominium(option);
     } else {
       setStatus(option);
@@ -101,19 +91,16 @@ export default function TenantList({ tenants }: TenantListProps) {
       <Search onSearch={handleSearch} />
       <div className="flex justify-end items-center w-full gap-5">
         <span className="text-neutral-400 text-sm font-medium">Filtros:</span>
-        <Dropdown
-          title="Condomínio"
-          options={condomiunsList}
-          onChange={handleFilterChange}
-        />
-        <Dropdown
-          title="Meses de atraso"
-          options={statusList}
-          onChange={handleFilterChange}
-        />
+        <Dropdown title="Local" options={condomiunsList} onChange={handleFilterChange} />
+        <Dropdown title="Atraso" options={statusList} onChange={handleFilterChange} />
       </div>
       {handlePagination().map((tenant) => (
-        <DebtorCard key={tenant.cpf} tenant={tenant} isModal={false} />
+        <DebtorCard
+          key={tenant.cpf}
+          tenant={tenant}
+          isModal={false}
+          isInteractive={true}
+        />
       ))}
       <Paginator currentPage={page} onPageChange={setPage} pageLimit={totalPageCount} />
     </div>

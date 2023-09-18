@@ -4,7 +4,7 @@ import { useProposalContext } from "@/contexts/ProposalContext";
 import { Condomino } from "@/models/Devedores";
 import { useRouter } from "next/navigation";
 import React from "react";
-import DebtorCard from "../DebtorCard/debtor-card";
+import DebtorCard from "@/components/DebtorCard/debtor-card";
 
 interface TenantInfo {
   name: string;
@@ -35,8 +35,7 @@ const TenantModal: React.FC<TenantModalProps> = ({ open, onClose }) => {
           className="relative z-10"
           aria-labelledby="modal-title"
           role="dialog"
-          aria-modal="true"
-        >
+          aria-modal="true">
           <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
 
           <div className="fixed inset-0 z-10 h-screen overflow-y-auto">
@@ -46,22 +45,22 @@ const TenantModal: React.FC<TenantModalProps> = ({ open, onClose }) => {
                   <div className="sm:flex sm:items-start ">
                     <button
                       onClick={closeModal}
-                      className="absolute top-2 right-6 text-5xl h-0 text-gray-500 hover:text-gray-700"
-                    >
+                      className="absolute top-2 right-6 text-5xl h-0 text-gray-500 hover:text-gray-700">
                       &times;
                     </button>
                     <div className="mt-3 gap-5 w-full text-center sm:ml-4 sm:mt-0 sm:text-left">
-                      <h1
-                        className="font-bold text-3xl leading-10"
-                        id="modal-title"
-                      >
+                      <h1 className="font-bold text-3xl leading-10" id="modal-title">
                         Confira as informações
                       </h1>
                       <h2 className="text-xl font-medium mt-2 leading-10">
                         Você selecionou o seguinte inadimplente:
                       </h2>
                       <div className="w-full max-w-3xl my-5">
-                        <DebtorCard tenant={debtor} isModal={true} />
+                        <DebtorCard
+                          tenant={debtor}
+                          isModal={true}
+                          isInteractive={false}
+                        />
                       </div>
                       <h2 className="text-xl font-medium leading-10">
                         É com esta pessoa que deseja iniciar o acordo?
@@ -74,15 +73,13 @@ const TenantModal: React.FC<TenantModalProps> = ({ open, onClose }) => {
                     <button
                       onClick={handleStartAgreement}
                       className="w-1/2 py-3 px-2 rounded-full text-tertiary
-                       text-s font-medium text-center bg-secondary"
-                    >
+                       text-s font-medium text-center bg-secondary">
                       Sim, negociar com esta pessoa
                     </button>
                     <button
                       onClick={closeModal}
                       className="w-1/2 py-3 px-2 rounded-full text-tertiary
-                       text-s font-medium text-center bg-[#808080]"
-                    >
+                       text-s font-medium text-center bg-[#808080]">
                       Não, negociar com outra pessoa
                     </button>
                   </div>

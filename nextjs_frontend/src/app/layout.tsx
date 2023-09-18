@@ -13,10 +13,14 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Reco",
-  description: "Uma plataforma de resolução de acordos"
+  description: "Uma plataforma de resolução de acordos",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en">
       <body className={`${visbyCF.className} ${inter.className}`}>
