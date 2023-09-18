@@ -18,10 +18,10 @@ export default async function AgreementsPage() {
 
   return (
     <div className="containerLayout">
-      <AuthTitle subtitle="Confira os inadimplentes e realize novos acordos" />
+      <AuthTitle subtitle="Confira os inadimplentes e realize novas negociações" />
       <div className="mb-3 flex items-center justify-between">
         <h2 className="font-bold text-2xl">Lista de Inadimplentes</h2>
-        <span>Total ({tenants.length})</span>
+        <span className="font-medium">Total: {tenants.length}</span>
       </div>
       <TenantList tenants={tenants} />
       <span className="hidden">
