@@ -15,7 +15,7 @@ export const options: NextAuthOptions = {
         email: {
           label: "Email",
           type: "text",
-          placeholder: "nome@email.com"
+          placeholder: "nome@email.com",
         },
         password: { label: "Password", type: "password" },
       },
@@ -38,10 +38,17 @@ export const options: NextAuthOptions = {
       if (session.user) {
         session.user.name = "Roberto";
       }
-      
-      return session
-    }
-  }
+
+      return session;
+    },
+  },
+  pages: {
+    signIn: "/auth/signIn",
+    // signOut: "/auth/signout",
+    // error: "/auth/error",
+    // verifyRequest: "/auth/verify-request",
+    // newUser: "/auth/new-user",
+  },
 };
 
 export default options;
