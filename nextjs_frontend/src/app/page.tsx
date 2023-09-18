@@ -1,7 +1,18 @@
+"use client";
+
 import Image from "next/image";
 import Styles from "./landing.module.scss";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 export default function Home() {
+  const router = useRouter();
+  const { data: session } = useSession();
+
+  if (session && session.user) {
+    router.push("/tenants");
+  }
+
   return (
     <div className="flex flex-col w-full max-h-fit">
       {/* HOME SECTION */}

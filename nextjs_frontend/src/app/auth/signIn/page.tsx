@@ -1,11 +1,11 @@
 "use client";
+
 import { useEffect } from "react";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import Link from "next/link";
 
-const SignIn = () => {
+export default function SignIn() {
   const router = useRouter();
   const { data: session } = useSession();
 
@@ -19,7 +19,6 @@ const SignIn = () => {
     e.preventDefault();
     const email = e.target.email.value;
     const password = e.target.password.value;
-    console.log(email, password);
 
     const result = await signIn("credentials", {
       redirect: true,
@@ -32,39 +31,22 @@ const SignIn = () => {
     }
   };
 
-  const handleLoginWithGoogle = async () => {
-    const result = await signIn("google", {
-      redirect: false,
-    });
-    if (!result?.error) {
-      router.push("/tenants");
-    }
-  };
-
   return (
     <div className="flex flex-wrap w-full h-full">
       <div className="bg-[#d9d9d9] flex items-center justify-center w-full md:w-1/2 ">
         <div className="w-48 lg:w-96">
           <h1 className="text-3xl font-medium leading-10 md:text-6xl">
-            Lorem ipsum dolor sit amet.{" "}
+            Acessar o sistema
           </h1>
           <h3 className="font-medium text-xl md:text-2xl">
-            Crie uma conta e comece a usar nosso serviço
+            Entre na sua conta e comece a utilizar a usar nosso serviço
           </h3>
         </div>
       </div>
       <div className="w-full flex flex-col justify-center h-full items-center md:w-1/2 bg-tertiary">
-        <Image
-          className="dark:invert"
-          alt="Reco Logo"
-          src="/reco.png"
-          width={160}
-          height={160}
-          priority
-        />
         <form className="w-4/6" onSubmit={handleSubmit}>
           <h3 className="text-center font-medium mb-5 text-xl md:text-2xl">
-            Olá! que bom te ver de novo.
+            Olá! que bom te ver de novo!
           </h3>
           <label htmlFor="email" className="font-medium">
             Email
@@ -101,7 +83,6 @@ const SignIn = () => {
               </label>
             </div>
             <div className="md:w-1/2 flex justify-end">
-              {" "}
               <Link
                 href="/forgot-password"
                 className="text-sm font-medium hover:underline pt-[2px]"
@@ -116,24 +97,14 @@ const SignIn = () => {
           >
             Login
           </button>
-          <button
-            // href="/api/auth/signin/google"
-            type="button"
-            className="w-full box-border bg-secondary text-white font-medium rounded-md h-12 hover:text-gray-300 mt-8"
-            onClick={handleLoginWithGoogle}
-          >
-            Entrar com o Google
-          </button>
           <Link
-            href="/auth/signUp"
+            href="#"
             className="flex justify-center text-sm font-medium hover:underline mt-8 mb-20 pt-[2px]"
           >
-            Não tem nenhuma conta ainda? Criar conta
+            Não tem nenhuma conta ainda? Entre em contato!
           </Link>
         </form>
       </div>
     </div>
   );
 };
-
-export default SignIn;
