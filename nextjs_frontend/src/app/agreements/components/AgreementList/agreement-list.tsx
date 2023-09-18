@@ -5,20 +5,30 @@ import Paginator from "@/components/Paginator/paginator";
 import { StatusType, AcordoIdentificado } from "@/models/Acordos";
 import { useEffect, useState } from "react";
 import AgreementCard from "../AgreementCard/agreement-card";
+import { Condomino } from "@/models/Devedores";
 
 interface AgreementListProps {
   searchQuery: string;
   title: string;
   description: string;
   agreements: AcordoIdentificado[];
+  tenants: Condomino[];
   filterByProgress: boolean;
 }
 
-const statusList: (StatusType | "Todos")[] = [
+const agreementStatusList: (StatusType | "Todos")[] = [
   "Todos",
   "Aguardando inadimplente",
   "Conversa iniciada",
   "Valor reserva alcançado"
+];
+
+const paymentStatusList: string[] = [
+  "Todos",
+  "Em dia",
+  "1 mês de atraso",
+  "2 meses de atraso",
+  "3 meses ou mais de atraso"
 ];
 
 const agreementsPerPage = 6;
@@ -28,15 +38,16 @@ export default function AgreementList({
   title,
   description,
   agreements,
+  tenants,
   filterByProgress
 }: AgreementListProps) {
-  const [filteredAgreements, setFilteredAgreements] =
-    useState<AcordoIdentificado[]>(agreements);
+  const [filteredAgreements, setFilteredAgreements] = useState<AcordoIdentificado[]>(agreements);
 
   const [condominiums, setCondominiums] = useState<string[]>([]);
 
   const [progress, setProgress] = useState<string>("Todos");
   const [condominium, setCondominium] = useState<string>("Todos");
+  const [paymentStatus, setPaymentStatus] = useState<string>("Todos");
 
   const [page, setPage] = useState(1);
 
@@ -53,13 +64,24 @@ export default function AgreementList({
   useEffect(() => {
     setFilteredAgreements(
       agreements.filter((agreement) => {
+        const tenant = getTenant(agreement.cpfDevedor);
         const progressFilter = progress === "Todos" || agreement.status === progress;
         const condominiumFilter =
           condominium === "Todos" || agreement.nomeCondominio === condominium;
-        return (filterByProgress ? progressFilter : true) && condominiumFilter;
+        const paymentStatusFilter =
+          tenant?.mensalidadesAtrasadas !== undefined
+            ? paymentStatus === "Todos" ||
+              (paymentStatus === "Em dia" && tenant?.mensalidadesAtrasadas === 0) ||
+              (paymentStatus === "1 mês de atraso" && tenant?.mensalidadesAtrasadas === 1) ||
+              (paymentStatus === "2 meses de atraso" && tenant?.mensalidadesAtrasadas === 2) ||
+              (paymentStatus === "3 meses ou mais de atraso" && tenant.mensalidadesAtrasadas >= 3)
+            : true;
+        return (
+          (filterByProgress ? progressFilter : true) && condominiumFilter && paymentStatusFilter
+        );
       })
     );
-  }, [condominium, agreements, filterByProgress, progress]);
+  }, [condominium, agreements, filterByProgress, progress, tenants, paymentStatus]);
 
   useEffect(() => {
     handleSearch(searchQuery);
@@ -83,10 +105,7 @@ export default function AgreementList({
   }
 
   function handlePagination() {
-    return filteredAgreements.slice(
-      (page - 1) * agreementsPerPage,
-      page * agreementsPerPage
-    );
+    return filteredAgreements.slice((page - 1) * agreementsPerPage, page * agreementsPerPage);
   }
 
   function handleFilterChange(title: string, option: string) {
@@ -94,8 +113,16 @@ export default function AgreementList({
       setProgress(option);
     } else if (title === "Local") {
       setCondominium(option);
+    } else if (title === "Atraso") {
+      setPaymentStatus(option);
     }
     setPage(1);
+  }
+
+  function getTenant(cpf: string) {
+    let tenant = tenants.find((tenant) => tenant.cpf === cpf);
+    if (!tenant) return null;
+    return tenant;
   }
 
   return (
@@ -110,16 +137,21 @@ export default function AgreementList({
           {filterByProgress && (
             <Dropdown
               title="Progresso"
-              options={statusList}
+              options={agreementStatusList}
               onChange={handleFilterChange}
             />
           )}
           <Dropdown title="Local" options={condominiums} onChange={handleFilterChange} />
+          <Dropdown title="Atraso" options={paymentStatusList} onChange={handleFilterChange} />
         </div>
       </div>
-      <div className="w-full flex flex-wrap">
+      <div className="w-full grid grid-cols-3 gap-5">
         {handlePagination().map((agreement) => (
-          <AgreementCard key={agreement.id} agreement={agreement} />
+          <AgreementCard
+            key={agreement.id}
+            agreement={agreement}
+            tenant={getTenant(agreement.cpfDevedor)}
+          />
         ))}
       </div>
       <Paginator currentPage={page} onPageChange={setPage} pageLimit={totalPageCount} />
