@@ -14,9 +14,6 @@ const SignIn = () => {
       router.push("/tenants");
     }
   }, [session]);
-  //   if (session && session.user) {
-  //     router.push("/tenants");
-  //   }
 
   const handleSubmit = async (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
