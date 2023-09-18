@@ -1,18 +1,17 @@
 "use client";
 
-import Link from "next/link";
-import { serverURL } from "@/config";
-import { useProposalContext } from "../../../../contexts/ProposalContext";
-import { Condomino } from "../../../../models/Devedores";
-import TenantModal from "../TenantModal/tenant-modal";
+import { useProposalContext } from "../../contexts/ProposalContext";
+import { Condomino } from "../../models/Devedores";
+import TenantModal from "../../app/tenants/components/TenantModal/tenant-modal";
 import { useState } from "react";
 
 interface DebtorCardProps {
   tenant: Condomino;
   isModal: boolean;
+  isInteractive: boolean;
 }
 
-export default function DebtorCard({ tenant, isModal }: DebtorCardProps) {
+export default function DebtorCard({ tenant, isModal, isInteractive }: DebtorCardProps) {
   const context = useProposalContext();
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -54,7 +53,7 @@ export default function DebtorCard({ tenant, isModal }: DebtorCardProps) {
           </span>
         </div>
       </div>
-      {!isModal && (
+      {isInteractive && (
         <div className="w-60 flex items-center justify-end">
           <button
             className="w-full h-10  rounded-md text-white

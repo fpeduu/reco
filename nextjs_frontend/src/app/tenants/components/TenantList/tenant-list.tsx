@@ -1,6 +1,6 @@
 "use client";
 
-import DebtorCard from "../DebtorCard/debtor-card";
+import DebtorCard from "@/components/DebtorCard/debtor-card";
 import { useEffect, useState } from "react";
 
 import { Condomino } from "@/models/Devedores";
@@ -95,7 +95,12 @@ export default function TenantList({ tenants }: TenantListProps) {
         <Dropdown title="Atraso" options={statusList} onChange={handleFilterChange} />
       </div>
       {handlePagination().map((tenant) => (
-        <DebtorCard key={tenant.cpf} tenant={tenant} isModal={false} />
+        <DebtorCard
+          key={tenant.cpf}
+          tenant={tenant}
+          isModal={false}
+          isInteractive={true}
+        />
       ))}
       <Paginator currentPage={page} onPageChange={setPage} pageLimit={totalPageCount} />
     </div>

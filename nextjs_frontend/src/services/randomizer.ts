@@ -2,7 +2,7 @@ import { faker } from "@faker-js/faker/locale/pt_BR";
 
 import { Condominio } from "@/models/Condominios";
 import { Condomino } from "@/models/Devedores";
-import { Acordo } from "@/models/Acordos";
+import { Acordo, StatusType } from "@/models/Acordos";
 
 export function generateCPF(): string {
   const cpf = String(faker.number.int()).padStart(11, "0").slice(0, 11);
@@ -86,6 +86,12 @@ export function createRandomAcordo(cpfDevedor: string): Acordo {
     max: minimumValue * 2,
     precision: 2
   });
+  const status = faker.helpers.arrayElement([
+    "Aguardando inadimplente",
+    "Conversa iniciada",
+    "Valor reserva alcançado",
+    "Negociação concluída"
+  ]) as StatusType;
 
   const chance = faker.number.int({ max: 100 });
   const gain = ((valor / minimumValue) * 100).toFixed(2);
@@ -94,7 +100,7 @@ export function createRandomAcordo(cpfDevedor: string): Acordo {
 
   return {
     id: faker.number.int(),
-    status: "Aguardando inadimplente",
+    status: status,
     cpfDevedor,
     usuarioEmail,
     valor,
