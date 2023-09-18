@@ -1,25 +1,32 @@
+"use client";
 import Image from "next/image";
 import Styles from "./footer.module.scss";
+import { useSession } from "next-auth/react";
 
 export default function Footer() {
+  const { data: session } = useSession();
+  const bgClass = session ? "bg-gray-100" : "bg-primary";
+
   return (
-    <div className="flex w-full ml-16 sm:ml-0 justify-evenly bg-gray-100 p-20">
-      <span className={Styles.footerSection}>
+    <div
+      className={`flex w-full ml-16 sm:ml-0 justify-evenly p-20 ${Styles.footerSection}`}
+    >
+      <span>
         <p> Início </p>
         <a href="/">Página inicial</a>
         <a href="#">Configurações</a>
       </span>
-      <span className={Styles.footerSection}>
+      <span>
         <p> Informações </p>
         <a href="#">Sobre nós</a>
         <a href="#">Nossos planos</a>
       </span>
-      <span className={Styles.footerSection}>
+      <span>
         <p> Suporte </p>
         <a href="#">FAQ</a>
         <a href="#">Atendente Virtual</a>
       </span>
-      <span className={Styles.footerSection}>
+      <span>
         <p> Contato </p>
         <div className="flex gap-2">
           <a href="#">

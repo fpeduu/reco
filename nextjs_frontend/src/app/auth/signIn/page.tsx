@@ -1,43 +1,50 @@
-// pages/auth/signIn.js
 "use client";
-import { signIn } from "next-auth/react";
+import { useEffect } from "react";
+import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import Link from "next/link";
 
 const SignIn = () => {
   const router = useRouter();
+  const { data: session } = useSession();
+
+  useEffect(() => {
+    if (session && session.user) {
+      router.push("/tenants");
+    }
+  }, [session]);
+  //   if (session && session.user) {
+  //     router.push("/tenants");
+  //   }
 
   const handleSubmit = async (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
     const email = e.target.email.value;
     const password = e.target.password.value;
+    console.log(email, password);
 
     const result = await signIn("credentials", {
-      redirect: false,
+      redirect: true,
       email,
       password,
     });
 
-    // if (!result.error) {
-    //   router.push("/dashboard"); // Redirect to the dashboard or any other page on successful sign-in
-    // }
+    if (!result?.error) {
+      router.push("/tenants");
+    }
+  };
+
+  const handleLoginWithGoogle = async () => {
+    const result = await signIn("google", {
+      redirect: false,
+    });
+    if (!result?.error) {
+      router.push("/tenants");
+    }
   };
 
   return (
-    // <div>
-    //   <h2>Sign In</h2>
-    //   <form onSubmit={handleSubmit}>
-    //     <div>
-    //       <label htmlFor="email">Email</label>
-    //       <input type="text" id="email" name="email" required />
-    //     </div>
-    //     <div>
-    //       <label htmlFor="password">Password</label>
-    //       <input type="password" id="password" name="password" required />
-    //     </div>
-    //     <button type="submit">Sign In</button>
-    //   </form>
-    // </div>
     <div className="flex flex-wrap w-full h-full">
       <div className="bg-[#d9d9d9] flex items-center justify-center w-full md:w-1/2 ">
         <div className="w-48 lg:w-96">
@@ -49,7 +56,7 @@ const SignIn = () => {
           </h3>
         </div>
       </div>
-      <div className="w-full flex flex-col justify-center items-center md:w-1/2 bg-tertiary">
+      <div className="w-full flex flex-col justify-center h-full items-center md:w-1/2 bg-tertiary">
         <Image
           className="dark:invert"
           alt="Reco Logo"
@@ -58,7 +65,7 @@ const SignIn = () => {
           height={160}
           priority
         />
-        <form className="w-4/6 ">
+        <form className="w-4/6" onSubmit={handleSubmit}>
           <h3 className="text-center font-medium mb-5 text-xl md:text-2xl">
             Olá! que bom te ver de novo.
           </h3>
@@ -98,14 +105,34 @@ const SignIn = () => {
             </div>
             <div className="md:w-1/2 flex justify-end">
               {" "}
-              <a
+              <Link
                 href="/forgot-password"
                 className="text-sm font-medium hover:underline pt-[2px]"
               >
                 Esqueci minha senha
-              </a>
+              </Link>
             </div>
           </div>
+          <button
+            type="submit"
+            className="w-full bg-secondary text-white font-medium rounded-md h-12 hover:text-gray-300 mt-8"
+          >
+            Login
+          </button>
+          <button
+            // href="/api/auth/signin/google"
+            type="button"
+            className="w-full box-border bg-secondary text-white font-medium rounded-md h-12 hover:text-gray-300 mt-8"
+            onClick={handleLoginWithGoogle}
+          >
+            Entrar com o Google
+          </button>
+          <Link
+            href="/auth/signUp"
+            className="flex justify-center text-sm font-medium hover:underline mt-8 mb-20 pt-[2px]"
+          >
+            Não tem nenhuma conta ainda? Criar conta
+          </Link>
         </form>
       </div>
     </div>
