@@ -1,4 +1,3 @@
-"use client";
 import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
@@ -9,7 +8,6 @@ import visbyCF from "@/config/fonts";
 import { NextAuthProvider } from "./providers";
 import { ProposalProvider } from "../contexts/ProposalContext";
 import { SideBarProvider } from "@/contexts/SideBarContext";
-import { useSession } from "next-auth/react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,11 +21,10 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { data: session } = useSession();
   return (
     <html lang="en">
       <body className={`${visbyCF.className} ${inter.className}`}>
-        <NextAuthProvider session={session}>
+        <NextAuthProvider>
           <ProposalProvider>
             <SideBarProvider>
               <Header />
