@@ -29,16 +29,16 @@ export const options: NextAuthOptions = {
         });
         const user = await response.json();
 
-        if (user) return user;
+        if (response.ok && user) return user;
+        else {
+          window.alert("User not identified");
+          return null;
+        }
       },
     }),
   ],
   callbacks: {
     async session({ session, token, user }) {
-      if (session.user) {
-        session.user.name = "Roberto";
-      }
-
       return session;
     },
   },

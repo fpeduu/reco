@@ -13,4 +13,4 @@ const UsuarioSchema = new mongoose.Schema({
 });
 
 export default mongoose.models.Usuarios ||
-               mongoose.model("Usuarios", UsuarioSchema);
+  mongoose.model("Usuarios", UsuarioSchema);
