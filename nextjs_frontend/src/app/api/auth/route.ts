@@ -1,4 +1,6 @@
 const bcrypt = require("bcryptjs");
+import { connectToDatabase } from "@/middlewares/mongodb";
+import Usuarios from "@/models/Usuarios";
 import { NextRequest, NextResponse } from "next/server";
 
 interface Credentials {
@@ -10,22 +12,19 @@ interface Credentials {
 export async function POST(req: NextRequest) {
   const credentials: Credentials = await req.json();
 
-  if (credentials.email == "lipe@gmail.com") {
-    // ! substituir pela verificação de se o usuário EXISTE
-    const passwordMatches = await bcrypt.compare(
-      credentials.password, // ! verificar senha
-      "$2a$10$1fWZFLHvw2iAg21.z6.HiO9jyAURFfZNvlYeqP3PSnHv46.VacLL6"
-    );
+  connectToDatabase();
 
-    if (passwordMatches) {
-      const user = {
-        // ! retornar usuário do banco
-        name: "lipe",
-        email: "lipe@gmail.com",
-      };
+  const user = await Usuarios.findOne({ email: credentials.email });
 
-      return NextResponse.json(user);
-    }
+  if (!user) return NextResponse.error();
+
+  const passwordMatches = await bcrypt.compare(
+    credentials.password,
+    user.password
+  );
+
+  if (passwordMatches) {
+    return NextResponse.json(user);
   } else {
     return NextResponse.error();
   }
