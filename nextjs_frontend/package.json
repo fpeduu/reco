@@ -27,6 +27,7 @@
     "preline": "^1.9.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "bcryptjs": "^2.4.3",
     "remove": "^0.1.5",
     "sass": "^1.65.1",
     "stream-to-blob": "^2.0.1",
