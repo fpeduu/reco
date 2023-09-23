@@ -13,7 +13,7 @@ export interface Acordo {
   dataAcordo?: Date;
   status: StatusType;
   valor: number;
-  juros: number;
+  entrada: number;
   diaPagamento: number;
   qtdParcelas: number;
   descricao: string;
@@ -21,32 +21,32 @@ export interface Acordo {
 
 export interface AcordoIdentificado extends Acordo {
   nomeDevedor: string;
-  nomeCondominio: string;
 }
 
 const AcordoSchema = new mongoose.Schema({
   id: {
     type: Number,
-    required: true
+    required: true,
   },
   usuarioEmail: {
     type: String,
-    required: true
+    required: true,
   },
   cpfDevedor: {
     type: String,
-    required: true
+    required: true,
   },
   dataAcordo: {
     type: Date,
-    default: Date.now
+    default: Date.now,
   },
   status: String,
+  entrada: Number,
   valor: Number,
-  juros: Number,
   diaPagamento: Number,
   qtdParcelas: Number,
-  descricao: String
+  descricao: String,
 });
 
-export default mongoose.models.Acordos || mongoose.model("Acordos", AcordoSchema);
+export default mongoose.models.Acordos ||
+  mongoose.model("Acordos", AcordoSchema);

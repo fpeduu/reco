@@ -4,23 +4,19 @@ export interface Devedor {
   rg: string;
   cpf: string;
   nome: string;
-  apartamento: string;
+  valorDivida: number;
   mensalidadesAtrasadas: number;
-  cnpjCondominio: string;
-}
-
-export interface Condomino extends Devedor {
-  nomeCondominio: string;
+  emailAdministrador: string;
 }
 
 const DevedorSchema = new mongoose.Schema({
   rg: String,
   cpf: String,
   nome: String,
-  apartamento: String,
+  valorDivida: Number,
   mensalidadesAtrasadas: Number,
-  cnpjCondominio: String,
+  emailAdministrador: String,
 });
 
 export default mongoose.models.Devedores ||
-               mongoose.model("Devedores", DevedorSchema);
+  mongoose.model("Devedores", DevedorSchema);
