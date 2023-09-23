@@ -50,14 +50,6 @@ export default function AgreementsPage() {
     };
 
     getTenants();
-
-    const getAcordos = async () => {
-      const email = session?.user?.email ?? "";
-      const acordos: AcordoIdentificado[] = await fetchAcordos(email);
-      console.log(acordos);
-    };
-
-    getAcordos();
   }, [session]);
 
   return (
