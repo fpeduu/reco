@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 export type StatusType =
   | "Aguardando inadimplente"
   | "Conversa iniciada"
+  | "Valor reserva informado"
   | "Valor reserva alcançado"
   | "Negociação concluída";
 
