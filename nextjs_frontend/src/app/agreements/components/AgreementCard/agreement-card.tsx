@@ -19,8 +19,8 @@ export default function AgreementCard({ agreement, tenant }: AgreementCardProps)
           {agreement.nomeCondominio}
         </span>
         <span>
-          <span className="font-semibold">Atraso:&nbsp;</span>
-          {tenant?.mensalidadesAtrasadas ? `${tenant.mensalidadesAtrasadas} meses` : "-"}
+          <span className="font-semibold">Status:&nbsp;</span>
+          {tenant?.mensalidadesAtrasadas ? `${tenant.mensalidadesAtrasadas} meses de atraso` : "-"}
         </span>
         <StatusBar status={agreement.status} />
       </div>

@@ -44,7 +44,7 @@ export default function DebtorCard({ tenant, isModal, isInteractive }: DebtorCar
         </div>
       </div>
       <div className="w-44 pb-1">
-        <p className="font-semibold">Atraso:</p>
+        <p className="font-semibold">Status:</p>
         <div className="flex items-center gap-1 text-xs font-oblique">
           <span className="pt-1">
             {tenant.mensalidadesAtrasadas > 0

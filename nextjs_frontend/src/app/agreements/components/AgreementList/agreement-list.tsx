@@ -142,7 +142,7 @@ export default function AgreementList({
             />
           )}
           <Dropdown title="Local" options={condominiums} onChange={handleFilterChange} />
-          <Dropdown title="Atraso" options={paymentStatusList} onChange={handleFilterChange} />
+          <Dropdown title="Status" options={paymentStatusList} onChange={handleFilterChange} />
         </div>
       </div>
       <div className="w-full grid grid-cols-3 gap-5">
