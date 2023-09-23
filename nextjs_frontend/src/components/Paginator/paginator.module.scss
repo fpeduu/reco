@@ -1,0 +1,12 @@
+.active-page {
+  background-color: black;
+  color: white;
+  outline: none;
+}
+.pageButton {
+  @apply w-10 h-10 flex justify-center items-center rounded-xl p-1 mx-2
+      hover:bg-red-600 hover:bg-opacity-20;
+  //   &.active {
+  //     @apply bg-secondary text-white hover:bg-opacity-100 focus:outline-none;
+  //   }
+}
