@@ -1,7 +1,7 @@
 import { faker } from "@faker-js/faker/locale/pt_BR";
 
 import { Condominio } from "@/models/Condominios";
-import { Condomino } from "@/models/Devedores";
+import { Condomino, Devedor } from "@/models/Devedores";
 import { Acordo, StatusType } from "@/models/Acordos";
 
 export function generateCPF(): string {
@@ -39,7 +39,13 @@ export function generateCNPJ(): string {
 export function generateRG(): string {
   const rg = String(faker.number.int()).padStart(9, "0").slice(0, 9);
   return (
-    rg.slice(0, 2) + "." + rg.slice(2, 5) + "." + rg.slice(5, 8) + "-" + rg.slice(8, 9)
+    rg.slice(0, 2) +
+    "." +
+    rg.slice(2, 5) +
+    "." +
+    rg.slice(5, 8) +
+    "-" +
+    rg.slice(8, 9)
   );
 }
 
@@ -56,21 +62,17 @@ export function generateAddress(): string {
   return `Rua ${streetName} n.º ${addressNumber}, ${district}, ${city} –  ${uf}, CEP ${cep}`;
 }
 
-export function createRandomTenant(
-  cnpjCondominio: string,
-  condominioName: string
-): Condomino {
+export function createRandomTenant(): Devedor {
   const cpfDevedor = generateCPF();
   const rgDevedor = generateRG();
 
   return {
-    cnpjCondominio: cnpjCondominio,
-    nomeCondominio: condominioName,
     rg: rgDevedor,
     cpf: cpfDevedor,
     nome: faker.person.fullName(),
-    apartamento: String(faker.number.int({ min: 1, max: 1000 })),
-    mensalidadesAtrasadas: faker.number.int({ min: 0, max: 60 })
+    emailAdministrador: faker.internet.email(),
+    valorDivida: faker.number.int({ min: 400, max: 3000 }),
+    mensalidadesAtrasadas: faker.number.int({ min: 0, max: 60 }),
   };
 }
 
@@ -79,18 +81,18 @@ export function createRandomAcordo(cpfDevedor: string): Acordo {
   const minimumValue = faker.number.float({
     min: 100,
     max: 10000,
-    precision: 2
+    precision: 2,
   });
   const valor = faker.number.float({
     min: minimumValue / 10,
     max: minimumValue * 2,
-    precision: 2
+    precision: 2,
   });
   const status = faker.helpers.arrayElement([
     "Aguardando inadimplente",
     "Conversa iniciada",
     "Valor reserva alcançado",
-    "Negociação concluída"
+    "Negociação concluída",
   ]) as StatusType;
 
   const chance = faker.number.int({ max: 100 });
@@ -107,7 +109,7 @@ export function createRandomAcordo(cpfDevedor: string): Acordo {
     descricao: `${chanceTxt}\n${gainTxt}`,
     diaPagamento: faker.number.int({ min: 1, max: 31 }),
     qtdParcelas: faker.number.int({ min: 1, max: 12 * 5 }),
-    juros: faker.number.float({ min: 0, max: 1, precision: 2 })
+    juros: faker.number.float({ min: 0, max: 1, precision: 2 }),
   };
 }
 
@@ -121,8 +123,8 @@ export function createRandomApartment(): Condominio {
     valorMensalidade: faker.number.float({
       min: 100,
       max: 10000,
-      precision: 2
+      precision: 2,
     }),
-    administradorEmail: faker.internet.email()
+    administradorEmail: faker.internet.email(),
   };
 }
