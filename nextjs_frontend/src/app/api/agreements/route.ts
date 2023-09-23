@@ -48,7 +48,7 @@ export async function GET() {
 }
 
 async function getAgreement(cpf: string) {
-  const agreement: Acordo = await Acordos.findOne({ cpfDevedor: cpf })
+  const agreement: any = await Acordos.findOne({ cpfDevedor: cpf })
     .lean()
     .exec();
 
