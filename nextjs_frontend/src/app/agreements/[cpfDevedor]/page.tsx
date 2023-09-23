@@ -4,11 +4,10 @@ import { serverURL } from "@/config/index";
 import { Condomino } from "@/models/Devedores";
 import { Acordo } from "@/models/Acordos";
 import { useParams } from "next/navigation";
-import DebtorCard from "@/components/DebtorCard/debtor-card";
-import StatusBarBig from "./components/StatusBarBig/status-bar-big";
-import DownloadButton from "@/components/DownloadButton/download-button";
 import { useEffect, useState } from "react";
 import { Condominio } from "@/models/Condominios";
+import TenantProfileCard from "./components/TenantProfileCard/tenant-profile-card";
+import CurrencyCard from "./components/CurrencyCard/currency-card";
 
 interface AgreementResponse {
   acordo: Acordo;
@@ -40,41 +39,29 @@ export default function AgreementStatus() {
 
   return (
     <div className="containerLayout flex flex-col gap-10">
-      <h1 className="text-5xl font-extrabold mb-10">Confira os detalhes da negociação</h1>
-      <div className="flex flex-col gap-2">
-        <h1 className="text-4xl font-extrabold leading-10">
-          Informações do inadimplente
-        </h1>
-        <h2 className="text-lg font-medium leading-10">
-          Confira o inadimplente com quem a negociação foi realizada
-        </h2>
-        {tenant && <DebtorCard tenant={tenant} isModal={false} isInteractive={false} />}
+      <h1 className="text-4xl font-extrabold">Detalhes da negociação</h1>
+      <div className="flex items-end gap-20">
+        <TenantProfileCard tenant={tenant} />
+        <CurrencyCard
+          icon="/icons/dollar_sign.svg"
+          iconSize={34}
+          title="Valor em débito"
+          value={tenant.mensalidadesAtrasadas * condominium.valorMensalidade}
+          desccriptionTitle="Em atraso"
+          description={`${tenant.mensalidadesAtrasadas} meses`}
+          isUpArrow={false}
+        />
+        <CurrencyCard
+          icon="/icons/document.svg"
+          iconSize={26}
+          title="Valor proposto"
+          value={agreement.valor ?? 0}
+          desccriptionTitle="Parcelado"
+          description={`${agreement.qtdParcelas} meses`}
+          isUpArrow={true}
+        />
       </div>
-      <div>
-        <h1 className="text-4xl font-extrabold leading-10">Progresso</h1>
-        <h2 className="text-lg font-medium leading-10">
-          Confira o andamento da negociação.&nbsp;
-          {agreement?.dataAcordo && (
-            <span>
-              Ela foi realizada há&nbsp;
-              <span className="font-semibold">
-                {new Date().getDate() - agreement.dataAcordo.getDate() + " dias"}
-              </span>
-            </span>
-          )}
-        </h2>
-        <div className="w-full">
-          <StatusBarBig status={agreement ? agreement.status : null} />
-        </div>
-      </div>
-      <div>
-        <h1 className="text-4xl font-extrabold leading-10">Proposta final</h1>
-        <h2 className="text-lg font-medium leading-10">
-          Confira a proposta final decidida entre a Reco e o inadimplente e baixe o
-          documento.
-        </h2>
-        <DownloadButton acordo={agreement} devedor={tenant} condominio={condominium} />
-      </div>
+      <h2 className="text-4xl font-bold">Andamento</h2>
     </div>
   );
 }
