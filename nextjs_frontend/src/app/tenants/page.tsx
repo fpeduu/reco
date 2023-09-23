@@ -6,6 +6,7 @@ import TenantList from "./components/TenantList/tenant-list";
 import { Devedor } from "@/models/Devedores";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
+import { AcordoIdentificado } from "@/models/Acordos";
 
 async function fetchTenants(administradorEmail: string) {
   return (await fetch(`${serverURL}/api/tenants/`, {
@@ -22,21 +23,41 @@ async function fetchTenants(administradorEmail: string) {
     })) as Devedor[];
 }
 
+async function fetchAcordos(administradorEmail: string) {
+  return (await fetch(`${serverURL}/api/agreements/`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ administradorEmail }),
+  })
+    .then((response) => response.json())
+    .catch((error) => {
+      console.error(error);
+      return [] as AcordoIdentificado[];
+    })) as AcordoIdentificado[];
+}
+
 export default function AgreementsPage() {
   const [tenants, setTenants] = useState<Devedor[]>([]);
   const { data: session } = useSession();
 
   useEffect(() => {
     const getTenants = async () => {
-      const email = session?.user?.email ?? "teste";
+      const email = session?.user?.email ?? "";
       const newTenants: Devedor[] = await fetchTenants(email);
-      console.log(email);
       setTenants(newTenants);
-
-      console.log(newTenants);
     };
 
     getTenants();
+
+    const getAcordos = async () => {
+      const email = session?.user?.email ?? "";
+      const acordos: AcordoIdentificado[] = await fetchAcordos(email);
+      console.log(acordos);
+    };
+
+    getAcordos();
   }, [session]);
 
   return (
