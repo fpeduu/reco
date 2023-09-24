@@ -5,7 +5,8 @@ export type StatusType =
   | "Conversa iniciada"
   | "Valor reserva informado"
   | "Valor reserva alcançado"
-  | "Negociação concluída";
+  | "Negociação concluída"
+  | "Baixar acordo finalizado";
 
 export interface Acordo {
   id: number;

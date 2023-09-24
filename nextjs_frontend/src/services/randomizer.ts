@@ -6,15 +6,7 @@ import { Acordo, StatusType } from "@/models/Acordos";
 
 export function generateCPF(): string {
   const cpf = String(faker.number.int()).padStart(11, "0").slice(0, 11);
-  return (
-    cpf.slice(0, 3) +
-    "." +
-    cpf.slice(3, 6) +
-    "." +
-    cpf.slice(6, 9) +
-    "-" +
-    cpf.slice(9, 11)
-  );
+  return cpf.slice(0, 3) + "." + cpf.slice(3, 6) + "." + cpf.slice(6, 9) + "-" + cpf.slice(9, 11);
 }
 
 export function generateCNPJ(): string {
@@ -38,9 +30,7 @@ export function generateCNPJ(): string {
 
 export function generateRG(): string {
   const rg = String(faker.number.int()).padStart(9, "0").slice(0, 9);
-  return (
-    rg.slice(0, 2) + "." + rg.slice(2, 5) + "." + rg.slice(5, 8) + "-" + rg.slice(8, 9)
-  );
+  return rg.slice(0, 2) + "." + rg.slice(2, 5) + "." + rg.slice(5, 8) + "-" + rg.slice(8, 9);
 }
 
 export function generateAddress(): string {
@@ -56,10 +46,7 @@ export function generateAddress(): string {
   return `Rua ${streetName} n.º ${addressNumber}, ${district}, ${city} –  ${uf}, CEP ${cep}`;
 }
 
-export function createRandomTenant(
-  cnpjCondominio: string,
-  condominioName: string
-): Condomino {
+export function createRandomTenant(cnpjCondominio: string, condominioName: string): Condomino {
   const cpfDevedor = generateCPF();
   const rgDevedor = generateRG();
 
@@ -90,7 +77,8 @@ export function createRandomAcordo(cpfDevedor: string): Acordo {
     "Aguardando inadimplente",
     "Conversa iniciada",
     "Valor reserva alcançado",
-    "Negociação concluída"
+    "Negociação concluída",
+    "Baixar acordo finalizado"
   ]) as StatusType;
 
   const chance = faker.number.int({ max: 100 });
