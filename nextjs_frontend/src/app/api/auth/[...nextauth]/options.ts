@@ -27,13 +27,13 @@ export const options: NextAuthOptions = {
           },
           body: JSON.stringify(credentials),
         });
-        const user = await response.json();
 
-        if (response.ok && user) return user;
-        else {
-          window.alert("User not identified");
-          return null;
+        const user = await response.json()
+        if (response.ok && user) {
+          return user;
         }
+          
+        return null;
       },
     }),
   ],
