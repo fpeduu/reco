@@ -1,4 +1,5 @@
 import { AcordoIdentificado } from "@/models/Acordos";
+import { getStatusIndex } from "../StatusBar/status-bar";
 import StatusBar from "../StatusBar/status-bar";
 import Link from "next/link";
 import { Condomino } from "@/models/Devedores";
@@ -22,7 +23,7 @@ export default function AgreementCard({ agreement, tenant }: AgreementCardProps)
           <span className="font-semibold">Status:&nbsp;</span>
           {tenant?.mensalidadesAtrasadas ? `${tenant.mensalidadesAtrasadas} meses de atraso` : "-"}
         </span>
-        <StatusBar status={agreement.status} />
+        <StatusBar statusIndex={getStatusIndex(agreement.status)} />
       </div>
     </Link>
   );

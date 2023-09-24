@@ -2,6 +2,7 @@
 
 import { serverURL } from "@/config";
 import { AcordoIdentificado } from "@/models/Acordos";
+import { getStatusIndex } from "./components/StatusBar/status-bar";
 import AgreementList from "./components/AgreementList/agreement-list";
 import Search from "@/components/Search/search";
 import { useEffect, useState } from "react";
@@ -38,11 +39,11 @@ export default function AgreementsPage() {
   }, []);
 
   const inProgressAgreements = agreements.filter((agreement) => {
-    return agreement.status !== "Negociação concluída";
+    return getStatusIndex(agreement.status) < 4;
   });
 
   const endedAgreements = agreements.filter((agreement) => {
-    return agreement.status === "Negociação concluída";
+    return getStatusIndex(agreement.status) > 3;
   });
 
   return (
