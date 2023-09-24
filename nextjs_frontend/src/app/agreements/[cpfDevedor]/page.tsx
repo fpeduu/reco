@@ -8,6 +8,8 @@ import { useEffect, useState } from "react";
 import { Condominio } from "@/models/Condominios";
 import TenantProfileCard from "./components/TenantProfileCard/tenant-profile-card";
 import CurrencyCard from "./components/CurrencyCard/currency-card";
+import StatusBarBig from "./components/StatusBarBig/status-bar-big";
+import DownloadButton from "@/components/DownloadButton/download-button";
 
 interface AgreementResponse {
   acordo: Acordo;
@@ -27,6 +29,7 @@ export default function AgreementStatus() {
   const [agreement, setAgreement] = useState<Acordo>({} as Acordo);
   const [tenant, setTenant] = useState<Condomino>({} as Condomino);
   const [condominium, setCondominium] = useState<Condominio>({} as Condominio);
+  const [subpage, setSubpage] = useState<"timeline" | "details">("timeline");
   const tenantCpf = useParams().cpfDevedor as string;
 
   useEffect(() => {
@@ -62,6 +65,34 @@ export default function AgreementStatus() {
         />
       </div>
       <h2 className="text-4xl font-bold">Andamento</h2>
+      <div className="w-full h-full bg-white rounded-2xl">
+        <nav className="border-b border-b-slate-300">
+          <button
+            onClick={() => setSubpage("timeline")}
+            className={
+              "w-56 p-5 pb-0 border-b text-sm " +
+              (subpage === "timeline" ? "text-red-600 border-b-red-600" : "text-slate-500")
+            }>
+            Linha do Tempo
+          </button>
+          <button
+            onClick={() => setSubpage("details")}
+            className={
+              "w-56 p-5 pb-0 border-b text-sm " +
+              (subpage === "details" ? "text-red-600 border-b-red-600" : "text-slate-500")
+            }>
+            Detalhes
+          </button>
+        </nav>
+        <div className="p-20 flex flex-col items-start">
+          {subpage === "timeline" && <StatusBarBig status={agreement.status} />}
+          {subpage === "timeline" &&
+            (agreement.status === "Negociação concluída" ||
+              agreement.status === "Baixar acordo finalizado") && (
+              <DownloadButton acordo={agreement} devedor={tenant} condominio={condominium} />
+            )}
+        </div>
+      </div>
     </div>
   );
 }
