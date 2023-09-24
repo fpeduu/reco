@@ -17,6 +17,7 @@ export interface Acordo {
 
 export interface AcordoIdentificado extends Acordo {
   nomeDevedor: string;
+  nomeCondominio: string;
 }
 
 const AcordoSchema = new mongoose.Schema({
