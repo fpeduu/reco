@@ -10,7 +10,7 @@ interface DropDownProps {
 export default function DropDown({
     title, options, onChange
 }: DropDownProps) {
-    const [selectedOption, setSelectedOption] = useState<string>("");
+    const [selectedOption, setSelectedOption] = useState<string>("Todos");
 
     function handleSelectOption(event: any) {
         const option: string = event.target.dataset.value;
@@ -26,7 +26,7 @@ export default function DropDown({
                     font-medium bg-secondary text-white shadow-sm align-middle
                     focus:outline-none focus:ring-2 focus:ring-offset-2
                     focus:ring-offset-white focus:white transition-all text-sm">
-                {selectedOption === "" ? title : selectedOption}
+                {selectedOption === "Todos" ? title : selectedOption}
                 <svg width="14" height="11" viewBox="0 0 14 11" fill="none"
                     xmlns="http://www.w3.org/2000/svg">
                 <path d="M7 10.5L0.937822 -1.88258e-07L13.0622 8.71687e-07L7 10.5Z"
