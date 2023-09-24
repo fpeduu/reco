@@ -1,27 +1,39 @@
+"use client";
+
 import { serverURL } from "@/config";
-import { Condomino } from "@/models/Devedores";
+import { Devedor } from "@/models/Devedores";
 
 import AuthTitle from "@/components/AuthTItle/auth-title";
 import TenantList from "./components/TenantList/tenant-list";
+import { useEffect, useState } from "react";
 
 async function fetchTenants() {
   return (await fetch(`${serverURL}/api/tenants/`)
     .then((response) => response.json())
     .catch((error) => {
       console.error(error);
-      return [] as Condomino[];
-    })) as Condomino[];
+      return [] as Devedor[];
+    })) as Devedor[];
 }
 
-export default async function AgreementsPage() {
-  const tenants = await fetchTenants();
+export default function AgreementsPage() {
+  const [tenants, setTenants] = useState<Devedor[]>([]);
+
+  useEffect(() => {
+    async function getTenants() {
+      const tenants = await fetchTenants();
+      setTenants(tenants);
+    }
+
+    getTenants();
+  }, [])
 
   return (
     <div className="containerLayout">
       <AuthTitle subtitle="Confira os inadimplentes e realize novas negociações" />
-      <div className="mb-3 flex items-center justify-between">
+      <div className="mb-3 flex items-center justify-start">
         <h2 className="font-bold text-2xl">Lista de Inadimplentes</h2>
-        <span className="font-medium">Total: {tenants.length}</span>
+        <span className="font-medium text-xs ml-2">(Total: {tenants.length})</span>
       </div>
       <TenantList tenants={tenants} />
       <span className="hidden">
