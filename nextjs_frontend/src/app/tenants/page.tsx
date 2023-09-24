@@ -3,19 +3,11 @@
 import { serverURL } from "@/config";
 import AuthTitle from "@/components/AuthTItle/auth-title";
 import TenantList from "./components/TenantList/tenant-list";
-import { Devedor } from "@/models/Devedores";
-import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import { AcordoIdentificado } from "@/models/Acordos";
+import { Devedor } from "@/models/Devedores";
 
-async function fetchTenants(administradorEmail: string) {
-  return (await fetch(`${serverURL}/api/tenants/`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ administradorEmail }),
-  })
+async function fetchTenants() {
+  return (await fetch(`${serverURL}/api/tenants/`)
     .then((response) => response.json())
     .catch((error) => {
       console.error(error);
@@ -23,41 +15,26 @@ async function fetchTenants(administradorEmail: string) {
     })) as Devedor[];
 }
 
-async function fetchAcordos(administradorEmail: string) {
-  return (await fetch(`${serverURL}/api/agreements/`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ administradorEmail }),
-  })
-    .then((response) => response.json())
-    .catch((error) => {
-      console.error(error);
-      return [] as AcordoIdentificado[];
-    })) as AcordoIdentificado[];
-}
-
 export default function AgreementsPage() {
   const [tenants, setTenants] = useState<Devedor[]>([]);
-  const { data: session } = useSession();
 
   useEffect(() => {
-    const getTenants = async () => {
-      const email = session?.user?.email ?? "";
-      const newTenants: Devedor[] = await fetchTenants(email);
-      setTenants(newTenants);
-    };
+    async function getTenants() {
+      const tenants = await fetchTenants();
+      setTenants(tenants);
+    }
 
     getTenants();
-  }, [session]);
+  }, []);
 
   return (
     <div className="containerLayout">
       <AuthTitle subtitle="Confira os inadimplentes e realize novas negociações" />
-      <div className="mb-3 flex items-center justify-between">
+      <div className="mb-3 flex items-center justify-start">
         <h2 className="font-bold text-2xl">Lista de Inadimplentes</h2>
-        <span className="font-medium">Total: {tenants.length}</span>
+        <span className="font-medium text-xs ml-2">
+          (Total: {tenants.length})
+        </span>
       </div>
       <TenantList tenants={tenants} />;
       <span className="hidden">

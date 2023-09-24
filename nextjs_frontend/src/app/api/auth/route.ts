@@ -9,14 +9,35 @@ interface Credentials {
   password: string;
 }
 
-export async function POST(req: NextRequest) {
-  const credentials: Credentials = await req.json();
-
+export async function GET(req: NextRequest) {
   connectToDatabase();
 
+  const {searchParams} = new URL(req.url);
+  const email = searchParams.get("email");
+  const user = await Usuarios.findOne({ email });
+
+  if (!user) {
+    return NextResponse.json({
+      error: "Usuário não encontrado"
+    }, { status: 404 })
+  }
+
+  return NextResponse.json({
+    email, name: user.nome
+  });
+}
+
+export async function POST(req: NextRequest) {
+  connectToDatabase();
+
+  const credentials: Credentials = await req.json();
   const user = await Usuarios.findOne({ email: credentials.email });
 
-  if (!user) return NextResponse.error();
+  if (!user) {
+    return NextResponse.json({
+      error: "Usuário não encontrado"
+    }, { status: 401 })
+  }
 
   const passwordMatches = await bcrypt.compare(
     credentials.password,
@@ -25,7 +46,8 @@ export async function POST(req: NextRequest) {
 
   if (passwordMatches) {
     return NextResponse.json(user);
-  } else {
-    return NextResponse.error();
   }
+  return NextResponse.json({
+    error: "Senha incorreta"
+  }, { status: 401 })
 }

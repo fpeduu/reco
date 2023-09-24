@@ -1,11 +1,8 @@
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 import { Acordo } from "@/models/Acordos";
 import { Devedor } from "@/models/Devedores";
-import { Condominio } from "@/models/Condominios";
 
-async function generateAgreement(
-  devedor: Devedor, acordo: Acordo, condominio: Condominio
-) {
+async function generateAgreement(devedor: Devedor, acordo: Acordo) {
   const pdfDoc = await PDFDocument.create();
   const timesBoldFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
   const timesRomanFont = await pdfDoc.embedFont(StandardFonts.TimesRoman);
@@ -37,28 +34,25 @@ async function generateAgreement(
       ? today.getFullYear() + Math.floor(lastPaymentMonth / 12)
       : today.getFullYear();
 
-  const firstPaymentDay = `${acordo.diaPagamento}/${
+  const firstPaymentDay = `${acordo.dataAcordo?.getDay()}/${
     firstPaymentMonth % 12
   }/${firstPaymentYear}`;
-  const lastPaymentDay = `${acordo.diaPagamento}/${
+  const lastPaymentDay = `${acordo.dataAcordo?.getDay()}/${
     lastPaymentMonth % 12
   }/${lastPaymentYear}`;
 
-  const totalDebit = (acordo.valor * (1 + acordo.juros))
+  const juros = 0.12;
+  const totalDebit = (acordo.valorTotal * (1 + juros));
   const totalDebitString = totalDebit.toLocaleString("pt-br");
   const debitMonths = ["01/01/2021", "01/02/2021", "01/03/2021"];
   const debitMonthsString = debitMonths.join(", ");
   const debitMonth = (totalDebit / acordo.qtdParcelas).toLocaleString("pt-br");
   const content = `
-CREDOR:
-
-${condominio.nome}, inscrito no CNPJ sob nº ${condominio.cnpj}, situado à ${condominio.address}.
-
 DEVEDOR(A):
 
-${devedor.nome}, portador(a) da carteira de identidade nº ${devedor.rg}, inscrita no CPF sob o nº ${devedor.cpf}, residente e domiciliada à ${condominio.address}.
+${devedor.nome}, inscrita no CPF sob o nº ${devedor.cpf}.
 
-APARTAMENTO: ${devedor.apartamento}
+APARTAMENTO: ${devedor.nomeCondominio}
 
 CLÁUSULAS E CONDIÇÕES:
 
@@ -118,7 +112,7 @@ _______________________________________________________
 Devedor(a)
 
 _______________________________________________________
-${condominio.nome}
+${devedor.nomeCondominio}
 
 _______________________________________________________
 Síndico(a)
@@ -161,12 +155,8 @@ Segunda testemunha
   return await pdfDoc.save();
 }
 
-export async function downloadAgreement(
-  devedor: Devedor, acordo: Acordo, condominio: Condominio
-) {
-  const pdfBytes = await generateAgreement(
-    devedor, acordo, condominio
-  );
+export async function downloadAgreement(devedor: Devedor, acordo: Acordo) {
+  const pdfBytes = await generateAgreement(devedor, acordo);
   const blob = new Blob([pdfBytes], { type: "application/pdf" });
   const link = document.createElement("a");
   link.href = window.URL.createObjectURL(blob);

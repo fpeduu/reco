@@ -1,21 +1,21 @@
 import mongoose from "mongoose";
 
 export interface Devedor {
-  rg: string;
   cpf: string;
   nome: string;
   valorDivida: number;
-  mensalidadesAtrasadas: number;
+  nomeCondominio: string;
   emailAdministrador: string;
+  mensalidadesAtrasadas: number;
 }
 
 const DevedorSchema = new mongoose.Schema({
-  rg: String,
   cpf: String,
   nome: String,
   valorDivida: Number,
-  mensalidadesAtrasadas: Number,
+  nomeCondominio: String,
   emailAdministrador: String,
+  mensalidadesAtrasadas: Number,
 });
 
 export default mongoose.models.Devedores ||

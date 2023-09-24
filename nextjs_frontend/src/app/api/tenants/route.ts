@@ -1,14 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
+import { options } from "../auth/[...nextauth]/options";
+import { getServerSession } from "next-auth/next";
 
-import Devedores from "@/models/Devedores";
-import { connectToDatabase } from "@/middlewares/mongodb";
+import Devedores, { Devedor } from "@/models/Devedores";
+import { connectToDatabase } from "../../../middlewares/mongodb";
 
-export async function POST(req: NextRequest) {
-  const { administradorEmail } = await req.json();
-
+export async function GET(request: NextRequest) {
   connectToDatabase();
+  const session = await getServerSession(options);
+  if (!session) {
+    return NextResponse.redirect("/auth/signin");
+  }
 
-  const devedores = await Devedores.find({ administradorEmail }).exec();
+  const devedores: Devedor[] = await Devedores.find({
+    emailAdministrador: session.user?.email,
+  });
 
   return NextResponse.json(devedores);
 }

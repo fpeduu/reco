@@ -7,16 +7,12 @@ export type StatusType =
   | "Negociação concluída";
 
 export interface Acordo {
-  id: number;
   usuarioEmail: string;
   cpfDevedor: string;
   dataAcordo?: Date;
-  status: StatusType;
-  valor: number;
   entrada: number;
-  diaPagamento: number;
+  valorTotal: number;
   qtdParcelas: number;
-  descricao: string;
 }
 
 export interface AcordoIdentificado extends Acordo {
@@ -24,10 +20,6 @@ export interface AcordoIdentificado extends Acordo {
 }
 
 const AcordoSchema = new mongoose.Schema({
-  id: {
-    type: Number,
-    required: true,
-  },
   usuarioEmail: {
     type: String,
     required: true,
@@ -40,12 +32,9 @@ const AcordoSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-  status: String,
   entrada: Number,
-  valor: Number,
-  diaPagamento: Number,
+  valorTotal: Number,
   qtdParcelas: Number,
-  descricao: String,
 });
 
 export default mongoose.models.Acordos ||

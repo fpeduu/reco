@@ -14,7 +14,8 @@ export default function Search({ onSearch }: SearchProps) {
 
   function handleSearch(event: React.ChangeEvent<HTMLInputElement>) {
     const value = event.target.value;
-    onDebouncedSearch(search);
+    if (value === "") onSearch("");
+    else onDebouncedSearch(search);
     setSearch(value);
   }
 
@@ -32,7 +33,7 @@ export default function Search({ onSearch }: SearchProps) {
           value={search}
           onChange={handleSearch}
           className="w-full py-2"
-          placeholder="Pesquise pelo nome ou CPF do condômino"
+          placeholder="Digite o nome, CPF ou condomínio do inadimplente"
         />
       </div>
       {search !== "" && (

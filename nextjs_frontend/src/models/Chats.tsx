@@ -3,26 +3,30 @@ import mongoose from "mongoose";
 export type StatusType =
   | "Aguardando inadimplente"
   | "Conversa iniciada"
-  | "Valor reserva alcançado"
-  | "Negociação concluída";
+  | "Primeira proposta realizada"
+  | "Segunda proposta realizada"
+  | "Terceira proposta realizada"
+  | "Aguardando confirmação da proposta"
+  | "Acordo realizado"
+  | "Acordo rejeitado";
 
-export interface Valor {
+export interface Proposta {
   entrada: number;
   valorParcela: number;
-  numeroParcelas: number;
+  qtdParcelas: number;
 }
 
 export interface Chat {
-  id: number;
   status: StatusType;
-  historicoValores: Valor[];
+  cpfDevedor: string;
+  historicoValores: Proposta[];
 }
 
 const ChatSchema = new mongoose.Schema({
-  id: Number,
   status: String,
+  cpfDevedor: String,
   historicoValores: [
-    { entrada: Number, valorParcela: Number, numeroParcelas: Number },
+    { entrada: Number, valorParcela: Number, qtdParcelas: Number },
   ],
 });
 
