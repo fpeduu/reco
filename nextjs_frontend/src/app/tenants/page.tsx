@@ -1,11 +1,10 @@
 "use client";
 
 import { serverURL } from "@/config";
-import { Devedor } from "@/models/Devedores";
-
 import AuthTitle from "@/components/AuthTItle/auth-title";
 import TenantList from "./components/TenantList/tenant-list";
 import { useEffect, useState } from "react";
+import { Devedor } from "@/models/Devedores";
 
 async function fetchTenants() {
   return (await fetch(`${serverURL}/api/tenants/`)
@@ -26,16 +25,18 @@ export default function AgreementsPage() {
     }
 
     getTenants();
-  }, [])
+  }, []);
 
   return (
     <div className="containerLayout">
       <AuthTitle subtitle="Confira os inadimplentes e realize novas negociações" />
       <div className="mb-3 flex items-center justify-start">
         <h2 className="font-bold text-2xl">Lista de Inadimplentes</h2>
-        <span className="font-medium text-xs ml-2">(Total: {tenants.length})</span>
+        <span className="font-medium text-xs ml-2">
+          (Total: {tenants.length})
+        </span>
       </div>
-      <TenantList tenants={tenants} />
+      <TenantList tenants={tenants} />;
       <span className="hidden">
         {/* Sem isso não renderiza as cores */}
         <span className="w-5 h-5 rounded-full bg-status-0" />

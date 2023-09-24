@@ -40,9 +40,9 @@ export function createRandomTenant(condominioName: string): Devedor {
     valorDivida: faker.number.float({
       min: 100,
       max: 10000,
-      precision: 2
+      precision: 2,
     }),
-    mensalidadesAtrasadas: faker.number.int({ min: 0, max: 60 })
+    mensalidadesAtrasadas: faker.number.int({ min: 0, max: 60 }),
   };
 }
 
@@ -51,12 +51,12 @@ export function createRandomAcordo(cpfDevedor: string): Acordo {
   const minimumValue = faker.number.float({
     min: 100,
     max: 10000,
-    precision: 2
+    precision: 2,
   });
   const valor = faker.number.float({
     min: minimumValue / 10,
     max: minimumValue * 2,
-    precision: 2
+    precision: 2,
   });
 
   return {
@@ -66,7 +66,7 @@ export function createRandomAcordo(cpfDevedor: string): Acordo {
     entrada: faker.number.float({
       min: 0,
       max: valor,
-      precision: 2
+      precision: 2,
     }),
     valorTotal: valor,
     dataAcordo: faker.date.past(),

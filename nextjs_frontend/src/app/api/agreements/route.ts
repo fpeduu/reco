@@ -1,43 +1,41 @@
-import { Acordo, AcordoIdentificado, StatusType } from "@/models/Acordos";
+import Acordos, { Acordo, AcordoIdentificado } from "@/models/Acordos";
 import { NextResponse } from "next/server";
-import { faker } from "@faker-js/faker/locale/pt_BR";
-import { generateCPF, createRandomAcordo } from "@/services/randomizer";
-
-function enrichAcordo(condominioName: string, acordo: Acordo): AcordoIdentificado {
-  const randomStatus: StatusType = faker.helpers.arrayElement([
-    "Aguardando inadimplente",
-    "Conversa iniciada",
-    "Valor reserva alcançado",
-    "Negociação concluída"
-  ]);
-
-  return {
-    ...acordo,
-    status: randomStatus,
-    nomeCondominio: condominioName,
-    usuarioEmail: faker.internet.email(),
-    nomeDevedor: faker.person.fullName()
-  };
-}
-
-function createRandomAgreement(condominioName: string): AcordoIdentificado {
-  const cpfDevedor = generateCPF();
-  const acordo = createRandomAcordo(cpfDevedor);
-  return enrichAcordo(condominioName, acordo);
-}
-
-function createRandomAgreementList() {
-  const condominioName = faker.company.name();
-  return faker.helpers.multiple(() => createRandomAgreement(condominioName), {
-    count: { min: 1, max: 10 }
-  });
-}
+import Devedores, { Devedor } from "@/models/Devedores";
+import { connectToDatabase } from "@/middlewares/mongodb";
+import { getServerSession } from "next-auth";
+import options from "../auth/[...nextauth]/options";
 
 export async function GET() {
-  const agreementList = [];
-  for (let i = 0; i < faker.number.int({ min: 1, max: 10 }); i++) {
-    agreementList.push(...createRandomAgreementList());
+  connectToDatabase();
+
+  const session = await getServerSession(options);
+
+  if (!session) {
+    return NextResponse.redirect("/auth/signin");
   }
-  const sortedAgreementList = agreementList.sort((a, b) => b.valor - a.valor);
-  return NextResponse.json(sortedAgreementList);
+
+  const devedores: Devedor[] = await Devedores.find({
+    emailAdministrador: session.user?.email,
+  });
+
+  const agreementPromises = devedores.map(async (devedor) => {
+    const agreement: Acordo | null = await Acordos.findOne({
+      cpfDevedor: devedor.cpf
+    });
+
+    if (!agreement) {
+      return null;
+    }
+
+    return {
+      ...agreement,
+      nomeDevedor: devedor.nome,
+      nomeCondominio: devedor.nomeCondominio,
+    };
+  }).filter((item) => item) as Promise<AcordoIdentificado>[];
+
+  const acordos: AcordoIdentificado[] = await Promise.all(
+    agreementPromises);
+
+  return NextResponse.json(acordos);
 }
