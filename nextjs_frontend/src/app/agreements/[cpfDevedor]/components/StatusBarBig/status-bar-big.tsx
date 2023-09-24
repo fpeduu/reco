@@ -43,7 +43,8 @@ export default function StatusBarBig({ status }: StatusBarBigProps) {
         <span
           className={`w-14 h-14 z-10 flex items-center justify-center rounded-full text-white ${
             step > 0 ? "bg-emerald-500" : "bg-gray-500"
-          }`}>
+          }`}
+        >
           {step > 0 && <span>&#10003;</span>}
         </span>
         <p className="text-center">
@@ -56,7 +57,8 @@ export default function StatusBarBig({ status }: StatusBarBigProps) {
         <span
           className={`w-14 h-14 z-10 flex items-center justify-center rounded-full text-white ${
             step > 1 ? "bg-emerald-500" : "bg-gray-500"
-          }`}>
+          }`}
+        >
           {step > 1 && <span>&#10003;</span>}
         </span>
         <p className="text-center">
@@ -69,7 +71,8 @@ export default function StatusBarBig({ status }: StatusBarBigProps) {
         <span
           className={`w-14 h-14 z-10 flex items-center justify-center rounded-full text-white ${
             step > 2 ? "bg-emerald-500" : "bg-gray-500"
-          }`}>
+          }`}
+        >
           {step > 2 && <span>&#10003;</span>}
         </span>
         <p className="text-center">
@@ -82,7 +85,8 @@ export default function StatusBarBig({ status }: StatusBarBigProps) {
         <span
           className={`w-14 h-14 z-10 flex items-center justify-center rounded-full text-white ${
             step >= 3 ? "bg-emerald-500" : "bg-gray-500"
-          }`}>
+          }`}
+        >
           {step >= 3 && <span>&#10003;</span>}
         </span>
         <p className="text-center">

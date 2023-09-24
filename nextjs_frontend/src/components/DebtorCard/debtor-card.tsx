@@ -45,7 +45,7 @@ export default function DebtorCard({
         <div className="w-36 pb-1">
           <p className="font-semibold">Condomínio:</p>
           <div className="flex items-center gap-1 pt-1 text-xs font-medium">
-            {tenant.nomeCondominio}
+            {tenant?.nomeCondominio}
           </div>
         </div>
         <div className="w-20 pb-1">

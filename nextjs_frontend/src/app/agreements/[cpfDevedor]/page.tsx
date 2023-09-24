@@ -7,10 +7,7 @@ import DebtorCard from "@/components/DebtorCard/debtor-card";
 import StatusBarBig from "./components/StatusBarBig/status-bar-big";
 import DownloadButton from "@/components/DownloadButton/download-button";
 import { useEffect, useState } from "react";
-import { Condominio } from "@/models/Condominios";
 import { Devedor } from "@/models/Devedores";
-import { faker } from "@faker-js/faker";
-import { createRandomApartment } from "@/services/randomizer";
 
 interface AgreementResponse {
   acordo: Acordo;
@@ -28,14 +25,12 @@ const fetchAgreement = async (cpfDevedor: string) => {
 export default function AgreementStatus() {
   const [agreement, setAgreement] = useState<Acordo>({} as Acordo);
   const [tenant, setTenant] = useState<Devedor>({} as Devedor);
-  const [condominium, setCondominium] = useState<Condominio>({} as Condominio);
   const tenantCpf = useParams().cpfDevedor as string;
 
   useEffect(() => {
     fetchAgreement(tenantCpf).then((response) => {
       setAgreement(response.acordo);
       setTenant(response.devedor);
-      setCondominium(createRandomApartment());
     });
   }, [tenantCpf]);
 
@@ -85,7 +80,7 @@ export default function AgreementStatus() {
         <DownloadButton
           acordo={agreement}
           devedor={tenant}
-          condominio={condominium}
+          condominio={{ nome: tenant.nomeCondominio }}
         />
       </div>
     </div>
