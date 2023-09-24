@@ -26,7 +26,7 @@ export default function Header() {
   }
 
   return (
-    <div className="w-full absolute z-20 h-20 pr-28 py-2 flex items-center bg-white text-red-600">
+    <div className="w-full absolute h-20 pr-28 py-2 flex items-center bg-white text-red-600">
       {session && (
         <button
           onClick={handleSidebarToggle}
