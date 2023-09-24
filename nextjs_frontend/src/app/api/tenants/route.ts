@@ -3,7 +3,7 @@ import { options } from "../auth/[...nextauth]/options";
 import { getServerSession } from "next-auth/next"
 
 import Devedores, { Devedor } from "@/models/Devedores";
-import { connectToDatabase } from "../../../middlewares/mongodb";
+import { connectToDatabase } from "@/middlewares/mongodb";
 
 export async function GET(request: NextRequest) {
   connectToDatabase();
