@@ -39,6 +39,16 @@ export const options: NextAuthOptions = {
   ],
   callbacks: {
     async session({ session, token, user }) {
+      const response = await fetch(
+        `${serverURL}/api/auth?email=${token.email}`, {
+        method: "GET", headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = await response.json();
+      session.user = data;
+
       return session;
     },
   },

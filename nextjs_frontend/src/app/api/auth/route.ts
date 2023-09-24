@@ -9,6 +9,24 @@ interface Credentials {
   password: string;
 }
 
+export async function GET(req: NextRequest) {
+  connectToDatabase();
+
+  const {searchParams} = new URL(req.url);
+  const email = searchParams.get("email");
+  const user = await Usuarios.findOne({ email });
+
+  if (!user) {
+    return NextResponse.json({
+      error: "Usuário não encontrado"
+    }, { status: 404 })
+  }
+
+  return NextResponse.json({
+    email, name: user.nome
+  });
+}
+
 export async function POST(req: NextRequest) {
   connectToDatabase();
 
