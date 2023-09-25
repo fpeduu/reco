@@ -20,7 +20,7 @@ const agreementStatusList: (StatusType | "Todos")[] = [
   "Todos",
   "Aguardando inadimplente",
   "Conversa iniciada",
-  "Valor reserva alcançado"
+  "Valor reserva alcançado",
 ];
 
 const paymentStatusList: string[] = [
@@ -28,7 +28,7 @@ const paymentStatusList: string[] = [
   "Em dia",
   "1 mês de atraso",
   "2 meses de atraso",
-  "3 meses ou mais de atraso"
+  "3 meses ou mais de atraso",
 ];
 
 const agreementsPerPage = 6;
@@ -39,9 +39,10 @@ export default function AgreementList({
   description,
   agreements,
   tenants,
-  filterByProgress
+  filterByProgress,
 }: AgreementListProps) {
-  const [filteredAgreements, setFilteredAgreements] = useState<AcordoIdentificado[]>(agreements);
+  const [filteredAgreements, setFilteredAgreements] =
+    useState<AcordoIdentificado[]>(agreements);
 
   const [condominiums, setCondominiums] = useState<string[]>([]);
 
@@ -51,10 +52,14 @@ export default function AgreementList({
 
   const [page, setPage] = useState(1);
 
-  const totalPageCount = Math.ceil(filteredAgreements.length / agreementsPerPage);
+  const totalPageCount = Math.ceil(
+    filteredAgreements.length / agreementsPerPage
+  );
 
   useEffect(() => {
-    const condominiums = agreements.map((agreement) => agreement.nomeCondominio);
+    const condominiums = agreements.map(
+      (agreement) => agreement.nomeCondominio
+    );
     const uniqueCondomiuns = condominiums.filter((condominium, index) => {
       return condominiums.indexOf(condominium) === index;
     });
@@ -65,23 +70,37 @@ export default function AgreementList({
     setFilteredAgreements(
       agreements.filter((agreement) => {
         const tenant = getTenant(agreement.cpfDevedor);
-        const progressFilter = progress === "Todos" || agreement.status === progress;
+        const progressFilter =
+          progress === "Todos" || agreement.status === progress;
         const condominiumFilter =
           condominium === "Todos" || agreement.nomeCondominio === condominium;
         const paymentStatusFilter =
           tenant?.mensalidadesAtrasadas !== undefined
             ? paymentStatus === "Todos" ||
-              (paymentStatus === "Em dia" && tenant?.mensalidadesAtrasadas === 0) ||
-              (paymentStatus === "1 mês de atraso" && tenant?.mensalidadesAtrasadas === 1) ||
-              (paymentStatus === "2 meses de atraso" && tenant?.mensalidadesAtrasadas === 2) ||
-              (paymentStatus === "3 meses ou mais de atraso" && tenant.mensalidadesAtrasadas >= 3)
+              (paymentStatus === "Em dia" &&
+                tenant?.mensalidadesAtrasadas === 0) ||
+              (paymentStatus === "1 mês de atraso" &&
+                tenant?.mensalidadesAtrasadas === 1) ||
+              (paymentStatus === "2 meses de atraso" &&
+                tenant?.mensalidadesAtrasadas === 2) ||
+              (paymentStatus === "3 meses ou mais de atraso" &&
+                tenant.mensalidadesAtrasadas >= 3)
             : true;
         return (
-          (filterByProgress ? progressFilter : true) && condominiumFilter && paymentStatusFilter
+          (filterByProgress ? progressFilter : true) &&
+          condominiumFilter &&
+          paymentStatusFilter
         );
       })
     );
-  }, [condominium, agreements, filterByProgress, progress, tenants, paymentStatus]);
+  }, [
+    condominium,
+    agreements,
+    filterByProgress,
+    progress,
+    tenants,
+    paymentStatus,
+  ]);
 
   useEffect(() => {
     handleSearch(searchQuery);
@@ -105,7 +124,10 @@ export default function AgreementList({
   }
 
   function handlePagination() {
-    return filteredAgreements.slice((page - 1) * agreementsPerPage, page * agreementsPerPage);
+    return filteredAgreements.slice(
+      (page - 1) * agreementsPerPage,
+      page * agreementsPerPage
+    );
   }
 
   function handleFilterChange(title: string, option: string) {
@@ -141,8 +163,16 @@ export default function AgreementList({
               onChange={handleFilterChange}
             />
           )}
-          <Dropdown title="Local" options={condominiums} onChange={handleFilterChange} />
-          <Dropdown title="Atraso" options={paymentStatusList} onChange={handleFilterChange} />
+          <Dropdown
+            title="Local"
+            options={condominiums}
+            onChange={handleFilterChange}
+          />
+          <Dropdown
+            title="Atraso"
+            options={paymentStatusList}
+            onChange={handleFilterChange}
+          />
         </div>
       </div>
       <div className="w-full grid grid-cols-3 gap-5">
@@ -154,7 +184,11 @@ export default function AgreementList({
           />
         ))}
       </div>
-      <Paginator currentPage={page} onPageChange={setPage} pageLimit={totalPageCount} />
+      <Paginator
+        currentPage={page}
+        onPageChange={setPage}
+        pageLimit={totalPageCount}
+      />
     </div>
   );
 }

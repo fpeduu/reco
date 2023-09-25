@@ -36,9 +36,9 @@ export default function TenantList({ tenants }: TenantListProps) {
     });
     const uniqueMonths = tenants
       .map((x) => x.mensalidadesAtrasadas)
-      .filter((month, index, arr) => (arr.indexOf(month) === index))
+      .filter((month, index, arr) => arr.indexOf(month) === index)
       .sort((a, b) => a - b)
-      .map((month) => month === 1 ? month + " mês" : month + " meses");
+      .map((month) => (month === 1 ? month + " mês" : month + " meses"));
     if (uniqueMonths.length > 10) {
       const lastMonth = uniqueMonths[10];
       uniqueMonths.splice(10, uniqueMonths.length - 10);
@@ -51,17 +51,23 @@ export default function TenantList({ tenants }: TenantListProps) {
 
   useEffect(() => {
     setFilteredTenants(
-      tenants.filter((tenant) => {
-        const condominiumFilter = condominium === "Todos" ||
-                                  tenant.nomeCondominio === condominium;
-        if (monthsLate === "Todos") return condominiumFilter;
-        const selected = Number(monthsLate.split(" ")[0]);
-        const monthsFilter = monthsLate.indexOf("ou mais") !== -1 ?
-          selected <= tenant.mensalidadesAtrasadas :
-          selected === tenant.mensalidadesAtrasadas;
-        return condominiumFilter && monthsFilter;
-      }).sort((a, b) => a.nome.localeCompare(b.nome) ||
-        a.mensalidadesAtrasadas - b.mensalidadesAtrasadas)
+      tenants
+        .filter((tenant) => {
+          const condominiumFilter =
+            condominium === "Todos" || tenant.nomeCondominio === condominium;
+          if (monthsLate === "Todos") return condominiumFilter;
+          const selected = Number(monthsLate.split(" ")[0]);
+          const monthsFilter =
+            monthsLate.indexOf("ou mais") !== -1
+              ? selected <= tenant.mensalidadesAtrasadas
+              : selected === tenant.mensalidadesAtrasadas;
+          return condominiumFilter && monthsFilter;
+        })
+        .sort(
+          (a, b) =>
+            a.nome.localeCompare(b.nome) ||
+            a.mensalidadesAtrasadas - b.mensalidadesAtrasadas
+        )
     );
   }, [monthsLate, condominium, tenants]);
 
@@ -73,17 +79,21 @@ export default function TenantList({ tenants }: TenantListProps) {
 
     setFilteredTenants(
       tenants.filter((tenant) => {
-        return tenant.nome.toLowerCase().includes(searchLower) ||
-               tenant.nomeCondominio.toLowerCase().includes(searchLower) || 
-               tenant.cpf.includes(searchLower);
+        return (
+          tenant.nome.toLowerCase().includes(searchLower) ||
+          tenant.nomeCondominio.toLowerCase().includes(searchLower) ||
+          tenant.cpf.includes(searchLower)
+        );
       })
     );
     setPage(1);
   }
 
   function handlePagination() {
-    return filteredTenants.slice((page - 1) * tenantsPerPage,
-                                 page * tenantsPerPage);
+    return filteredTenants.slice(
+      (page - 1) * tenantsPerPage,
+      page * tenantsPerPage
+    );
   }
 
   function handleFilterChange(title: string, option: string) {
@@ -99,22 +109,26 @@ export default function TenantList({ tenants }: TenantListProps) {
     <div className="flex flex-col items-center justify-between gap-3">
       <Search onSearch={handleSearch} />
       <div className="flex justify-end items-center w-full gap-5">
-        <span className="text-neutral-400 text-sm font-medium">Filtros:</span>
-        <Dropdown title="Condomínio" options={condomiunsList}
-                  onChange={handleFilterChange} />
-        <Dropdown title="Atraso" options={monthsLateList}
-                  onChange={handleFilterChange} />
+        <span className=" text-sm font-light">Filtrar por:</span>
+        <Dropdown
+          title="Condomínio"
+          options={condomiunsList}
+          onChange={handleFilterChange}
+        />
+        <Dropdown
+          title="Atraso"
+          options={monthsLateList}
+          onChange={handleFilterChange}
+        />
       </div>
       {handlePagination().map((tenant) => (
-        <DebtorCard
-          key={tenant.cpf}
-          tenant={tenant}
-          isModal={false}
-          isInteractive={true}
-        />
+        <DebtorCard key={tenant.cpf} tenant={tenant} />
       ))}
-      <Paginator currentPage={page} onPageChange={setPage}
-                 pageLimit={totalPageCount} />
+      <Paginator
+        currentPage={page}
+        onPageChange={setPage}
+        pageLimit={totalPageCount}
+      />
     </div>
   );
 }

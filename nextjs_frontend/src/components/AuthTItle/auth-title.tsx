@@ -7,8 +7,12 @@ export default function AuthTitle({ subtitle }: { subtitle?: string }) {
 
   return (
     <div className="my-10">
-      <h1 className="text-4xl font-extrabold leading-10">Olá, {session?.user?.name}!</h1>
-      {subtitle && <h2 className="text-lg font-medium leading-10">{subtitle}</h2>}
+      <h1 className="text-4xl font-bold leading-10">
+        Olá, {session?.user?.name}!
+      </h1>
+      {subtitle && (
+        <h2 className="text-lg font-light leading-10">{subtitle}</h2>
+      )}
     </div>
   );
 }

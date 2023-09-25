@@ -31,8 +31,8 @@ export default function AgreementsPage() {
     <div className="containerLayout">
       <AuthTitle subtitle="Confira os inadimplentes e realize novas negociações" />
       <div className="mb-3 flex items-center justify-start">
-        <h2 className="font-bold text-2xl">Lista de Inadimplentes</h2>
-        <span className="font-medium text-xs ml-2">
+        <h2 className="font-semibold text-2xl">Lista de Inadimplentes</h2>
+        <span className="font-light text-xs ml-2">
           (Total: {tenants.length})
         </span>
       </div>
