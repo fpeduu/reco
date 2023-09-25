@@ -3,30 +3,23 @@
 import DebtorCard from "@/components/DebtorCard/debtor-card";
 import { useEffect, useState } from "react";
 
-import { Condomino } from "@/models/Devedores";
+import { Devedor } from "@/models/Devedores";
 import Search from "@/components/Search/search";
 import Dropdown from "@/components/Dropdown/dropdown";
 import Paginator from "@/components/Paginator/paginator";
 
 interface TenantListProps {
-  tenants: Condomino[];
+  tenants: Devedor[];
 }
-
-const statusList: string[] = [
-  "Todos",
-  "Em dia",
-  "1 mês de atraso",
-  "2 meses de atraso",
-  "3 meses ou mais de atraso"
-];
 
 const tenantsPerPage = 7;
 
 export default function TenantList({ tenants }: TenantListProps) {
-  const [filteredTenants, setFilteredTenants] = useState<Condomino[]>(tenants);
+  const [filteredTenants, setFilteredTenants] = useState<Devedor[]>(tenants);
   const [condomiunsList, setCondomiunsList] = useState<string[]>([]);
+  const [monthsLateList, setMonthsLateList] = useState<string[]>([]);
   const [condominium, setCondominium] = useState<string>("Todos");
-  const [status, setStatus] = useState<string>("Todos");
+  const [monthsLate, setMonthsLate] = useState<string>("Todos");
   const [page, setPage] = useState(1);
 
   const totalPageCount = Math.ceil(filteredTenants.length / tenantsPerPage);
@@ -41,23 +34,41 @@ export default function TenantList({ tenants }: TenantListProps) {
     const uniqueCondomiuns = condomiuns.filter((condominium, index) => {
       return condomiuns.indexOf(condominium) === index;
     });
+    const uniqueMonths = tenants
+      .map((x) => x.mensalidadesAtrasadas)
+      .filter((month, index, arr) => arr.indexOf(month) === index)
+      .sort((a, b) => a - b)
+      .map((month) => (month === 1 ? month + " mês" : month + " meses"));
+    if (uniqueMonths.length > 10) {
+      const lastMonth = uniqueMonths[10];
+      uniqueMonths.splice(10, uniqueMonths.length - 10);
+      uniqueMonths.push(lastMonth + " ou mais");
+    }
+
     setCondomiunsList(["Todos", ...uniqueCondomiuns]);
+    setMonthsLateList(["Todos", ...uniqueMonths]);
   }, [tenants]);
 
   useEffect(() => {
     setFilteredTenants(
-      tenants.filter((tenant) => {
-        const condominiumFilter = condominium === "Todos" || tenant.nomeCondominio === condominium;
-        const statusFilter =
-          status === "Todos" ||
-          (status === "Em dia" && tenant.mensalidadesAtrasadas === 0) ||
-          (status === "1 mês de atraso" && tenant.mensalidadesAtrasadas === 1) ||
-          (status === "2 meses de atraso" && tenant.mensalidadesAtrasadas === 2) ||
-          (status === "3 meses ou mais de atraso" && tenant.mensalidadesAtrasadas >= 3);
-        return condominiumFilter && statusFilter;
-      })
+      tenants
+        .filter((tenant) => {
+          const condominiumFilter =
+            condominium === "Todos" || tenant.nomeCondominio === condominium;
+          if (monthsLate === "Todos") return condominiumFilter;
+          const selected = Number(monthsLate.split(" ")[0]);
+          const monthsFilter =
+            monthsLate.indexOf("ou mais") !== -1
+              ? selected <= tenant.mensalidadesAtrasadas
+              : selected === tenant.mensalidadesAtrasadas;
+          return condominiumFilter && monthsFilter;
+        })
+        .sort(
+          (a, b) =>
+            a.nome.localeCompare(b.nome) || a.mensalidadesAtrasadas - b.mensalidadesAtrasadas
+        )
     );
-  }, [status, condominium, tenants]);
+  }, [monthsLate, condominium, tenants]);
 
   function handleSearch(search: string) {
     if (search === "") {
@@ -67,7 +78,11 @@ export default function TenantList({ tenants }: TenantListProps) {
 
     setFilteredTenants(
       tenants.filter((tenant) => {
-        return tenant.nome.toLowerCase().includes(searchLower) || tenant.cpf.includes(searchLower);
+        return (
+          tenant.nome.toLowerCase().includes(searchLower) ||
+          tenant.nomeCondominio.toLowerCase().includes(searchLower) ||
+          tenant.cpf.includes(searchLower)
+        );
       })
     );
     setPage(1);
@@ -81,18 +96,18 @@ export default function TenantList({ tenants }: TenantListProps) {
     if (title === "Condomínio") {
       setCondominium(option);
     } else {
-      setStatus(option);
+      setMonthsLate(option);
     }
     setPage(1);
   }
 
   return (
-    <div className="flex flex-col items-center justify-between gap-5">
+    <div className="flex flex-col items-center justify-between gap-3">
       <Search onSearch={handleSearch} />
       <div className="flex justify-end items-center w-full gap-5">
         <span className="text-neutral-400 text-sm font-medium">Filtros:</span>
         <Dropdown title="Condomínio" options={condomiunsList} onChange={handleFilterChange} />
-        <Dropdown title="Atraso" options={statusList} onChange={handleFilterChange} />
+        <Dropdown title="Atraso" options={monthsLateList} onChange={handleFilterChange} />
       </div>
       {handlePagination().map((tenant) => {
         const condValue: number = 149.32; // TODO: get from API

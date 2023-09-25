@@ -1,8 +1,0 @@
-.finalProposalCard {
-  @apply w-96 flex flex-col items-center justify-center shadow rounded-lg bg-black text-white text-lg;
-
-  ul li {
-    @apply pl-7 pt-1 bg-[url(/icons/check_circle.svg)]
-               bg-no-repeat bg-left;
-  }
-}

@@ -84,7 +84,7 @@ export default function SignIn() {
             </div>
             <div className="md:w-1/2 flex justify-end">
               <Link
-                href="/forgot-password"
+                href="#"
                 className="text-sm font-medium hover:underline pt-[2px]"
               >
                 Esqueci minha senha
@@ -107,4 +107,4 @@ export default function SignIn() {
       </div>
     </div>
   );
-};
+}

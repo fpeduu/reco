@@ -1,7 +1,6 @@
 "use client";
 
 import { serverURL } from "@/config/index";
-import { Condomino } from "@/models/Devedores";
 import { Acordo } from "@/models/Acordos";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -13,8 +12,7 @@ import DownloadButton from "@/components/DownloadButton/download-button";
 
 interface AgreementResponse {
   acordo: Acordo;
-  devedor: Condomino;
-  condominio: Condominio;
+  devedor: Devedor;
 }
 
 const fetchAgreement = async (cpfDevedor: string) => {
@@ -25,7 +23,7 @@ const fetchAgreement = async (cpfDevedor: string) => {
     })) as AgreementResponse;
 };
 
-export default function AgreementStatus() {
+export default function AgreementStatus({ params }: AgreementStatusProps) {
   const [agreement, setAgreement] = useState<Acordo>({} as Acordo);
   const [tenant, setTenant] = useState<Condomino>({} as Condomino);
   const [condominium, setCondominium] = useState<Condominio>({} as Condominio);
@@ -33,12 +31,16 @@ export default function AgreementStatus() {
   const tenantCpf = useParams().cpfDevedor as string;
 
   useEffect(() => {
-    fetchAgreement(tenantCpf).then((response) => {
+    fetchAgreement(params.cpfDevedor).then((response) => {
       setAgreement(response.acordo);
       setTenant(response.devedor);
-      setCondominium(response.condominio);
+      const dataAcordo = response.acordo.dataAcordo;
+      if (dataAcordo) {
+        const daysPassed = new Date().getDate() - dataAcordo.getDate();
+        setDaysPassed(daysPassed);
+      }
     });
-  }, [tenantCpf]);
+  }, [params]);
 
   return (
     <div className="containerLayout flex flex-col gap-10">
