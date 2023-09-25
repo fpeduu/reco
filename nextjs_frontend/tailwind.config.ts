@@ -1,19 +1,17 @@
-import type { Config } from 'tailwindcss'
+import type { Config } from "tailwindcss";
 
 const config: Config = {
   content: [
-    './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/components/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/app/**/*.{js,ts,jsx,tsx,mdx}',
-    'node_modules/preline/dist/*.js',
+    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    "node_modules/preline/dist/*.js",
   ],
-  plugins: [
-    require('preline/plugin'),
-  ],
+  plugins: [require("preline/plugin")],
   theme: {
     extend: {
       fontFamily: {
-        sans: ['var(--font-visbycf)']
+        sans: ["var(--font-NoirPro)"],
       },
       colors: {
         primary: "#f23322",
@@ -23,10 +21,10 @@ const config: Config = {
           0: "#0fa958",
           1: "#ffc700",
           2: "#ff7a00",
-          3: "#ff0000"
-        }
-      }
+          3: "#ff0000",
+        },
+      },
     },
   },
-}
-export default config
+};
+export default config;
