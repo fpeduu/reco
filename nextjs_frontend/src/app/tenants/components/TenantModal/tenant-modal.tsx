@@ -60,7 +60,7 @@ export default function TenantModal({ open, onClose }: TenantModalProps) {
       }
     });
   }, [open]);
-
+  
   return open && (
     <div
       className="relative z-10"

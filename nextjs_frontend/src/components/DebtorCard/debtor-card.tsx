@@ -53,9 +53,7 @@ export default function DebtorCard({ tenant }: DebtorCardProps) {
         <div className="w-20 pb-1">
           <p className="font-semibold">Dívida:</p>
           <div className="flex items-center gap-1 text-xs font-medium">
-            <span className="pt-1">
-              R$ {tenant.valorDivida?.toLocaleString("pt-BR")}
-            </span>
+            <span className="pt-1">R$ {tenant.valorDivida?.toLocaleString("pt-BR")}</span>
           </div>
         </div>
         <div className="w-44 flex items-center justify-end">
