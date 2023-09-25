@@ -1,10 +1,10 @@
 import { StatusType } from "@/models/Acordos";
 
 interface StatusBarProps {
-  statusIndex: number;
+  status: StatusType;
 }
 
-const primaryBarLengths = ["w-1/6", "w-2/6", "w-3/6", "w-4/6", "w-full", "w-full", "w-0"];
+const primaryBarLengths = ["w-0", "w-1/5", "w-2/5", "w-3/5", "w-full", "w-full", "w-0"];
 const primaryBarColors = [
   "bg-red-500",
   "bg-amber-500",
@@ -52,17 +52,17 @@ export function getStatusIndex(status: StatusType) {
   }
 }
 
-export default function StatusBar({ statusIndex }: StatusBarProps) {
+export default function StatusBar({ status }: StatusBarProps) {
+  const statusIndex = getStatusIndex(status);
   const textColor = textColors.at(statusIndex);
   const barColor = primaryBarColors.at(statusIndex);
   const barLength = primaryBarLengths.at(statusIndex);
   const secondaryBarColor = secondaryBarColors.at(statusIndex);
-  const statusPercentage = ((100 / 6) * (statusIndex + 1)).toFixed(0);
 
   return (
     <>
-      <span className={"self-end " + textColor}>
-        {statusIndex < 4 ? `${statusPercentage}% completo` : "Completo!"}
+      <span className={"self-end text-sm " + textColor}>
+        {statusIndex < 4 ? `${status}` : "Negociação concluída!"}
       </span>
       <span className="w-full relative">
         <span className={"w-full h-2 absolute z-0 rounded-full " + secondaryBarColor} />
