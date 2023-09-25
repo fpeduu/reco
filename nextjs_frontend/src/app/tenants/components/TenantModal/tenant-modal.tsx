@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 
 import { useProposalContext } from "@/contexts/ProposalContext";
 import { RegrasProposta } from "@/models/Usuarios";
+import { Acordo } from "@/models/Acordos";
 import { serverURL } from "@/config";
 
 import ModalContent, {
@@ -17,12 +18,31 @@ interface TenantModalProps {
 }
 
 async function fetchProposalInfos(cpf: string) {
-    return await fetch(`${serverURL}/api/proposal/${cpf}/`)
-        .then((response) => response.json())
-        .catch((error) => {
-            console.error(error);
-            return null 
-        }) as RegrasProposta | null;
+  return await fetch(`${serverURL}/api/proposal/${cpf}/`)
+    .then((response) => response.json())
+    .catch((error) => {
+      console.error(error);
+      return null 
+    }) as RegrasProposta | null;
+}
+
+async function createAgreement(
+  cpf: string,
+  entrada: number,
+  valorParcela: number,
+  qtdParcelas: number
+) {
+  return await fetch(`${serverURL}/api/agreements/${cpf}/`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ entrada, valorParcela, qtdParcelas })
+  }).then((response) => response.json())
+    .catch((error) => {
+        console.error(error);
+        return null 
+    }) as Acordo | null;
 }
 
 export default function TenantModal({ open, onClose }: TenantModalProps) {
@@ -34,8 +54,18 @@ export default function TenantModal({ open, onClose }: TenantModalProps) {
     worstInstallments: 0, piorParcela: 0, melhorParcela: 0
   });
 
-  function onConfirm() {
-    setConfirmed(true);
+  async function onConfirm() {
+    createAgreement(debtor.cpf, negotiation.bestValue,
+                    negotiation.bestInstallments,
+                    negotiation.melhorParcela as number
+    ).then((data) => {
+      if (data) {
+        setConfirmed(true);
+      } else {
+        alert("Erro ao criar acordo");
+        console.error(data);
+      }
+    });
   }
 
   useEffect(() => {
