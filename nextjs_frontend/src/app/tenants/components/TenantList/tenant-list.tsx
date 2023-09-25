@@ -1,10 +1,10 @@
 "use client";
 
-import DebtorCard from "@/components/DebtorCard/debtor-card";
 import { useEffect, useState } from "react";
 
 import { Devedor } from "@/models/Devedores";
 import Search from "@/components/Search/search";
+import DebtorCard from "../DebtorCard/debtor-card";
 import Dropdown from "@/components/Dropdown/dropdown";
 import Paginator from "@/components/Paginator/paginator";
 

@@ -1,9 +1,10 @@
 "use client";
 
-import { useProposalContext } from "@/contexts/ProposalContext";
-import { Devedor } from "@/models/Devedores";
-import TenantModal from "../../app/tenants/components/TenantModal/tenant-modal";
 import { useState } from "react";
+
+import { useProposalContext } from "@/contexts/ProposalContext";
+import TenantModal from "../TenantModal/tenant-modal";
+import { Devedor } from "@/models/Devedores";
 
 interface DebtorCardProps {
   tenant: Devedor;

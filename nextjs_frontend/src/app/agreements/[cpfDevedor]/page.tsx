@@ -8,7 +8,7 @@ import { Devedor } from "@/models/Devedores";
 import TenantProfileCard from "./components/TenantProfileCard/tenant-profile-card";
 import CurrencyCard from "./components/CurrencyCard/currency-card";
 import StatusBarBig from "./components/StatusBarBig/status-bar-big";
-import DownloadButton from "@/components/DownloadButton/download-button";
+import DownloadButton from "./components/DownloadButton/download-button";
 
 interface AgreementResponse {
   acordo: Acordo;
