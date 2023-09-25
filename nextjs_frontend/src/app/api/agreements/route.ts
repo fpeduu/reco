@@ -28,7 +28,16 @@ export async function GET() {
     }
 
     return {
-      ...agreement,
+      usuarioEmail: agreement.usuarioEmail,
+      cpfDevedor: agreement.cpfDevedor,
+      dataAcordo: agreement.dataAcordo,
+      status: agreement.status,
+
+      entrada: agreement.entrada,
+      valorTotal: agreement.valorTotal,
+      qtdParcelas: agreement.qtdParcelas,
+      historicoValores: agreement.historicoValores,
+      
       nomeDevedor: devedor.nome,
       nomeCondominio: devedor.nomeCondominio,
     };
