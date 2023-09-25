@@ -4,10 +4,10 @@ import { Inter } from "next/font/google";
 import Header from "@/components/Header/header";
 import SideBar from "@/components/SideBar/sidebar";
 import Footer from "@/components/Footer/footer";
-import visbyCF from "@/config/fonts";
 import { NextAuthProvider } from "./providers";
 import { ProposalProvider } from "../contexts/ProposalContext";
 import { SideBarProvider } from "@/contexts/SideBarContext";
+import NoirPro from "@/config/fonts";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,7 +23,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${visbyCF.className} ${inter.className}`}>
+      <body className={`${NoirPro.className} ${inter.className}`}>
         <NextAuthProvider>
           <ProposalProvider>
             <SideBarProvider>
