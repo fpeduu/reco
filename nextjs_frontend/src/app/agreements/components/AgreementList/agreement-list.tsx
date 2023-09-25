@@ -111,7 +111,7 @@ export default function AgreementList({
   function handleFilterChange(title: string, option: string) {
     if (title === "Progresso") {
       setProgress(option);
-    } else if (title === "Local") {
+    } else if (title === "Condomínio") {
       setCondominium(option);
     } else if (title === "Atraso") {
       setPaymentStatus(option);
@@ -141,7 +141,7 @@ export default function AgreementList({
               onChange={handleFilterChange}
             />
           )}
-          <Dropdown title="Local" options={condominiums} onChange={handleFilterChange} />
+          <Dropdown title="Condomínio" options={condominiums} onChange={handleFilterChange} />
           <Dropdown title="Status" options={paymentStatusList} onChange={handleFilterChange} />
         </div>
       </div>

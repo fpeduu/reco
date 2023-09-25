@@ -11,14 +11,17 @@ interface AgreementCardProps {
 export default function AgreementCard({ agreement, tenant }: AgreementCardProps) {
   return (
     <Link className="w-full cursor-pointer" href={`/agreements/${agreement.cpfDevedor}`}>
-      <div className="p-5 flex flex-col rounded-lg text-sm bg-white hover:bg-gray-50">
-        <span className="text-xl font-bold">{agreement.nomeDevedor}</span>
-        <span className="mb-2 text-zinc-500">{agreement.cpfDevedor}</span>
+      <div className="p-5 flex flex-col rounded-xl text-sm bg-white hover:bg-gray-50">
+        <span className="text-xl font-bold mb-5">{agreement.nomeDevedor}</span>
         <span>
-          <span className="font-semibold">Local:&nbsp;</span>
-          {agreement.nomeCondominio}
+          <span className="font-semibold">CPF:</span>&nbsp;
+          {agreement.cpfDevedor}
         </span>
         <span>
+          <span className="font-semibold">Condomínio:&nbsp;</span>
+          {agreement.nomeCondominio}
+        </span>
+        <span className="mb-5">
           <span className="font-semibold">Status:&nbsp;</span>
           {tenant?.mensalidadesAtrasadas ? `${tenant.mensalidadesAtrasadas} meses de atraso` : "-"}
         </span>

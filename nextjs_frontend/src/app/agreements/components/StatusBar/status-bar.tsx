@@ -61,12 +61,12 @@ export default function StatusBar({ status }: StatusBarProps) {
 
   return (
     <>
-      <span className={"self-end text-sm " + textColor}>
-        {statusIndex < 4 ? `${status}` : "Negociação concluída!"}
+      <span className={"mb-2 self-end text-sm " + textColor}>
+        {statusIndex < 4 ? `${status}.` : "Negociação concluída!"}
       </span>
-      <span className="w-full relative">
-        <span className={"w-full h-2 absolute z-0 rounded-full " + secondaryBarColor} />
-        <span className={barLength + " h-2 z-1 absolute rounded-full " + barColor} />
+      <span className="w-full relative mb-3">
+        <span className={"w-full h-3 absolute z-0 rounded-full " + secondaryBarColor} />
+        <span className={barLength + " h-3 z-1 absolute rounded-full " + barColor} />
       </span>
     </>
   );
