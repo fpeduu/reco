@@ -110,7 +110,7 @@ export default function TenantList({ tenants }: TenantListProps) {
         <Dropdown title="Atraso" options={monthsLateList} onChange={handleFilterChange} />
       </div>
       {handlePagination().map((tenant) => {
-        return <DebtorCard key={tenant.cpf} tenant={tenant} isModal={false} isInteractive={true} />;
+        return <DebtorCard key={tenant.cpf} tenant={tenant} />;
       })}
       <Paginator currentPage={page} onPageChange={setPage} pageLimit={totalPageCount} />
     </div>
