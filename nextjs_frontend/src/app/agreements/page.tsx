@@ -6,7 +6,7 @@ import { getStatusIndex } from "./components/StatusBar/status-bar";
 import AgreementList from "./components/AgreementList/agreement-list";
 import Search from "@/components/Search/search";
 import { useEffect, useState } from "react";
-import { Condomino } from "@/models/Devedores";
+import { Devedor } from "@/models/Devedores";
 
 const BASE_URL = `${serverURL}/api/agreements/`;
 
@@ -24,14 +24,14 @@ async function fetchTenants() {
     .then((response) => response.json())
     .catch((error) => {
       console.error(error);
-      return [] as Condomino[];
-    })) as Condomino[];
+      return [] as Devedor[];
+    })) as Devedor[];
 }
 
 export default function AgreementsPage() {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [agreements, setAgreements] = useState<AcordoIdentificado[]>([]);
-  const [tenants, setTenants] = useState<Condomino[]>([]);
+  const [tenants, setTenants] = useState<Devedor[]>([]);
 
   useEffect(() => {
     fetchAgreements().then((agreements) => setAgreements(agreements));
@@ -39,10 +39,12 @@ export default function AgreementsPage() {
   }, []);
 
   const inProgressAgreements = agreements.filter((agreement) => {
+    if (!agreement) return;
     return getStatusIndex(agreement.status) < 4;
   });
 
   const endedAgreements = agreements.filter((agreement) => {
+    if (!agreement) return;
     return getStatusIndex(agreement.status) > 3;
   });
 

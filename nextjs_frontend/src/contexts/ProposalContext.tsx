@@ -1,11 +1,11 @@
 "use client";
 
 import { createContext, useContext, useState } from "react";
-import { Condomino } from "@/models/Devedores";
+import { Devedor } from "@/models/Devedores";
 
 interface ProposalContext {
-  debtor: Condomino;
-  setDebtor: React.Dispatch<React.SetStateAction<Condomino>>;
+  debtor: Devedor;
+  setDebtor: React.Dispatch<React.SetStateAction<Devedor>>;
 }
 
 interface ProposalProviderProps {
@@ -15,13 +15,14 @@ interface ProposalProviderProps {
 export const ProposalContext = createContext<ProposalContext | null>(null);
 
 export function ProposalProvider({ children }: ProposalProviderProps) {
-  const [debtor, setDebtor] = useState<Condomino>({} as Condomino);
+  const [debtor, setDebtor] = useState<Devedor>({} as Devedor);
 
   return (
-    <ProposalContext.Provider value={{
-      debtor,
-      setDebtor,
-    }}>
+    <ProposalContext.Provider
+      value={{
+        debtor,
+        setDebtor
+      }}>
       {children}
     </ProposalContext.Provider>
   );

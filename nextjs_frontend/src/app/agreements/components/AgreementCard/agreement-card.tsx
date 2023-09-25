@@ -1,11 +1,11 @@
 import { AcordoIdentificado } from "@/models/Acordos";
 import StatusBar from "../StatusBar/status-bar";
 import Link from "next/link";
-import { Condomino } from "@/models/Devedores";
+import { Devedor } from "@/models/Devedores";
 
 interface AgreementCardProps {
   agreement: AcordoIdentificado;
-  tenant: Condomino | null;
+  tenant: Devedor | null;
 }
 
 export default function AgreementCard({ agreement, tenant }: AgreementCardProps) {

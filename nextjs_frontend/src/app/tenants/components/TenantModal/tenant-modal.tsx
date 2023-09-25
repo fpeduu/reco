@@ -1,7 +1,6 @@
 // TenantModal.tsx
 import { serverURL } from "@/config";
 import { useProposalContext } from "@/contexts/ProposalContext";
-import { Condomino } from "@/models/Devedores";
 import { useRouter } from "next/navigation";
 import React from "react";
 import DebtorCard from "@/components/DebtorCard/debtor-card";
@@ -58,12 +57,7 @@ const TenantModal: React.FC<TenantModalProps> = ({ open, onClose }) => {
                         Você selecionou o seguinte inadimplente:
                       </h2>
                       <div className="w-full max-w-3xl my-5">
-                        <DebtorCard
-                          tenant={debtor}
-                          debt={debtor.mensalidadesAtrasadas * condValue}
-                          isModal={true}
-                          isInteractive={false}
-                        />
+                        <DebtorCard tenant={debtor} isModal={true} isInteractive={false} />
                       </div>
                       <h2 className="text-xl font-medium leading-10">
                         É com esta pessoa que deseja iniciar o acordo?

@@ -4,7 +4,7 @@ import { serverURL } from "@/config/index";
 import { Acordo } from "@/models/Acordos";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Condominio } from "@/models/Condominios";
+import { Devedor } from "@/models/Devedores";
 import TenantProfileCard from "./components/TenantProfileCard/tenant-profile-card";
 import CurrencyCard from "./components/CurrencyCard/currency-card";
 import StatusBarBig from "./components/StatusBarBig/status-bar-big";
@@ -23,24 +23,18 @@ const fetchAgreement = async (cpfDevedor: string) => {
     })) as AgreementResponse;
 };
 
-export default function AgreementStatus({ params }: AgreementStatusProps) {
+export default function AgreementStatus() {
   const [agreement, setAgreement] = useState<Acordo>({} as Acordo);
-  const [tenant, setTenant] = useState<Condomino>({} as Condomino);
-  const [condominium, setCondominium] = useState<Condominio>({} as Condominio);
+  const [tenant, setTenant] = useState<Devedor>({} as Devedor);
   const [subpage, setSubpage] = useState<"timeline" | "details">("timeline");
   const tenantCpf = useParams().cpfDevedor as string;
 
   useEffect(() => {
-    fetchAgreement(params.cpfDevedor).then((response) => {
+    fetchAgreement(tenantCpf).then((response) => {
       setAgreement(response.acordo);
       setTenant(response.devedor);
-      const dataAcordo = response.acordo.dataAcordo;
-      if (dataAcordo) {
-        const daysPassed = new Date().getDate() - dataAcordo.getDate();
-        setDaysPassed(daysPassed);
-      }
     });
-  }, [params]);
+  }, [tenantCpf]);
 
   return (
     <div className="containerLayout flex flex-col gap-10">
@@ -51,7 +45,7 @@ export default function AgreementStatus({ params }: AgreementStatusProps) {
           icon="/icons/dollar_sign.svg"
           iconSize={34}
           title="Valor em débito"
-          value={tenant.mensalidadesAtrasadas * condominium.valorMensalidade}
+          value={tenant.mensalidadesAtrasadas * tenant.valorDivida}
           desccriptionTitle="Em atraso"
           description={`${tenant.mensalidadesAtrasadas} meses`}
           isUpArrow={false}
@@ -60,7 +54,7 @@ export default function AgreementStatus({ params }: AgreementStatusProps) {
           icon="/icons/document.svg"
           iconSize={26}
           title="Valor proposto"
-          value={agreement.valor ?? 0}
+          value={agreement.valorTotal ? agreement.valorTotal / agreement.qtdParcelas : 0}
           desccriptionTitle="Parcelado"
           description={`${agreement.qtdParcelas} meses`}
           isUpArrow={true}
@@ -91,7 +85,7 @@ export default function AgreementStatus({ params }: AgreementStatusProps) {
           {subpage === "timeline" &&
             (agreement.status === "Negociação concluída" ||
               agreement.status === "Baixar acordo finalizado") && (
-              <DownloadButton acordo={agreement} devedor={tenant} condominio={condominium} />
+              <DownloadButton acordo={agreement} devedor={tenant} />
             )}
         </div>
       </div>

@@ -4,17 +4,15 @@ import { downloadAgreement } from "@/services/agreementGenerator";
 import Image from "next/image";
 import { Acordo } from "@/models/Acordos";
 import { Devedor } from "@/models/Devedores";
-import { Condominio } from "@/models/Condominios";
 
 interface DownloadButtonProps {
   acordo: Acordo;
   devedor: Devedor;
-  condominio: Condominio;
 }
 
-export default function DownloadButton({ devedor, acordo, condominio }: DownloadButtonProps) {
+export default function DownloadButton({ devedor, acordo }: DownloadButtonProps) {
   function handleDownloadAgreement() {
-    downloadAgreement(devedor, acordo, condominio);
+    downloadAgreement(devedor, acordo);
   }
 
   return (

@@ -110,16 +110,7 @@ export default function TenantList({ tenants }: TenantListProps) {
         <Dropdown title="Atraso" options={monthsLateList} onChange={handleFilterChange} />
       </div>
       {handlePagination().map((tenant) => {
-        const condValue: number = 149.32; // TODO: get from API
-        return (
-          <DebtorCard
-            key={tenant.cpf}
-            tenant={tenant}
-            debt={tenant.mensalidadesAtrasadas * condValue}
-            isModal={false}
-            isInteractive={true}
-          />
-        );
+        return <DebtorCard key={tenant.cpf} tenant={tenant} isModal={false} isInteractive={true} />;
       })}
       <Paginator currentPage={page} onPageChange={setPage} pageLimit={totalPageCount} />
     </div>

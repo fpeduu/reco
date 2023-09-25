@@ -1,7 +1,7 @@
-import { Condomino } from "@/models/Devedores";
+import { Devedor } from "@/models/Devedores";
 
 interface TenantProfileCardProps {
-  tenant: Condomino;
+  tenant: Devedor;
 }
 
 export default function TenantProfileCard({ tenant }: TenantProfileCardProps) {
