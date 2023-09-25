@@ -80,7 +80,7 @@ export default function SideBar() {
               <ul className="flex flex-col gap-2">
                 <li className="w-full flex place-items-center">
                   <Link
-                    href="/settings/"
+                    href="#"
                     className={
                       Styles.navitem +
                       " " +
@@ -102,7 +102,7 @@ export default function SideBar() {
                 </li>
                 <li className="w-full flex place-items-center">
                   <Link
-                    href="/help/"
+                    href="#"
                     className={
                       Styles.navitem +
                       " " +

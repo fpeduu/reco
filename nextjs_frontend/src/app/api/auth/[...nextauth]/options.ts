@@ -27,17 +27,27 @@ export const options: NextAuthOptions = {
           },
           body: JSON.stringify(credentials),
         });
-        const user = await response.json();
 
-        if (user) return user;
+        const user = await response.json()
+        if (response.ok && user) {
+          return user;
+        }
+          
+        return null;
       },
     }),
   ],
   callbacks: {
     async session({ session, token, user }) {
-      if (session.user) {
-        session.user.name = "Roberto";
-      }
+      const response = await fetch(
+        `${serverURL}/api/auth?email=${token.email}`, {
+        method: "GET", headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = await response.json();
+      session.user = data;
 
       return session;
     },

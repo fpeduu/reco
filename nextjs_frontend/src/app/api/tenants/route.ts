@@ -1,24 +1,30 @@
 import { NextResponse } from "next/server";
-import { faker } from '@faker-js/faker/locale/pt_BR';
+import { options } from "../auth/[...nextauth]/options";
+import { getServerSession } from "next-auth/next";
 
-import { Condomino } from "@/models/Devedores";
-import { generateCNPJ, createRandomTenant } from "@/services/randomizer";
-
-function createRandomTenantList(): Condomino[] {
-  const cnpjCondominio = generateCNPJ();
-
-  const condominioName = faker.company.name();
-  return faker.helpers.multiple(() => createRandomTenant(
-    cnpjCondominio, condominioName
-  ), { count: { min: 1, max: 10 }});
-}
+import Devedores, { Devedor } from "@/models/Devedores";
+import { connectToDatabase } from "@/middlewares/mongodb";
 
 export async function GET() {
-  const tenantList = [];
-  for (let i = 0; i < faker.number.int({ min: 1, max: 10 }); i++) {
-    tenantList.push(...createRandomTenantList());
+  connectToDatabase();
+  const session = await getServerSession(options);
+  if (!session) {
+    return NextResponse.redirect("/auth/signin");
   }
-  const sortedTenantList = tenantList.sort((a, b) =>
-    b.mensalidadesAtrasadas - a.mensalidadesAtrasadas);
-  return NextResponse.json(sortedTenantList);
+
+  const devedores: Devedor[] = await Devedores.aggregate([
+    { $match: { emailAdministrador: session.user?.email } },
+    {
+      $lookup: {
+        from: "acordos",
+        localField: "cpf",
+        foreignField: "cpfDevedor",
+        as: "acordos",
+      },
+    },
+    { $match: { acordos: { $size: 0 } } },
+    { $unset: "acordos" }
+  ]);
+
+  return NextResponse.json(devedores);
 }
