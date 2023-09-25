@@ -21,6 +21,8 @@ const TenantModal: React.FC<TenantModalProps> = ({ open, onClose }) => {
   const router = useRouter();
   const { debtor } = useProposalContext();
 
+  const condValue = 149.32; //TODO: get this value from the backend
+
   function handleStartAgreement() {
     router.push(`${serverURL}/proposal/${debtor.cpf}`);
   }
@@ -58,6 +60,7 @@ const TenantModal: React.FC<TenantModalProps> = ({ open, onClose }) => {
                       <div className="w-full max-w-3xl my-5">
                         <DebtorCard
                           tenant={debtor}
+                          debt={debtor.mensalidadesAtrasadas * condValue}
                           isModal={true}
                           isInteractive={false}
                         />

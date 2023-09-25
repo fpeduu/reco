@@ -78,7 +78,7 @@ export default function TenantList({ tenants }: TenantListProps) {
   }
 
   function handleFilterChange(title: string, option: string) {
-    if (title === "Local") {
+    if (title === "Condomínio") {
       setCondominium(option);
     } else {
       setStatus(option);
@@ -91,12 +91,21 @@ export default function TenantList({ tenants }: TenantListProps) {
       <Search onSearch={handleSearch} />
       <div className="flex justify-end items-center w-full gap-5">
         <span className="text-neutral-400 text-sm font-medium">Filtros:</span>
-        <Dropdown title="Local" options={condomiunsList} onChange={handleFilterChange} />
-        <Dropdown title="Status" options={statusList} onChange={handleFilterChange} />
+        <Dropdown title="Condomínio" options={condomiunsList} onChange={handleFilterChange} />
+        <Dropdown title="Atraso" options={statusList} onChange={handleFilterChange} />
       </div>
-      {handlePagination().map((tenant) => (
-        <DebtorCard key={tenant.cpf} tenant={tenant} isModal={false} isInteractive={true} />
-      ))}
+      {handlePagination().map((tenant) => {
+        const condValue: number = 149.32; // TODO: get from API
+        return (
+          <DebtorCard
+            key={tenant.cpf}
+            tenant={tenant}
+            debt={tenant.mensalidadesAtrasadas * condValue}
+            isModal={false}
+            isInteractive={true}
+          />
+        );
+      })}
       <Paginator currentPage={page} onPageChange={setPage} pageLimit={totalPageCount} />
     </div>
   );

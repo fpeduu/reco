@@ -7,11 +7,12 @@ import { useState } from "react";
 
 interface DebtorCardProps {
   tenant: Condomino;
+  debt: number;
   isModal: boolean;
   isInteractive: boolean;
 }
 
-export default function DebtorCard({ tenant, isModal, isInteractive }: DebtorCardProps) {
+export default function DebtorCard({ tenant, debt, isModal, isInteractive }: DebtorCardProps) {
   const context = useProposalContext();
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -37,19 +38,30 @@ export default function DebtorCard({ tenant, isModal, isInteractive }: DebtorCar
         <p className="font-semibold">CPF:</p>
         <span className="text-xs font-oblique ">{tenant.cpf}</span>
       </div>
-      <div className="w-44 pb-1">
-        <p className="font-semibold">Local:</p>
+      <div className="w-48 pb-1">
+        <p className="font-semibold">Condomínio:</p>
         <div className="flex items-center gap-1 pt-1 text-xs font-oblique">
           {tenant.nomeCondominio}
         </div>
       </div>
-      <div className="w-44 pb-1">
-        <p className="font-semibold">Status:</p>
+      <div className="w-36 pb-1">
+        <p className="font-semibold">Atraso:</p>
         <div className="flex items-center gap-1 text-xs font-oblique">
           <span className="pt-1">
             {tenant.mensalidadesAtrasadas > 0
               ? `${tenant.mensalidadesAtrasadas} meses`
               : "Nenhum atraso"}
+          </span>
+        </div>
+      </div>
+      <div className="w-44 pb-1">
+        <p className="font-semibold">Dívida:</p>
+        <div className="flex items-center gap-1 text-xs font-oblique">
+          <span className="pt-1">
+            {debt.toLocaleString("pt-BR", {
+              style: "currency",
+              currency: "BRL"
+            })}
           </span>
         </div>
       </div>
@@ -59,7 +71,7 @@ export default function DebtorCard({ tenant, isModal, isInteractive }: DebtorCar
             className="w-full h-10  rounded-md text-white
                      text-s font-semibold text-center bg-primary"
             onClick={handleStartAgreement}>
-            Iniciar negociação
+            Negociar
           </button>
         </div>
       )}
