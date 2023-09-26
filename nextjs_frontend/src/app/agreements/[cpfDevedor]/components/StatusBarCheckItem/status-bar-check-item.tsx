@@ -12,7 +12,7 @@ export default function StatusBarCheckItem({
   step,
   checkStatus,
   title,
-  subtitle
+  subtitle,
 }: StatusBarCheckItemProps) {
   return (
     <div className={"relative flex " + (step < 5 ? "w-60" : "w-auto")}>
@@ -24,15 +24,19 @@ export default function StatusBarCheckItem({
               : checkStatus === "Em andamento"
               ? "bg-amber-500"
               : "bg-gray-100"
-          }`}>
+          }`}
+        >
           {checkStatus === "Completo" ? (
             <Image src="/icons/check.svg" alt="check" width={21} height={15} />
           ) : (
             <span
               className={
-                "font-semibold tex-xl " +
-                (checkStatus === "Em andamento" ? "text-white" : "text-slate-500")
-              }>
+                "font-normal tex-xl " +
+                (checkStatus === "Em andamento"
+                  ? "text-white"
+                  : "text-slate-500")
+              }
+            >
               {step + 1}
             </span>
           )}
@@ -52,7 +56,9 @@ export default function StatusBarCheckItem({
         />
       )}
       {step < 5 && checkStatus === "Em andamento" && (
-        <span className={`w-1/2 h-2 top-4 left-8 flex absolute rounded-2xl bg-amber-500`} />
+        <span
+          className={`w-1/2 h-2 top-4 left-8 flex absolute rounded-2xl bg-amber-500`}
+        />
       )}
     </div>
   );

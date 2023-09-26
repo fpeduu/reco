@@ -32,10 +32,10 @@ export default function AgreementsPage() {
   return (
     <div className="containerLayout">
       <div className="my-10">
-        <h1 className="text-4xl font-extrabold leading-10">
+        <h1 className="text-4xl font-bold leading-10">
           Olá, {session?.user?.name}!
         </h1>
-        <h2 className="text-lg font-medium leading-10">
+        <h2 className="text-lg  leading-10">
           Confira os inadimplentes e realize novas negociações
         </h2>
       </div>
