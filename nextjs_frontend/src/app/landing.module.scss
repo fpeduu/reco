@@ -1,28 +1,28 @@
 .featureCard {
-  @apply flex flex-wrap items-center justify-center bg-secondary rounded-2xl text-tertiary p-6 gap-5 md:min-w-[550px] min-h-[150px] shadow-md md:h-[150px] md:justify-start divide-x;
+  @apply flex flex-wrap items-center justify-center bg-secondary rounded-2xl text-tertiary p-6 gap-5 md:min-w-[500px] min-h-[150px] shadow-md md:h-[150px] md:justify-start divide-x;
 
   div {
     @apply flex flex-col gap-2 px-5 max-w-[300px];
 
     h5 {
-      @apply text-xl font-medium;
+      @apply text-2xl font-medium;
     }
 
     p {
-      @apply text-[13px] leading-6 font-medium;
+      @apply text-[13px] leading-6 font-light;
     }
   }
 }
 
 .userGuideStep {
-  @apply flex flex-col items-center justify-center gap-5 w-full;
+  @apply flex flex-col items-center justify-start gap-6 w-full mt-8 mx-4;
 
   div {
-    @apply flex items-center justify-center rounded-full text-tertiary bg-primary w-28 h-28 text-6xl pt-3;
+    @apply flex items-center justify-center rounded-full text-tertiary bg-primary w-28 h-28 text-5xl;
   }
 
   p {
-    @apply max-w-2xl tracking-wider leading-7 max-w-xs text-center font-medium text-secondary;
+    @apply max-w-2xl tracking-wider leading-7 max-w-xs text-center font-light text-secondary;
   }
 }
 
@@ -36,10 +36,10 @@
     @apply tracking-wide text-lg text-center text-secondary font-medium;
   }
   p {
-    @apply tracking-wide text-sm text-center text-secondary font-medium;
+    @apply tracking-wide text-sm text-center text-secondary;
   }
   small {
-    @apply tracking-wide text-sm text-center text-secondary max-w-xs italic mt-5;
+    @apply tracking-wide text-sm text-center text-secondary max-w-xs font-light italic mt-5;
   }
 }
 
@@ -65,7 +65,7 @@
 }
 
 .horizontalLine {
-  width: 200px; /* Adjust the length of the line as needed */
+  width: 210px; /* Adjust the length of the line as needed */
   height: 2px; /* Adjust the thickness of the line as needed */
   background-color: #000; /* Adjust the line color as needed */
   position: absolute;

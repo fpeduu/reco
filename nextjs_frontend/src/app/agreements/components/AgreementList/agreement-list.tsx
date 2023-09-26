@@ -151,11 +151,11 @@ export default function AgreementList({
     <div className="w-full flex flex-col items-center justify-between gap-5">
       <div className="w-full flex justify-between items-start">
         <div className="flex flex-col gap-3">
-          <h1 className="text-4xl font-extrabold">{title}</h1>
-          <p className="text-lg font-medium">{description}</p>
+          <h1 className="text-4xl font-semibold">{title}</h1>
+          <p className="text-lg font-light">{description}</p>
         </div>
         <div className="flex justify-end items-center gap-5">
-          <span className="text-neutral-400 text-sm font-medium">Filtros:</span>
+          <span className="text-sm font-light">Filtrar por:</span>
           {filterByProgress && (
             <Dropdown
               title="Progresso"

@@ -8,11 +8,19 @@ interface AgreementCardProps {
   tenant: Devedor | null;
 }
 
-export default function AgreementCard({ agreement, tenant }: AgreementCardProps) {
+export default function AgreementCard({
+  agreement,
+  tenant,
+}: AgreementCardProps) {
   return (
-    <Link className="w-full cursor-pointer" href={`/agreements/${agreement.cpfDevedor}`}>
+    <Link
+      className="w-full cursor-pointer"
+      href={`/agreements/${agreement.cpfDevedor}`}
+    >
       <div className="p-5 flex flex-col rounded-xl text-sm bg-white hover:bg-gray-50">
-        <span className="text-xl font-bold mb-5">{agreement.nomeDevedor}</span>
+        <span className="text-xl font-semibold mb-5">
+          {agreement.nomeDevedor}
+        </span>
         <span>
           <span className="font-semibold">CPF:</span>&nbsp;
           {agreement.cpfDevedor}
@@ -23,7 +31,9 @@ export default function AgreementCard({ agreement, tenant }: AgreementCardProps)
         </span>
         <span className="mb-5">
           <span className="font-semibold">Status:&nbsp;</span>
-          {tenant?.mensalidadesAtrasadas ? `${tenant.mensalidadesAtrasadas} meses de atraso` : "-"}
+          {tenant?.mensalidadesAtrasadas
+            ? `${tenant.mensalidadesAtrasadas} meses de atraso`
+            : "-"}
         </span>
         <StatusBar status={agreement.status} />
       </div>
