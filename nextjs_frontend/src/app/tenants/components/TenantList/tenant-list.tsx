@@ -1,10 +1,10 @@
 "use client";
 
-import DebtorCard from "@/components/DebtorCard/debtor-card";
 import { useEffect, useState } from "react";
 
 import { Devedor } from "@/models/Devedores";
 import Search from "@/components/Search/search";
+import DebtorCard from "../DebtorCard/debtor-card";
 import Dropdown from "@/components/Dropdown/dropdown";
 import Paginator from "@/components/Paginator/paginator";
 
@@ -36,6 +36,7 @@ export default function TenantList({ tenants }: TenantListProps) {
     });
     const uniqueMonths = tenants
       .map((x) => x.mensalidadesAtrasadas)
+      .filter((month, index, arr) => arr.indexOf(month) === index)
       .filter((month, index, arr) => arr.indexOf(month) === index)
       .sort((a, b) => a - b)
       .map((month) => (month === 1 ? month + " mês" : month + " meses"));
@@ -79,6 +80,11 @@ export default function TenantList({ tenants }: TenantListProps) {
 
     setFilteredTenants(
       tenants.filter((tenant) => {
+        return (
+          tenant.nome.toLowerCase().includes(searchLower) ||
+          tenant.nomeCondominio.toLowerCase().includes(searchLower) ||
+          tenant.cpf.includes(searchLower)
+        );
         return (
           tenant.nome.toLowerCase().includes(searchLower) ||
           tenant.nomeCondominio.toLowerCase().includes(searchLower) ||

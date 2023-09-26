@@ -1,7 +1,8 @@
 import { StatusType } from "@/models/Acordos";
+import StatusBarCheckItem from "../StatusBarCheckItem/status-bar-check-item";
 
 interface StatusBarBigProps {
-  status: StatusType | null;
+  status: StatusType;
 }
 
 export default function StatusBarBig({ status }: StatusBarBigProps) {
@@ -11,90 +12,59 @@ export default function StatusBarBig({ status }: StatusBarBigProps) {
         return 0;
       case "Conversa iniciada":
         return 1;
-      case "Valor reserva alcançado":
+      case "Valor reserva informado":
         return 2;
-      case "Negociação concluída":
+      case "Valor reserva alcançado":
         return 3;
+      case "Negociação concluída":
+        return 4;
+      case "Baixar acordo finalizado":
+        return 5;
       default:
         return 0;
     }
   }
 
-  const step = status ? getStatusStep(status) : 0;
+  const step = getStatusStep(status);
 
   return (
-    <span className="w-full p-1 flex justify-between relative">
-      <span
-        className={`w-1/3 h-8 top-4 left-0 flex justify-center absolute ${
-          step > 0 ? "bg-emerald-500" : "bg-gray-500"
-        }`}
+    <span className="w-full p-1 flex justify-center">
+      <StatusBarCheckItem
+        step={0}
+        title="Aguardando"
+        subtitle="inadimplente"
+        checkStatus={step > 0 ? "Completo" : "Em andamento"}
       />
-      <span
-        className={`w-1/3 h-8 top-4 left-1/3 flex justify-center absolute ${
-          step > 1 ? "bg-emerald-500" : "bg-gray-500"
-        }`}
+      <StatusBarCheckItem
+        step={1}
+        title="Conversa"
+        subtitle="iniciada"
+        checkStatus={step > 1 ? "Completo" : step === 1 ? "Em andamento" : "Pendente"}
       />
-      <span
-        className={`w-1/3 h-8 top-4 left-2/3 flex justify-center absolute ${
-          step > 2 ? "bg-emerald-500" : "bg-gray-500"
-        }`}
+      <StatusBarCheckItem
+        step={2}
+        title="Valor reserva"
+        subtitle="informado"
+        checkStatus={step > 2 ? "Completo" : step === 2 ? "Em andamento" : "Pendente"}
       />
-      <div className="flex flex-col items-center -ml-16">
-        <span
-          className={`w-14 h-14 z-10 flex items-center justify-center rounded-full text-white ${
-            step > 0 ? "bg-emerald-500" : "bg-gray-500"
-          }`}
-        >
-          {step > 0 && <span>&#10003;</span>}
-        </span>
-        <p className="text-center">
-          Aguardando
-          <br />
-          inadimplente
-        </p>
-      </div>
-      <div className="flex flex-col items-center">
-        <span
-          className={`w-14 h-14 z-10 flex items-center justify-center rounded-full text-white ${
-            step > 1 ? "bg-emerald-500" : "bg-gray-500"
-          }`}
-        >
-          {step > 1 && <span>&#10003;</span>}
-        </span>
-        <p className="text-center">
-          Conversa
-          <br />
-          iniciada
-        </p>
-      </div>
-      <div className="flex flex-col items-center">
-        <span
-          className={`w-14 h-14 z-10 flex items-center justify-center rounded-full text-white ${
-            step > 2 ? "bg-emerald-500" : "bg-gray-500"
-          }`}
-        >
-          {step > 2 && <span>&#10003;</span>}
-        </span>
-        <p className="text-center">
-          Valor reserva
-          <br />
-          alcançado
-        </p>
-      </div>
-      <div className="flex flex-col items-center -mr-16">
-        <span
-          className={`w-14 h-14 z-10 flex items-center justify-center rounded-full text-white ${
-            step >= 3 ? "bg-emerald-500" : "bg-gray-500"
-          }`}
-        >
-          {step >= 3 && <span>&#10003;</span>}
-        </span>
-        <p className="text-center">
-          Negociação
-          <br />
-          concluída
-        </p>
-      </div>
+      <StatusBarCheckItem
+        step={3}
+        title="Valor reserva"
+        subtitle="alcançado"
+        checkStatus={step > 3 ? "Completo" : step === 3 ? "Em andamento" : "Pendente"}
+      />
+      <StatusBarCheckItem
+        step={4}
+        title="Negociação"
+        subtitle="concluída"
+        checkStatus={step >= 4 ? "Completo" : "Pendente"}
+      />
+      <StatusBarCheckItem
+        step={5}
+        title="Baixar acordo"
+        subtitle="finalizado"
+        checkStatus={step === 5 ? "Completo" : "Pendente"}
+      />
     </span>
   );
 }

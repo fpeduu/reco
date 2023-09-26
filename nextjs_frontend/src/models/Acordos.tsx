@@ -1,15 +1,12 @@
 import mongoose from "mongoose";
 
-export enum StatusType {
-  "Aguardando inadimplente",
-  "Conversa iniciada",
-  "Primeira proposta realizada",
-  "Segunda proposta realizada",
-  "Terceira proposta realizada",
-  "Aguardando confirmação da proposta",
-  "Acordo realizado",
-  "Acordo rejeitado",
-}
+export type StatusType =
+  | "Aguardando inadimplente"
+  | "Conversa iniciada"
+  | "Valor reserva informado"
+  | "Valor reserva alcançado"
+  | "Negociação concluída"
+  | "Baixar acordo finalizado";
 
 export interface Proposta {
   entrada: number;
@@ -37,24 +34,21 @@ export interface AcordoIdentificado extends Acordo {
 const AcordoSchema = new mongoose.Schema({
   usuarioEmail: {
     type: String,
-    required: true,
+    required: true
   },
   cpfDevedor: {
     type: String,
-    required: true,
+    required: true
   },
   dataAcordo: {
     type: Date,
-    default: Date.now,
+    default: Date.now
   },
   status: String,
   entrada: Number,
   valorTotal: Number,
   qtdParcelas: Number,
-  historicoValores: [
-    { entrada: Number, valorParcela: Number, qtdParcelas: Number },
-  ],
+  historicoValores: [{ entrada: Number, valorParcela: Number, qtdParcelas: Number }]
 });
 
-export default mongoose.models.Acordos ||
-  mongoose.model("Acordos", AcordoSchema);
+export default mongoose.models.Acordos || mongoose.model("Acordos", AcordoSchema);

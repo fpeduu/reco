@@ -5,14 +5,14 @@ import Paginator from "@/components/Paginator/paginator";
 import { StatusType, AcordoIdentificado } from "@/models/Acordos";
 import { useEffect, useState } from "react";
 import AgreementCard from "../AgreementCard/agreement-card";
-import { Condomino } from "@/models/Devedores";
+import { Devedor } from "@/models/Devedores";
 
 interface AgreementListProps {
   searchQuery: string;
   title: string;
   description: string;
   agreements: AcordoIdentificado[];
-  tenants: Condomino[];
+  tenants: Devedor[];
   filterByProgress: boolean;
 }
 
@@ -133,7 +133,7 @@ export default function AgreementList({
   function handleFilterChange(title: string, option: string) {
     if (title === "Progresso") {
       setProgress(option);
-    } else if (title === "Local") {
+    } else if (title === "Condomínio") {
       setCondominium(option);
     } else if (title === "Atraso") {
       setPaymentStatus(option);
@@ -164,21 +164,21 @@ export default function AgreementList({
             />
           )}
           <Dropdown
-            title="Local"
+            title="Condomínio"
             options={condominiums}
             onChange={handleFilterChange}
           />
           <Dropdown
-            title="Atraso"
+            title="Status"
             options={paymentStatusList}
             onChange={handleFilterChange}
           />
         </div>
       </div>
       <div className="w-full grid grid-cols-3 gap-5">
-        {handlePagination().map((agreement) => (
+        {handlePagination().map((agreement, index) => (
           <AgreementCard
-            key={agreement.id}
+            key={index}
             agreement={agreement}
             tenant={getTenant(agreement.cpfDevedor)}
           />

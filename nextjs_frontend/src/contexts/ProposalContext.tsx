@@ -18,10 +18,11 @@ export function ProposalProvider({ children }: ProposalProviderProps) {
   const [debtor, setDebtor] = useState<Devedor>({} as Devedor);
 
   return (
-    <ProposalContext.Provider value={{
-      debtor,
-      setDebtor,
-    }}>
+    <ProposalContext.Provider
+      value={{
+        debtor,
+        setDebtor
+      }}>
       {children}
     </ProposalContext.Provider>
   );

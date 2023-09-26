@@ -12,9 +12,19 @@ export async function GET() {
     return NextResponse.redirect("/auth/signin");
   }
 
-  const devedores: Devedor[] = await Devedores.find({
-    emailAdministrador: session.user?.email,
-  });
+  const devedores: Devedor[] = await Devedores.aggregate([
+    { $match: { emailAdministrador: session.user?.email } },
+    {
+      $lookup: {
+        from: "acordos",
+        localField: "cpf",
+        foreignField: "cpfDevedor",
+        as: "acordos",
+      },
+    },
+    { $match: { acordos: { $size: 0 } } },
+    { $unset: "acordos" }
+  ]);
 
   return NextResponse.json(devedores);
 }
