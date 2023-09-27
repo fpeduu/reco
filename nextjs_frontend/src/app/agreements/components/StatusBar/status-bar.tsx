@@ -5,25 +5,25 @@ interface StatusBarProps {
   status: StatusType;
 }
 
-const primaryBarLengths = ["w-0", "w-1/5", "w-2/5",
-                           "w-3/5", "w-full", "w-full", "w-0"];
+const primaryBarLengths = ["w-0", "w-1/5", "w-1/5", "w-2/5",
+                           "w-3/5", "w-4/5", "w-full"];
 const primaryBarColors = [
+  "red-500",
   "red-500",
   "amber-500",
   "amber-500",
   "amber-500",
   "emerald-500",
-  "emerald-500",
-  "gray-500"
+  "emerald-500"
 ];
 const secondaryBarColors = [
+  "bg-red-200",
   "bg-red-200",
   "bg-amber-200",
   "bg-amber-200",
   "bg-amber-200",
   "bg-emerald-200",
-  "bg-emerald-200",
-  "bg-gray-500"
+  "bg-emerald-200"
 ];
 
 export default function StatusBar({ status }: StatusBarProps) {

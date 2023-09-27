@@ -3,13 +3,13 @@ import { StatusType } from "@/models/Acordos";
 export function getStatusStep(status: StatusType) {
   switch (status) {
     case "Conversa iniciada":
-      return 1;
+      return 1; // Este passo ocorre ao mesmo tempo que o 2°
     case "Primeira proposta":
       return 2;
     case "Segunda proposta":
       return 3;
     case "Proposta do inadimplente":
-      return 4;
+      return 4; // Este passo ocorre ao mesmo tempo que o 5°
     case "Aguardando aprovação":
       return 5;
     case "Acordo recusado":

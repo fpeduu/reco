@@ -83,7 +83,9 @@ export async function POST(request: NextRequest) {
 
   let status: StatusType = "Aguardando inadimplente";
   const session = await getServerSession(options);
-  if (session) {
+  const history = proposal.historicoValores;
+  if (session && history.length > 0 &&
+      history[history.length - 1].aceito) {
     if (newProposal.aceito) {
       status = "Acordo aceito";
     } else {
@@ -91,7 +93,7 @@ export async function POST(request: NextRequest) {
     }
   } else if (newProposal.aceito) {
     status = "Aguardando aprovação";
-  } else switch (proposal.historicoValores.length) {
+  } else switch (history.length) {
     case 0:
       status = "Primeira proposta";
       break;
@@ -107,13 +109,22 @@ export async function POST(request: NextRequest) {
   }
 
   if (status === "Acordo aceito") {
-    proposal.entrada = newProposal.entrada;
+    const devedor: Devedor | null = await Devedores.findOne({
+      cpf: cpfDevedor,
+    });
+    if (!devedor) {
+      return NextResponse.json({
+        "error": "No debtor found"
+      });
+    }
+    proposal.entrada = devedor.valorDivida * newProposal.entrada;
     proposal.qtdParcelas = newProposal.qtdParcelas;
+  } else {
+    history.push(newProposal);
   }
 
-  proposal.status = status;
   proposal.dataAcordo = new Date();
-  proposal.historicoValores.push(newProposal);
+  proposal.status = status;
 
   const updatedProposal = await Acordos.findOneAndUpdate(
     { cpfDevedor },
@@ -121,7 +132,7 @@ export async function POST(request: NextRequest) {
       dataAcordo: proposal.dataAcordo,
       status, entrada: proposal.entrada,
       qtdParcelas: proposal.qtdParcelas,
-      historicoValores: proposal.historicoValores,
+      historicoValores: history,
     } },
     { new: true }
   );
