@@ -2,15 +2,16 @@ import mongoose from "mongoose";
 
 export interface RegrasProposta {
   mesesAtraso: number;
-  melhorEntrada?: number;
+  melhorEntrada: number;
   melhorParcela: number;
   piorParcela: number;
-  piorEntrada?: number;
+  piorEntrada: number;
 }
 
 export interface Usuario {
   nome: string;
   email: string;
+  contact: string;
   password: string;
   regrasProposta: RegrasProposta[];
 }
@@ -18,20 +19,19 @@ export interface Usuario {
 const UsuarioSchema = new mongoose.Schema({
   nome: String,
   email: String,
+  contact: String,
   password: String,
   regrasProposta: [
     {
       mesesAtraso: Number,
       melhorEntrada: {
         type: Number,
-        required: false,
         default: 0,
       },
       melhorParcela: Number,
       piorParcela: Number,
       piorEntrada: {
         type: Number,
-        required: false,
         default: 0
       },
     },

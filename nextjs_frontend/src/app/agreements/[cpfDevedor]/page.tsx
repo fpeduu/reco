@@ -82,11 +82,9 @@ export default function AgreementStatus() {
         </nav>
         <div className="p-20 flex flex-col items-end gap-10">
           {subpage === "timeline" && <StatusBarBig status={agreement.status} />}
-          {subpage === "timeline" &&
-            (agreement.status === "Negociação concluída" ||
-              agreement.status === "Baixar acordo finalizado") && (
-              <DownloadButton acordo={agreement} devedor={tenant} />
-            )}
+          {subpage === "timeline" && agreement.status === "Acordo aceito" && (
+            <DownloadButton acordo={agreement} devedor={tenant} />
+          )}
         </div>
       </div>
     </div>

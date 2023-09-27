@@ -39,14 +39,18 @@ export function getStatusIndex(status: StatusType) {
       return 0;
     case "Conversa iniciada":
       return 1;
-    case "Valor reserva informado":
+    case "Primeira proposta":
       return 2;
-    case "Valor reserva alcançado":
+    case "Segunda proposta":
       return 3;
-    case "Negociação concluída":
+    case "Proposta do inadimplente":
       return 4;
-    case "Baixar acordo finalizado":
+    case "Aguardando aprovação":
       return 5;
+    case "Acordo recusado":
+      return 6;
+    case "Acordo aceito":
+      return 6;
     default:
       return -1;
   }

@@ -7,6 +7,7 @@ import Search from "@/components/Search/search";
 import DebtorCard from "../DebtorCard/debtor-card";
 import Dropdown from "@/components/Dropdown/dropdown";
 import Paginator from "@/components/Paginator/paginator";
+import { filterByCodominiumAndMonths, getUniqueMonths } from "@/services/tableUtils";
 
 interface TenantListProps {
   tenants: Devedor[];
@@ -34,17 +35,9 @@ export default function TenantList({ tenants }: TenantListProps) {
     const uniqueCondomiuns = condomiuns.filter((condominium, index) => {
       return condomiuns.indexOf(condominium) === index;
     });
-    const uniqueMonths = tenants
-      .map((x) => x.mensalidadesAtrasadas)
-      .filter((month, index, arr) => arr.indexOf(month) === index)
-      .filter((month, index, arr) => arr.indexOf(month) === index)
-      .sort((a, b) => a - b)
-      .map((month) => (month === 1 ? month + " mês" : month + " meses"));
-    if (uniqueMonths.length > 10) {
-      const lastMonth = uniqueMonths[10];
-      uniqueMonths.splice(10, uniqueMonths.length - 10);
-      uniqueMonths.push(lastMonth + " ou mais");
-    }
+    const uniqueMonths = getUniqueMonths(
+      tenants.map((x) => x.mensalidadesAtrasadas)
+    );
 
     setCondomiunsList(["Todos", ...uniqueCondomiuns]);
     setMonthsLateList(["Todos", ...uniqueMonths]);
@@ -52,24 +45,13 @@ export default function TenantList({ tenants }: TenantListProps) {
 
   useEffect(() => {
     setFilteredTenants(
-      tenants
-        .filter((tenant) => {
-          const condominiumFilter =
-            condominium === "Todos" || tenant.nomeCondominio === condominium;
-          if (monthsLate === "Todos") return condominiumFilter;
-          const selected = Number(monthsLate.split(" ")[0]);
-          const monthsFilter =
-            monthsLate.indexOf("ou mais") !== -1
-              ? selected <= tenant.mensalidadesAtrasadas
-              : selected === tenant.mensalidadesAtrasadas;
-          return condominiumFilter && monthsFilter;
-        })
-        .sort(
-          (a, b) =>
-            a.nome.localeCompare(b.nome) ||
-            a.mensalidadesAtrasadas - b.mensalidadesAtrasadas
-        )
-    );
+      tenants.filter((tenant) => filterByCodominiumAndMonths(
+          condominium, tenant.nomeCondominio,
+          monthsLate, tenant.mensalidadesAtrasadas
+      )).sort((a, b) =>
+        a.nome.localeCompare(b.nome) ||
+        a.mensalidadesAtrasadas - b.mensalidadesAtrasadas
+      ));
   }, [monthsLate, condominium, tenants]);
 
   function handleSearch(search: string) {

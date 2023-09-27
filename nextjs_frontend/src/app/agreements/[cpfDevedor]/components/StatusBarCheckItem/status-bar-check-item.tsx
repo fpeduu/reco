@@ -2,17 +2,16 @@ import Image from "next/image";
 import StatusBarCard from "../StatusBarCard/status-bar-card";
 
 interface StatusBarCheckItemProps {
+  key?: any;
   step: number;
   checkStatus: "Completo" | "Em andamento" | "Pendente";
   title: string;
-  subtitle?: string;
 }
 
 export default function StatusBarCheckItem({
   step,
   checkStatus,
   title,
-  subtitle,
 }: StatusBarCheckItemProps) {
   return (
     <div className={"relative flex " + (step < 5 ? "w-60" : "w-auto")}>
@@ -41,10 +40,8 @@ export default function StatusBarCheckItem({
             </span>
           )}
         </span>
-        <p className="-mr-16 mt-5 mb-6">
+        <p className="w-24 mt-5 mb-6 -translate-x-5 text-center">
           {title}
-          <br />
-          {subtitle}
         </p>
         <StatusBarCard checkStatus={checkStatus} />
       </div>

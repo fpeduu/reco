@@ -6,6 +6,10 @@ import { StatusType, AcordoIdentificado } from "@/models/Acordos";
 import { useEffect, useState } from "react";
 import AgreementCard from "../AgreementCard/agreement-card";
 import { Devedor } from "@/models/Devedores";
+import {
+  filterByCodominiumAndMonths,
+  getUniqueMonths
+} from "@/services/tableUtils";
 
 interface AgreementListProps {
   searchQuery: string;
@@ -15,22 +19,11 @@ interface AgreementListProps {
   tenants: Devedor[];
   filterByProgress: boolean;
 }
-
 const agreementStatusList: (StatusType | "Todos")[] = [
-  "Todos",
-  "Aguardando inadimplente",
-  "Conversa iniciada",
-  "Valor reserva alcançado",
-];
-
-const paymentStatusList: string[] = [
-  "Todos",
-  "Em dia",
-  "1 mês de atraso",
-  "2 meses de atraso",
-  "3 meses ou mais de atraso",
-];
-
+  "Todos", "Aguardando inadimplente", "Conversa iniciada",
+  "Primeira proposta", "Segunda proposta", "Proposta do inadimplente",
+  "Aguardando aprovação", "Acordo aceito", "Acordo recusado", 
+]
 const agreementsPerPage = 6;
 
 export default function AgreementList({
@@ -45,6 +38,7 @@ export default function AgreementList({
     useState<AcordoIdentificado[]>(agreements);
 
   const [condominiums, setCondominiums] = useState<string[]>([]);
+  const [monthsLateList, setMonthsLateList] = useState<string[]>([]);
 
   const [progress, setProgress] = useState<string>("Todos");
   const [condominium, setCondominium] = useState<string>("Todos");
@@ -57,39 +51,37 @@ export default function AgreementList({
   );
 
   useEffect(() => {
-    const condominiums = agreements.map(
+    // @ts-ignore
+    import("preline");
+  }, []);
+
+  useEffect(() => {
+    const apartments = agreements.map(
       (agreement) => agreement.nomeCondominio
     );
-    const uniqueCondomiuns = condominiums.filter((condominium, index) => {
-      return condominiums.indexOf(condominium) === index;
+    const uniqueCondomiuns = apartments.filter((condominium, index) => {
+      return apartments.indexOf(condominium) === index;
     });
+    const uniqueMonths = getUniqueMonths(
+      tenants.map((x) => x.mensalidadesAtrasadas)
+    );
+
     setCondominiums(["Todos", ...uniqueCondomiuns]);
+    setMonthsLateList(["Todos", ...uniqueMonths]);
   }, [agreements]);
 
   useEffect(() => {
     setFilteredAgreements(
       agreements.filter((agreement) => {
         const tenant = getTenant(agreement.cpfDevedor);
+        const firstFilter = filterByCodominiumAndMonths(
+          condominium, agreement.nomeCondominio,
+          paymentStatus, tenant?.mensalidadesAtrasadas as number
+        )
         const progressFilter =
           progress === "Todos" || agreement.status === progress;
-        const condominiumFilter =
-          condominium === "Todos" || agreement.nomeCondominio === condominium;
-        const paymentStatusFilter =
-          tenant?.mensalidadesAtrasadas !== undefined
-            ? paymentStatus === "Todos" ||
-              (paymentStatus === "Em dia" &&
-                tenant?.mensalidadesAtrasadas === 0) ||
-              (paymentStatus === "1 mês de atraso" &&
-                tenant?.mensalidadesAtrasadas === 1) ||
-              (paymentStatus === "2 meses de atraso" &&
-                tenant?.mensalidadesAtrasadas === 2) ||
-              (paymentStatus === "3 meses ou mais de atraso" &&
-                tenant.mensalidadesAtrasadas >= 3)
-            : true;
-        return (
-          (filterByProgress ? progressFilter : true) &&
-          condominiumFilter &&
-          paymentStatusFilter
+        return (firstFilter &&
+          (filterByProgress ? progressFilter : true)
         );
       })
     );
@@ -158,7 +150,7 @@ export default function AgreementList({
           <span className="text-sm font-light">Filtrar por:</span>
           {filterByProgress && (
             <Dropdown
-              title="Progresso"
+              title="Status"
               options={agreementStatusList}
               onChange={handleFilterChange}
             />
@@ -169,8 +161,8 @@ export default function AgreementList({
             onChange={handleFilterChange}
           />
           <Dropdown
-            title="Status"
-            options={paymentStatusList}
+            title="Atraso"
+            options={monthsLateList}
             onChange={handleFilterChange}
           />
         </div>

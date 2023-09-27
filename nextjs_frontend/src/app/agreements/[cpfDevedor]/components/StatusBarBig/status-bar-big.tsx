@@ -5,6 +5,24 @@ interface StatusBarBigProps {
   status: StatusType;
 }
 
+const statusList = [
+  {
+    title: "Aguardando inadimplente",
+  },
+  {
+    title: "Conversa iniciada",
+  },
+  {
+    title: "Primeira proposta",
+  },
+  {
+    title: "Segunda proposta",
+  },
+  {
+    title: "Proposta do devedor",
+  },
+]
+
 export default function StatusBarBig({ status }: StatusBarBigProps) {
   function getStatusStep(status: StatusType) {
     switch (status) {
@@ -12,14 +30,18 @@ export default function StatusBarBig({ status }: StatusBarBigProps) {
         return 0;
       case "Conversa iniciada":
         return 1;
-      case "Valor reserva informado":
+      case "Primeira proposta":
         return 2;
-      case "Valor reserva alcançado":
+      case "Segunda proposta":
         return 3;
-      case "Negociação concluída":
+      case "Proposta do inadimplente":
         return 4;
-      case "Baixar acordo finalizado":
+      case "Aguardando aprovação":
         return 5;
+      case "Acordo recusado":
+        return 6;
+      case "Acordo aceito":
+        return 6;
       default:
         return 0;
     }
@@ -29,41 +51,18 @@ export default function StatusBarBig({ status }: StatusBarBigProps) {
 
   return (
     <span className="w-full p-1 flex justify-center">
+      {statusList.map((statusItem, index) => (
+        <StatusBarCheckItem
+          title={statusItem.title}
+          step={index} key={statusItem.title}
+          checkStatus={step > index ? "Completo" :
+                       step === index ? "Em andamento" : "Pendente"}
+        />
+      ))}
       <StatusBarCheckItem
-        step={0}
-        title="Aguardando"
-        subtitle="inadimplente"
-        checkStatus={step > 0 ? "Completo" : "Em andamento"}
-      />
-      <StatusBarCheckItem
-        step={1}
-        title="Conversa"
-        subtitle="iniciada"
-        checkStatus={step > 1 ? "Completo" : step === 1 ? "Em andamento" : "Pendente"}
-      />
-      <StatusBarCheckItem
-        step={2}
-        title="Valor reserva"
-        subtitle="informado"
-        checkStatus={step > 2 ? "Completo" : step === 2 ? "Em andamento" : "Pendente"}
-      />
-      <StatusBarCheckItem
-        step={3}
-        title="Valor reserva"
-        subtitle="alcançado"
-        checkStatus={step > 3 ? "Completo" : step === 3 ? "Em andamento" : "Pendente"}
-      />
-      <StatusBarCheckItem
-        step={4}
-        title="Negociação"
-        subtitle="concluída"
-        checkStatus={step >= 4 ? "Completo" : "Pendente"}
-      />
-      <StatusBarCheckItem
-        step={5}
-        title="Baixar acordo"
-        subtitle="finalizado"
-        checkStatus={step === 5 ? "Completo" : "Pendente"}
+        step={6}
+        title={step == 6 ? status : "Acordo aceito"}
+        checkStatus={step === 6 ? "Completo" : "Pendente"}
       />
     </span>
   );

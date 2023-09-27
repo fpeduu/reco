@@ -45,7 +45,7 @@ export default function AgreementsPage() {
           (Total: {tenants.length})
         </span>
       </div>
-      <TenantList tenants={tenants} />;
+      <TenantList tenants={tenants} />
       <span className="hidden">
         {/* Sem isso não renderiza as cores */}
         <span className="w-5 h-5 rounded-full bg-status-0" />

@@ -3,15 +3,18 @@ import mongoose from "mongoose";
 export type StatusType =
   | "Aguardando inadimplente"
   | "Conversa iniciada"
-  | "Valor reserva informado"
-  | "Valor reserva alcançado"
-  | "Negociação concluída"
-  | "Baixar acordo finalizado";
+  | "Primeira proposta"
+  | "Segunda proposta"
+  | "Proposta do inadimplente"
+  | "Aguardando aprovação"
+  | "Acordo aceito"
+  | "Acordo recusado";
 
 export interface Proposta {
+  aceito: boolean;
   entrada: number;
-  valorParcela: number;
   qtdParcelas: number;
+  valorParcela: number;
 }
 
 export interface Acordo {
@@ -48,7 +51,12 @@ const AcordoSchema = new mongoose.Schema({
   entrada: Number,
   valorTotal: Number,
   qtdParcelas: Number,
-  historicoValores: [{ entrada: Number, valorParcela: Number, qtdParcelas: Number }]
+  historicoValores: [{
+    entrada: Number,
+    aceito: Boolean,
+    qtdParcelas: Number,
+    valorParcela: Number,
+  }]
 });
 
 export default mongoose.models.Acordos || mongoose.model("Acordos", AcordoSchema);
