@@ -11,6 +11,7 @@ import StatusBarBig from "./components/StatusBarBig/status-bar-big";
 import DownloadButton from "./components/DownloadButton/download-button";
 import TenantProfileCard from "./components/TenantProfileCard/tenant-profile-card";
 import AgreementDecision from "./components/AgreementDecision/agreement-decision";
+import HistoryLine from "./components/HistoryLine/history-line";
 
 async function fetchAgreement(cpfDevedor: string) {
   return (await fetch(`${serverURL}/api/agreements/${cpfDevedor}/`)
@@ -18,15 +19,17 @@ async function fetchAgreement(cpfDevedor: string) {
     .catch((error) => {
       console.error(error);
     })) as DevedorAcordo;
-};
+}
 
 async function fetchAcceptAgreement(cpf: string, newProposal: Proposta) {
   return (await fetch(`${serverURL}/api/proposal/${cpf}/`, {
-    method: "POST", headers: {
-      "Content-Type": "application/json",
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
     },
-    body: JSON.stringify(newProposal),
-  }).then((response) => response.json())
+    body: JSON.stringify(newProposal)
+  })
+    .then((response) => response.json())
     .catch((error) => {
       console.error(error);
     })) as Acordo;
@@ -35,7 +38,7 @@ async function fetchAcceptAgreement(cpf: string, newProposal: Proposta) {
 interface AgreementStatusProps {
   params: {
     cpfDevedor: string;
-  }
+  };
 }
 
 export default function AgreementStatus({ params }: AgreementStatusProps) {
@@ -64,8 +67,7 @@ export default function AgreementStatus({ params }: AgreementStatusProps) {
   async function onAcceptAgreement() {
     const lastAgreement = getAndModifyAgreement(true);
     if (!lastAgreement || !agreement) return;
-    const response = await fetchAcceptAgreement(params.cpfDevedor,
-                                                lastAgreement);
+    const response = await fetchAcceptAgreement(params.cpfDevedor, lastAgreement);
     agreement.acordo.status = response.status;
     setAgreement(agreement);
   }
@@ -73,8 +75,7 @@ export default function AgreementStatus({ params }: AgreementStatusProps) {
   async function onRejectAgreement() {
     const lastAgreement = getAndModifyAgreement(false);
     if (!lastAgreement || !agreement) return;
-    const response = await fetchAcceptAgreement(params.cpfDevedor,
-                                                lastAgreement);
+    const response = await fetchAcceptAgreement(params.cpfDevedor, lastAgreement);
     agreement.acordo.status = response.status;
     setAgreement(agreement);
   }
@@ -93,9 +94,7 @@ export default function AgreementStatus({ params }: AgreementStatusProps) {
 
   return (
     <div className="containerLayout flex flex-col gap-10">
-      <h1 className="text-4xl font-medium">
-        Detalhes da negociação
-      </h1>
+      <h1 className="text-4xl font-medium">Detalhes da negociação</h1>
       <div className="flex items-end justify-start gap-20">
         <TenantProfileCard tenant={agreement} />
         <CurrencyCard
@@ -113,37 +112,49 @@ export default function AgreementStatus({ params }: AgreementStatusProps) {
           title="Valor de entrada"
           value={agreement.acordo.entrada}
           descriptionStyle="text-green-600"
-          description={`+ ${agreement.acordo.qtdParcelas} parcelas de ${installmentValue.toLocaleString()}`}
+          description={`+ ${
+            agreement.acordo.qtdParcelas
+          } parcelas de ${installmentValue.toLocaleString()}`}
         />
       </div>
       <h2 className="text-4xl font-medium">Andamento</h2>
-      <div className="w-full h-full bg-white rounded-2xl">
+      <div className="w-full h-fit bg-white rounded-2xl">
         <nav className="border-b border-b-slate-300">
           <button
             onClick={switchToTimeline}
-            className={"w-56 p-5 pb-0 border-b text-sm " +
+            className={
+              "w-56 p-5 pb-0 border-b text-sm " +
               (subpage === "timeline" ? "text-red-600 border-b-red-600" : "text-slate-500")
             }>
             Linha do Tempo
           </button>
           <button
             onClick={switchToDetails}
-            className={"w-56 p-5 pb-0 border-b text-sm " +
+            className={
+              "w-56 p-5 pb-0 border-b text-sm " +
               (subpage === "details" ? "text-red-600 border-b-red-600" : "text-slate-500")
             }>
             Detalhes
           </button>
         </nav>
-        {subpage === "timeline" && 
-        <div className="p-20 flex flex-col items-end gap-10">
-            <StatusBarBig status={agreement.acordo.status} />
-          {agreement.acordo.status === "Aguardando aprovação" && 
-            <AgreementDecision onAcceptAgreement={onAcceptAgreement}
-                               onRejectAgreement={onRejectAgreement}/>
-          }
-          {agreement.acordo.status === "Acordo aceito" && 
-            <DownloadButton agreement={agreement} />}
-        </div>}
+        <div className="p-20 flex flex-col items-end">
+          {subpage === "timeline" ? (
+            <>
+              <StatusBarBig status={agreement.acordo.status} />
+              {agreement.acordo.status === "Aguardando aprovação" && (
+                <AgreementDecision
+                  onAcceptAgreement={onAcceptAgreement}
+                  onRejectAgreement={onRejectAgreement}
+                />
+              )}
+              {agreement.acordo.status === "Acordo aceito" && (
+                <DownloadButton agreement={agreement} />
+              )}
+            </>
+          ) : (
+            <HistoryLine history={agreement.acordo.historicoValores} />
+          )}
+        </div>
       </div>
     </div>
   );
