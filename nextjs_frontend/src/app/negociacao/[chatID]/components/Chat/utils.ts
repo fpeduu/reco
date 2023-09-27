@@ -6,13 +6,14 @@ export interface IProposal extends Proposta {
   confirmMessage: string;
 }
 
-export function formatProposal(
-  totalValue: number, value: number, installment: number
-) {
+export function formatProposal(totalValue: number, value: number, installment: number) {
   const newValue = totalValue * value;
   let proposalString = "";
   if (value > 0) {
-    proposalString = `R$ ${newValue.toLocaleString("pt-br")} de entrada`;
+    proposalString = `${newValue.toLocaleString("pt-br", {
+      style: "currency",
+      currency: "BRL"
+    })} de entrada`;
     if (installment > 0) {
       proposalString += " e ";
     }
@@ -25,24 +26,30 @@ export function formatProposal(
   } else if (installment > 1) {
     proposalString += `${installment} vezes`;
     const installmentValue = (totalValue - newValue) / installment;
-    proposalString += ` de R$ ${installmentValue.toFixed(2)}`;
+    proposalString += ` de ${installmentValue.toLocaleString("pt-BR", {
+      style: "currency",
+      currency: "BRL"
+    })}`;
   }
 
   return proposalString;
 }
 
 export function firstProposal(chatData: NegotiationData) {
-  const totalDebit = chatData.valorDivida.toLocaleString("pt-br");
+  const totalDebit = chatData.valorDivida.toLocaleString("pt-br", {
+    style: "currency",
+    currency: "BRL"
+  });
   const bestValue = chatData.rules.melhorEntrada;
   const confirmMessage = formatProposal(
-    chatData.valorDivida, bestValue,
+    chatData.valorDivida,
+    bestValue,
     chatData.rules.melhorParcela
   );
-  const firstInstallmentValue = (chatData.valorDivida
-    - chatData.valorDivida * bestValue)
-    / chatData.rules.melhorParcela;
+  const firstInstallmentValue =
+    (chatData.valorDivida - chatData.valorDivida * bestValue) / chatData.rules.melhorParcela;
 
-  const proposalMessage = `Olá, <b>${chatData.nome}</b>! Detectamos uma pendência referente a <b>${chatData.mensalidadesAtrasadas} meses</b> de atraso, totalizando <b>R$ ${totalDebit}</b>. Estamos aqui para facilitar sua negociação. Nossa primeira proposta é para você pagar <b>${confirmMessage}</b>. O que acha?`;
+  const proposalMessage = `Olá, <b>${chatData.nome}</b>! Detectamos uma pendência referente a <b>${chatData.mensalidadesAtrasadas} meses</b> de atraso, totalizando <b>${totalDebit}</b>. Estamos aqui para facilitar sua negociação. Nossa primeira proposta é para você pagar <b>${confirmMessage}</b>. O que acha?`;
 
   const proposal: IProposal = {
     autor: "Bot",
@@ -51,7 +58,7 @@ export function firstProposal(chatData: NegotiationData) {
     message: proposalMessage,
     confirmMessage: confirmMessage,
     valorParcela: firstInstallmentValue,
-    qtdParcelas: chatData.rules.melhorParcela,
+    qtdParcelas: chatData.rules.melhorParcela
   };
   return proposal;
 }
@@ -61,21 +68,16 @@ export function secondProposal(chatData: NegotiationData) {
   let currentInstallment = chatData.rules.piorParcela;
   let proposalMessage = `Entendido ${chatData.nome}. `;
   let currentValue = chatData.rules.piorEntrada;
-  let installmentValue = (chatData.valorDivida
-    - chatData.valorDivida * currentValue)
-    / currentInstallment;
+  let installmentValue =
+    (chatData.valorDivida - chatData.valorDivida * currentValue) / currentInstallment;
   let confirmMessage = "";
 
   if (firstInstallment === currentInstallment) {
-    confirmMessage = formatProposal(
-      chatData.valorDivida, currentValue, currentInstallment
-    )
+    confirmMessage = formatProposal(chatData.valorDivida, currentValue, currentInstallment);
     proposalMessage += `Uma alternativa seria ${confirmMessage}. Essa opção lhe atende melhor?`;
   } else {
-    currentValue = 0, currentInstallment = firstInstallment - 1;
-    confirmMessage = formatProposal(
-      chatData.valorDivida, 0, currentInstallment
-    )
+    (currentValue = 0), (currentInstallment = firstInstallment - 1);
+    confirmMessage = formatProposal(chatData.valorDivida, 0, currentInstallment);
     installmentValue = chatData.valorDivida / currentInstallment;
     proposalMessage += `Uma alternativa seria <b>${confirmMessage}</b>. Essa opção lhe atende melhor?`;
   }
@@ -87,7 +89,7 @@ export function secondProposal(chatData: NegotiationData) {
     message: proposalMessage,
     confirmMessage: confirmMessage,
     valorParcela: installmentValue,
-    qtdParcelas: currentInstallment,
+    qtdParcelas: currentInstallment
   };
   return proposal;
 }
@@ -101,7 +103,7 @@ export function thirdProposal(chatData: NegotiationData) {
     message: proposalMessage,
     confirmMessage: "",
     valorParcela: 0,
-    qtdParcelas: 0,
+    qtdParcelas: 0
   };
   return proposal;
 }
