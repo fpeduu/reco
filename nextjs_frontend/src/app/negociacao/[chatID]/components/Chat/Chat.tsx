@@ -61,18 +61,25 @@ export default function Chat({ chatData }: ChatProps) {
   };
 
   useEffect(() => {
-    const newMessages: IMessage[] = [{
-      message: proposals[0].message, isBot: true, iteractive: true,
-      onConfirm: onConfirmFirstProposal, onDeny: onDenyFirstProposal
-    }];
-    for (let i = 0; i < chatData.proposals.length; i++) {
-      const message = !chatData.proposals[i].aceito ? "Recusar acordo" :
-                      `Pagar ${proposals[0].confirmMessage}`;
-      newMessages.push({ message, isBot: false });
+    const predefinedfunctions = [
+      [onConfirmFirstProposal, onDenyFirstProposal],
+      [onConfirmSecondProposal, onDenySecondProposal],
+    ]
+
+    const newMessages: IMessage[] = [];
+    for (let i = 0; i < predefinedfunctions.length; i++) {
+      newMessages.push({
+        message: proposals[i].message, isBot: true,
+        iteractive: lastProposalIdx === i - 1,
+        onConfirm: predefinedfunctions[i][0],
+        onDeny: predefinedfunctions[i][1],
+      });
+      if (i > lastProposalIdx) break;
+      const answer = !chatData.proposals[i].aceito ? "Recusar acordo" :
+                      `Pagar ${proposals[i].confirmMessage}`;
       if (!chatData.proposals[i].aceito) {
         newMessages.push({
-          message: proposals[1].message, isBot: true,
-          iteractive: lastProposalIdx === i,
+          message: answer, isBot: false,
         });
       }
     }
@@ -80,31 +87,40 @@ export default function Chat({ chatData }: ChatProps) {
   }, [chatData])
 
 
-  async function onConfirmFirstProposal() {
+  async function onConfirmPredefinedProposal(index: number) {
+    const {
+      entrada, qtdParcelas, valorParcela, confirmMessage
+    } = proposals[index];
     setMessages(prevMessages => [...prevMessages, {
-      message: `Pagar ${proposals[0].confirmMessage}`,
+      message: `Pagar ${confirmMessage}`,
       isBot: false
     }]);
 
     setIsLoading(true);
     await updateProposal(chatData.cpf, {
-      aceito: true, entrada: proposals[0].entrada,
-      qtdParcelas: proposals[0].qtdParcelas,
-      valorParcela: proposals[0].valorParcela,
+      aceito: true, autor: "Bot", entrada,
+      qtdParcelas, valorParcela,
     });
     setIsLoading(false);
     setIsWaiting(true);
   }
+
+  function onConfirmFirstProposal() {
+    onConfirmPredefinedProposal(0);
+  }
+  function onConfirmSecondProposal() {
+    onConfirmPredefinedProposal(1);
+  }
   
-  async function onDenyFirstProposal() {
+  async function onDenyPredefinedProposal(index: number) {
     const userAnswer = { message: "Recusar acordo", isBot: false };
+    const { entrada, qtdParcelas, valorParcela } = proposals[index];
     setMessages(prevMessages => [...prevMessages, userAnswer]);
 
     setIsLoading(true);
     await updateProposal(chatData.cpf, {
-      aceito: false, entrada: proposals[0].entrada,
-      qtdParcelas: proposals[0].qtdParcelas,
-      valorParcela: proposals[0].valorParcela,
+      aceito: false, autor: "Bot",
+      entrada, qtdParcelas, valorParcela,
     });
     setIsLoading(false);
 
@@ -112,10 +128,18 @@ export default function Chat({ chatData }: ChatProps) {
       setIsDenied(true);
     } else {
       setMessages(prevMessages => [...prevMessages, {
-        message: proposals[1].message,
+        message: proposals[index + 1].message,
         isBot: true, iteractive: true,
       }]);
     }
+  }
+
+  function onDenyFirstProposal() {
+    onDenyPredefinedProposal(0);
+  }
+
+  function onDenySecondProposal() {
+    onDenyPredefinedProposal(1);
   }
 
   return (
@@ -138,7 +162,7 @@ export default function Chat({ chatData }: ChatProps) {
       {chatData.status === "Acordo aceito" &&
         <Message isBot={true} iteractive={false}>
           <AcceptProposal
-            value={lastProposal.entrada}
+            value={chatData.valorDivida * lastProposal.entrada}
             installment={lastProposal.qtdParcelas}
           />
         </Message>

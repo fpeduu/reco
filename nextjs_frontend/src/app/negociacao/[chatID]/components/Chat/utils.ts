@@ -45,6 +45,7 @@ export function firstProposal(chatData: NegotiationData) {
   const proposalMessage = `Olá, <b>${chatData.nome}</b>! Detectamos uma pendência referente a <b>${chatData.mensalidadesAtrasadas} meses</b> de atraso, totalizando <b>R$ ${totalDebit}</b>. Estamos aqui para facilitar sua negociação. Nossa primeira proposta é para você pagar <b>${confirmMessage}</b>. O que acha?`;
 
   const proposal: IProposal = {
+    autor: "Bot",
     aceito: false,
     entrada: bestValue,
     message: proposalMessage,
@@ -80,6 +81,7 @@ export function secondProposal(chatData: NegotiationData) {
   }
 
   const proposal: IProposal = {
+    autor: "Bot",
     aceito: false,
     entrada: currentValue,
     message: proposalMessage,
@@ -93,6 +95,7 @@ export function secondProposal(chatData: NegotiationData) {
 export function thirdProposal(chatData: NegotiationData) {
   const proposalMessage = `${chatData.nome}, vamos tentar chegar a um acordo. Informe abaixo um <b>valor de entrada</b> e a <b>quantidade de parcelas</b> que seriam ideais para você. E, se puder, <b>justifique sua proposta</b>.`;
   const proposal: IProposal = {
+    autor: "User",
     aceito: false,
     entrada: 0,
     message: proposalMessage,

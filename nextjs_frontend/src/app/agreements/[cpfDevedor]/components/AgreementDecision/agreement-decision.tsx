@@ -9,7 +9,7 @@ export default function AgreementDecision({
   return (
     <div className="flex gap-2">
       <button className="font-semibold py-4 px-6 text-center
-                bg-red-100 text-red-200 rounded-lg shadow
+                bg-red-100 text-red-500 rounded-lg shadow
                 hover:bg-red-200 hover:text-primary"
         onClick={onRejectAgreement}>
         Rejeitar acordo
