@@ -17,9 +17,9 @@ export default function Message({
       <p className="text-lg font-semibold mb-2">
         {name}
       </p>
-      <p className="text-base font-normal">
+      <div className="text-base font-normal">
         {children}
-      </p>
+      </div>
       {iteractive ?
         <div className="flex flex-col mt-8">
           Clique na opção que se adequa a sua situação:

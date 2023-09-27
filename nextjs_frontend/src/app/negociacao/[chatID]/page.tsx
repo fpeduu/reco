@@ -1,6 +1,8 @@
 import { serverURL } from "@/config";
+
 import Chat from "./components/Chat/Chat";
 import ChatLoading from "./loading";
+
 import { NegotiationData } from "@/types/negotiation.dto";
 
 async function fetchChatData(chatID: string) {
@@ -31,7 +33,7 @@ export default async function ChatPage({ params }: ChatPageProps) {
       <h1 className="text-4xl font-semibold mb-10">
         Negociação
       </h1>
-      <Chat chatData={chatData} />
+      <Chat chatData={chatData}/>
     </div>
   )
 }

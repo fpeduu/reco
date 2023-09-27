@@ -1,20 +1,34 @@
 "use client";
 
-import { NegotiationData } from "@/types/negotiation.dto";
+import { serverURL } from "@/config";
+import { useEffect, useState } from "react";
 
+import { NegotiationData } from "@/types/negotiation.dto";
 import Message from "../Message/Message";
 import {
   AcceptProposal,
   ProposalDenied,
   WaitForApproval
 } from "../Message/Messages";
-import { useEffect, useState } from "react";
 import {
   IProposal,
   firstProposal,
   secondProposal,
   thirdProposal
 } from "./utils";
+import { Acordo, Proposta } from "@/models/Acordos";
+
+async function updateProposal(chatID: string, data: Proposta) {
+  return await fetch(`${serverURL}/api/proposal/${chatID}/`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data)
+  }).then((response) => response.json())
+    .catch((error) => {
+      console.error(error);
+      return null
+    }) as Acordo | null;
+}
 
 interface ChatProps {
   chatData: NegotiationData;
@@ -67,47 +81,42 @@ export default function Chat({ chatData }: ChatProps) {
 
 
   async function onConfirmFirstProposal() {
-    setIsLoading(true);
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    setIsLoading(false);
-
-    chatData.proposals.push({
-      aceito: true,
-      entrada: proposals[0].entrada,
-      qtdParcelas: proposals[0].qtdParcelas,
-      valorParcela: proposals[0].valorParcela,
-    });
     setMessages(prevMessages => [...prevMessages, {
       message: `Pagar ${proposals[0].confirmMessage}`,
       isBot: false
     }]);
+
+    setIsLoading(true);
+    await updateProposal(chatData.cpf, {
+      aceito: true, entrada: proposals[0].entrada,
+      qtdParcelas: proposals[0].qtdParcelas,
+      valorParcela: proposals[0].valorParcela,
+    });
+    setIsLoading(false);
     setIsWaiting(true);
   }
   
   async function onDenyFirstProposal() {
-    setIsLoading(true);
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    setIsLoading(false);
+    const userAnswer = { message: "Recusar acordo", isBot: false };
+    setMessages(prevMessages => [...prevMessages, userAnswer]);
 
-    chatData.proposals.push({
-      aceito: false,
-      entrada: proposals[0].entrada,
+    setIsLoading(true);
+    await updateProposal(chatData.cpf, {
+      aceito: false, entrada: proposals[0].entrada,
       qtdParcelas: proposals[0].qtdParcelas,
       valorParcela: proposals[0].valorParcela,
     });
-    const userAnswer = { message: "Recusar acordo", isBot: false };
+    setIsLoading(false);
+
     if (chatData.rules.melhorParcela === 1) {
-      setMessages(prevMessages => [...prevMessages, userAnswer]);
       setIsDenied(true);
     } else {
-      setMessages(prevMessages => [...prevMessages, userAnswer, {
+      setMessages(prevMessages => [...prevMessages, {
         message: proposals[1].message,
         isBot: true, iteractive: true,
       }]);
     }
   }
-
-
 
   return (
     <div className="w-full h-4/5 bg-white shadow-md rounded-3xl

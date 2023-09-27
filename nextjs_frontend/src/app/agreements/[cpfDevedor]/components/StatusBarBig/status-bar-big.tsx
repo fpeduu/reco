@@ -6,36 +6,24 @@ interface StatusBarBigProps {
 }
 
 const statusList = [
-  {
-    title: "Aguardando inadimplente",
-  },
-  {
-    title: "Conversa iniciada",
-  },
-  {
-    title: "Primeira proposta",
-  },
-  {
-    title: "Segunda proposta",
-  },
-  {
-    title: "Proposta do devedor",
-  },
+  { title: "Aguardando inadimplente" },
+  { title: "Conversa iniciada" },
+  { title: "Primeira proposta" },
+  { title: "Segunda proposta" },
+  { title: "Proposta do devedor" },
 ]
 
 export default function StatusBarBig({ status }: StatusBarBigProps) {
   function getStatusStep(status: StatusType) {
     switch (status) {
-      case "Aguardando inadimplente":
-        return 0;
       case "Conversa iniciada":
         return 1;
       case "Primeira proposta":
-        return 2;
-      case "Segunda proposta":
         return 3;
-      case "Proposta do inadimplente":
+      case "Segunda proposta":
         return 4;
+      case "Proposta do inadimplente":
+        return 5;
       case "Aguardando aprovação":
         return 5;
       case "Acordo recusado":
