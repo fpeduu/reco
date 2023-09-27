@@ -13,7 +13,7 @@ export default function HistoryLine({ history }: HistoryLineProps) {
         <HistoryLineItem
           key={index}
           proposal={proposal}
-          align={index % 2 === 0 ? "left" : "right"}
+          align={proposal.autor === "Bot" ? "right" : "left"}
           connect={index !== history.length - 1}
         />
       ))}

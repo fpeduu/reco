@@ -17,7 +17,9 @@ export default function HistoryLineItem({ proposal, align, connect }: HistoryLin
         </>
       )}
       <div className={"w-1/4 flex flex-col " + (align === "left" ? "items-start" : "items-end")}>
-        <h1 className="text-xl font-semibold mb-3">Sistema</h1>
+        <h1 className="text-xl font-semibold mb-3">
+          {!proposal || proposal.autor === "Bot" ? "Sistema" : "Devedor"}
+        </h1>
         {proposal && (
           <>
             <span className="text-sm text-zinc-500">
@@ -27,7 +29,7 @@ export default function HistoryLineItem({ proposal, align, connect }: HistoryLin
                 currency: "BRL"
               })}
             </span>
-            <span className="mb-7 text-xs text-zinc-500">
+            <span className="mb-5 text-xs text-zinc-500">
               <span className="font-medium">Parcelado:</span>&nbsp;
               {proposal.qtdParcelas} meses
             </span>
