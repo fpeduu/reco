@@ -12,9 +12,17 @@ export interface Notification {
 
 interface NotificationFlyMenuProps {
   notifications: Notification[];
+  onRemoveCard: Function;
 }
 
-export default function NotificationFlyMenu({ notifications }: NotificationFlyMenuProps) {
+export default function NotificationFlyMenu({
+  notifications,
+  onRemoveCard
+}: NotificationFlyMenuProps) {
+  function handleRemoveCard(index: number) {
+    onRemoveCard(index);
+  }
+
   return (
     <Popover className="relative">
       <Popover.Button className="p-2 border rounded-full mr-20 hover:cursor-pointer hover:bg-slate-100">
@@ -32,6 +40,7 @@ export default function NotificationFlyMenu({ notifications }: NotificationFlyMe
               tenantName={notification.tenantName}
               condominiumName={notification.condominiumName}
               message={notification.message}
+              onRemove={() => handleRemoveCard(index)}
             />
           ))}
         </div>

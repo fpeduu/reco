@@ -3,11 +3,12 @@
 import { useSession, signIn, signOut } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
+import { useState, useEffect } from "react";
 import { useSideBarContext } from "@/contexts/SideBarContext";
 import NotificationFlyMenu from "../NotificationFlyMenu/notification-fly-menu";
 import { Notification } from "../NotificationFlyMenu/notification-fly-menu";
 
-const notifications: Notification[] = [
+const notificationList: Notification[] = [
   {
     type: "Sucesso",
     tenantName: "João da Silva",
@@ -46,7 +47,12 @@ const notifications: Notification[] = [
   }
 ];
 
+async function fetchNotifications() {
+  return notificationList;
+}
+
 export default function Header() {
+  const [notifications, setNotifications] = useState<Notification[]>([]);
   const { hideSideBar, setHideSideBar } = useSideBarContext();
   const { data: session } = useSession();
 
@@ -66,6 +72,17 @@ export default function Header() {
     setHideSideBar(!hideSideBar);
   }
 
+  function handleRemoveNotification(index: number) {
+    const newNotifications = notifications.filter((_, i) => i !== index);
+    setNotifications(newNotifications);
+  }
+
+  useEffect(() => {
+    fetchNotifications().then((notifications) => {
+      setNotifications(notifications);
+    });
+  }, []);
+
   return (
     <div className="w-full absolute h-20 pr-28 py-2 flex items-center bg-white text-red-600">
       {session && (
@@ -83,7 +100,10 @@ export default function Header() {
         <span className="w-1/3 flex justify-end items-center gap-2 font-semibold underline">
           {session ? (
             <>
-              <NotificationFlyMenu notifications={notifications} />
+              <NotificationFlyMenu
+                notifications={notifications}
+                onRemoveCard={handleRemoveNotification}
+              />
               <button onClick={handleLogout} className="flex place-items-center gap-2">
                 <Image src="/icons/logout.svg" alt="Logout Logo" width={24} height={24} />
                 Sair
