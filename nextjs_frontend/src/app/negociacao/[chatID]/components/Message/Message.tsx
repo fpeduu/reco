@@ -1,20 +1,40 @@
 interface MessageProps {
-  message: string;
   isBot: boolean;
+  children: React.ReactNode;
+  iteractive?: boolean;
+  onConfirm?: () => void;
+  onDeny?: () => void;
 }
 
-export default function Message({ message, isBot }: MessageProps) {
+export default function Message({
+  isBot, children, iteractive, onConfirm, onDeny
+}: MessageProps) {
   const styles = isBot ? "" : "ml-auto bg-tertiary"
   const name = isBot ? "Reco Bot" : "Você"
 
   return (
     <div className={`w-2/5 shadow-md m-7 max-h-fit rounded-xl p-5 ${styles}`}>
-      <p className="text-lg font-semibold">
+      <p className="text-lg font-semibold mb-2">
         {name}
       </p>
       <p className="text-base font-normal">
-        {message}
+        {children}
       </p>
+      {iteractive ?
+        <div className="flex flex-col mt-8">
+          Clique na opção que se adequa a sua situação:
+          <div className="flex w-2/3 gap-2 mt-2">
+            <button onClick={onConfirm}
+              className="bg-primary h-10 rounded-md flex-1 text-white">
+              Aceitar acordo
+            </button>
+            <button onClick={onDeny}
+              className="bg-tertiary h-10 rounded-md flex-1 text-[#545454]">
+              Recusar acordo
+            </button>
+          </div>
+        </div>
+        : <></>}
     </div>
   )
 }
