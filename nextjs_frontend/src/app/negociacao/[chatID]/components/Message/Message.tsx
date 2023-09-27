@@ -10,13 +10,9 @@ export default function Message({
   isBot, children, iteractive, onConfirm, onDeny
 }: MessageProps) {
   const styles = isBot ? "" : "ml-auto bg-tertiary"
-  const name = isBot ? "Reco Bot" : "Você"
 
   return (
     <div className={`w-2/5 shadow-md m-7 max-h-fit rounded-xl p-5 ${styles}`}>
-      <p className="text-lg font-semibold mb-2">
-        {name}
-      </p>
       <div className="text-base font-normal">
         {children}
       </div>

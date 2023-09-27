@@ -10,7 +10,10 @@ export type StatusType =
   | "Acordo aceito"
   | "Acordo recusado";
 
+export type AuthorType = "Bot" | "User";
+
 export interface Proposta {
+  autor: AuthorType;
   aceito: boolean;
   entrada: number;
   qtdParcelas: number;
@@ -47,6 +50,7 @@ const AcordoSchema = new mongoose.Schema({
   valorTotal: Number,
   qtdParcelas: Number,
   historicoValores: [{
+    autor: String,
     entrada: Number,
     aceito: Boolean,
     qtdParcelas: Number,

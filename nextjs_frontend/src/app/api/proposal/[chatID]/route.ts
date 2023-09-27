@@ -108,7 +108,7 @@ export async function POST(request: NextRequest) {
       break;
   }
 
-  if (status === "Acordo aceito") {
+  if (status === "Acordo aceito" || status === "Acordo recusado") {
     const devedor: Devedor | null = await Devedores.findOne({
       cpf: cpfDevedor,
     });
