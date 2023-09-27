@@ -29,11 +29,6 @@ export interface Acordo {
   historicoValores: Proposta[];
 }
 
-export interface AcordoIdentificado extends Acordo {
-  nomeDevedor: string;
-  nomeCondominio: string;
-}
-
 const AcordoSchema = new mongoose.Schema({
   usuarioEmail: {
     type: String,

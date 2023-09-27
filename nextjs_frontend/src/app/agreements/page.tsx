@@ -1,51 +1,39 @@
 "use client";
 
 import { serverURL } from "@/config";
-import { AcordoIdentificado } from "@/models/Acordos";
-import { getStatusIndex } from "./components/StatusBar/status-bar";
-import AgreementList from "./components/AgreementList/agreement-list";
-import Search from "@/components/Search/search";
 import { useEffect, useState } from "react";
-import { Devedor } from "@/models/Devedores";
 
-const BASE_URL = `${serverURL}/api/agreements/`;
+import Search from "@/components/Search/search";
+import AgreementList from "./components/AgreementList/agreement-list";
+
+import { DevedorAcordo } from "@/types/acordo.dto";
+import { getStatusStep } from "@/services/statusSteps";
 
 const fetchAgreements = async () => {
-  return (await fetch(`${BASE_URL}`)
+  return (await fetch(`${serverURL}/api/agreements/`)
     .then((response) => response.json())
     .catch((error) => {
       console.error(error);
-      return [] as AcordoIdentificado[];
-    })) as AcordoIdentificado[];
+      return [] as DevedorAcordo[];
+    })) as DevedorAcordo[];
 };
-
-async function fetchTenants() {
-  return (await fetch(`${serverURL}/api/tenants/`)
-    .then((response) => response.json())
-    .catch((error) => {
-      console.error(error);
-      return [] as Devedor[];
-    })) as Devedor[];
-}
 
 export default function AgreementsPage() {
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [agreements, setAgreements] = useState<AcordoIdentificado[]>([]);
-  const [tenants, setTenants] = useState<Devedor[]>([]);
+  const [agreements, setAgreements] = useState<DevedorAcordo[]>([]);
 
   useEffect(() => {
     fetchAgreements().then((agreements) => setAgreements(agreements));
-    fetchTenants().then((tenants) => setTenants(tenants));
   }, []);
 
   const inProgressAgreements = agreements.filter((agreement) => {
     if (!agreement) return;
-    return getStatusIndex(agreement.status) < 4;
+    return getStatusStep(agreement.acordo.status) < 6;
   });
 
   const endedAgreements = agreements.filter((agreement) => {
     if (!agreement) return;
-    return getStatusIndex(agreement.status) > 3;
+    return getStatusStep(agreement.acordo.status) === 6;
   });
 
   return (
@@ -54,7 +42,6 @@ export default function AgreementsPage() {
       <AgreementList
         searchQuery={searchQuery}
         agreements={inProgressAgreements}
-        tenants={tenants}
         title="Em andamento"
         description="Confira suas negociações em andamento. Clique nos cards para mais informações."
         filterByProgress={true}
@@ -62,7 +49,6 @@ export default function AgreementsPage() {
       <AgreementList
         searchQuery={searchQuery}
         agreements={endedAgreements}
-        tenants={tenants}
         title="Finalizadas"
         description="Confira suas negociações finalizadas. Clique nos cards para mais informações."
         filterByProgress={false}
