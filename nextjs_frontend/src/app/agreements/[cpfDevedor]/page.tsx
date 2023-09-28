@@ -45,7 +45,7 @@ export default function AgreementStatus({ params }: AgreementStatusProps) {
   const [agreement, setAgreement] = useState<DevedorAcordo>();
   const [subpage, setSubpage] = useState<"timeline" | "details">("timeline");
   const [installmentValue, setInstallmentValue] = useState<number>(0);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
     fetchAgreement(params.cpfDevedor).then((response) => {
@@ -63,11 +63,11 @@ export default function AgreementStatus({ params }: AgreementStatusProps) {
     const lastAgreement = agreement.acordo.historicoValores[length];
     lastAgreement.aceito = accept;
 
-    setLoading(true);
+    setIsLoading(true);
     const response = await fetchAcceptAgreement(params.cpfDevedor, lastAgreement);
     agreement.acordo.status = response.status;
     setAgreement(agreement);
-    setLoading(false);
+    setIsLoading(false);
   }
 
   async function onAcceptAgreement() {
@@ -136,7 +136,7 @@ export default function AgreementStatus({ params }: AgreementStatusProps) {
           </button>
         </nav>
         <div className="max-h-128 overflow-y-auto p-20 flex flex-col items-end">
-          {subpage === "timeline" ? (
+          {subpage === "timeline" && !isLoading ? (
             <>
               <StatusBarBig status={agreement.acordo.status} />
               {agreement.acordo.status === "Aguardando aprovação" && (
