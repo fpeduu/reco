@@ -16,6 +16,7 @@ export interface Proposta {
   autor: AuthorType;
   aceito: boolean;
   entrada: number;
+  motivo?: string;
   qtdParcelas: number;
   valorParcela: number;
 }
@@ -51,6 +52,7 @@ const AcordoSchema = new mongoose.Schema({
   qtdParcelas: Number,
   historicoValores: [{
     autor: String,
+    motivo: String,
     entrada: Number,
     aceito: Boolean,
     qtdParcelas: Number,

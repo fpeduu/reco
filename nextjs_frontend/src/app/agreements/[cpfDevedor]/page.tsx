@@ -45,6 +45,7 @@ export default function AgreementStatus({ params }: AgreementStatusProps) {
   const [agreement, setAgreement] = useState<DevedorAcordo>();
   const [subpage, setSubpage] = useState<"timeline" | "details">("timeline");
   const [installmentValue, setInstallmentValue] = useState<number>(0);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     fetchAgreement(params.cpfDevedor).then((response) => {
@@ -56,28 +57,25 @@ export default function AgreementStatus({ params }: AgreementStatusProps) {
     });
   }, [params]);
 
-  function getAndModifyAgreement(accept: boolean) {
+  async function getAndModifyAndFetchAgreement(accept: boolean) {
     if (!agreement) return;
     const length = agreement.acordo.historicoValores.length - 1;
     const lastAgreement = agreement.acordo.historicoValores[length];
     lastAgreement.aceito = accept;
-    return lastAgreement;
+
+    setLoading(true);
+    const response = await fetchAcceptAgreement(params.cpfDevedor, lastAgreement);
+    agreement.acordo.status = response.status;
+    setAgreement(agreement);
+    setLoading(false);
   }
 
   async function onAcceptAgreement() {
-    const lastAgreement = getAndModifyAgreement(true);
-    if (!lastAgreement || !agreement) return;
-    const response = await fetchAcceptAgreement(params.cpfDevedor, lastAgreement);
-    agreement.acordo.status = response.status;
-    setAgreement(agreement);
+    getAndModifyAndFetchAgreement(true);
   }
 
   async function onRejectAgreement() {
-    const lastAgreement = getAndModifyAgreement(false);
-    if (!lastAgreement || !agreement) return;
-    const response = await fetchAcceptAgreement(params.cpfDevedor, lastAgreement);
-    agreement.acordo.status = response.status;
-    setAgreement(agreement);
+    getAndModifyAndFetchAgreement(false);
   }
 
   function switchToTimeline() {
@@ -152,7 +150,10 @@ export default function AgreementStatus({ params }: AgreementStatusProps) {
               )}
             </>
           ) : (
-            <HistoryLine history={agreement.acordo.historicoValores} />
+            <HistoryLine
+              divida={agreement.valorDivida}
+              history={agreement.acordo.historicoValores}
+            />
           )}
         </div>
       </div>

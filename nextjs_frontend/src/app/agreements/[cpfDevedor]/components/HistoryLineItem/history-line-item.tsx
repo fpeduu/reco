@@ -2,12 +2,15 @@ import { Proposta } from "@/models/Acordos";
 import HistoryLineConnection from "../HistoryLineConnection/history-line-connection";
 
 interface HistoryLineItemProps {
+  divida?: number;
   proposal?: Proposta;
   align: "left" | "right";
   connect: boolean;
 }
 
-export default function HistoryLineItem({ proposal, align, connect }: HistoryLineItemProps) {
+export default function HistoryLineItem({
+  divida, proposal, align, connect
+}: HistoryLineItemProps) {
   return (
     <div className="w-full flex justify-center gap-5">
       {align === "left" && (
@@ -20,19 +23,29 @@ export default function HistoryLineItem({ proposal, align, connect }: HistoryLin
         <h1 className="text-xl font-semibold mb-3">
           {!proposal || proposal.autor === "Bot" ? "Sistema" : "Devedor"}
         </h1>
-        {proposal && (
+        {proposal && divida && (
           <>
+            {proposal.entrada > 0 && <span className="text-sm text-zinc-500">
+              <span className="font-medium">Valor de entrada:</span>&nbsp;
+              {(divida * proposal.entrada).toLocaleString("pt-BR", {
+                style: "currency",
+                currency: "BRL"
+              })}
+            </span>}
             <span className="text-sm text-zinc-500">
-              <span className="font-medium">Valor proposto:</span>&nbsp;
-              {proposal.valorParcela.toLocaleString("pt-BR", {
+              +
+              <span className="font-medium">
+                {proposal.qtdParcelas} parcelas&nbsp;
+              </span>
+              de {proposal.valorParcela.toLocaleString("pt-BR", {
                 style: "currency",
                 currency: "BRL"
               })}
             </span>
-            <span className="mb-5 text-xs text-zinc-500">
-              <span className="font-medium">Parcelado:</span>&nbsp;
-              {proposal.qtdParcelas} meses
-            </span>
+            {proposal.motivo && <span className="text-sm text-zinc-500">
+              <span className="font-medium">Motivo:</span>&nbsp;
+              {proposal.motivo}
+            </span>}
             {proposal.aceito ? (
               <span className="w-24 h-8 px-2 flex items-center justify-center rounded-md font-medium bg-emerald-50 text-emerald-600">
                 Aceito
