@@ -72,7 +72,7 @@ export default function Paginator({
 
   const renderPagination = () => {
     const displayedPages: (number | string)[] = [];
-    const pageRange = 3;
+    const pageRange = 5;
 
     if (pageLimit <= pageRange) {
       for (let i = 1; i <= pageLimit; i++) {
