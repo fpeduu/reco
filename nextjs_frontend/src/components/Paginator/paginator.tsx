@@ -12,18 +12,10 @@ export default function Paginator({
   currentPage,
   pageLimit,
 }: PaginatorProps) {
-  const activeStyles = {
-    backgroundColor: "black" /* Equivalent to bg-secondary */,
-    color: "white" /* Equivalent to text-white */,
-    // backgroundColorOpacity: 1 /* Equivalent to hover:bg-opacity-100 */,
-
-    outline: "none",
-  };
-
   function handlePreviousPage() {
     if (currentPage > 1) {
       const newPage = currentPage - 1;
-      onPageChange(newPage); // Update the currentPage
+      onPageChange(newPage);
       currentPage = newPage;
     }
     const pageElements = document.querySelectorAll("[data-page]");
@@ -32,49 +24,44 @@ export default function Paginator({
     });
     const clickedPageElement = document.querySelector(
       `[data-page="${currentPage}"]`
-    );
+    ) as HTMLElement;
 
-    // Add the active-page class to the clicked page element
     if (clickedPageElement) {
       clickedPageElement.classList.add(Styles["active-page"]);
+      clickedPageElement.focus();
     }
   }
 
   function handleNextPage() {
     if (currentPage < pageLimit) {
       const newPage = currentPage + 1;
-      onPageChange(newPage); // Update the currentPage
-      currentPage = newPage; // Update the currentPage variable
+      onPageChange(newPage);
+      currentPage = newPage;
     }
     const pageElements = document.querySelectorAll("[data-page]");
-    console.log(pageElements);
     pageElements.forEach((element) => {
       element.classList.remove(Styles["active-page"]);
-      console.log(element);
     });
 
     const clickedPageElement = document.querySelector(
       `[data-page="${currentPage}"]`
-    );
-    console.log(clickedPageElement);
+    ) as HTMLElement;
 
-    // Add the active-page class to the clicked page element
     if (clickedPageElement) {
       clickedPageElement.classList.add(Styles["active-page"]);
+      clickedPageElement.focus();
     }
   }
 
   function handlePageClick(page: number) {
     onPageChange(page);
     const pageElements = document.querySelectorAll("[data-page]");
-    console.log(pageElements);
     pageElements.forEach((element) => {
       element.classList.remove(Styles["active-page"]);
     });
     const clickedPageElement = document.querySelector(
       `[data-page="${page}"]`
     ) as HTMLElement;
-    console.log(clickedPageElement);
 
     if (clickedPageElement) {
       clickedPageElement.classList.add(Styles["active-page"]);
@@ -84,53 +71,63 @@ export default function Paginator({
   }
 
   const renderPagination = () => {
-    if (pageLimit <= 6) {
-      // If there are 2, 3, 4, 5, or 6 pages, display all pages
-      return (
-        <div className="flex items-center">
-          {Array.from({ length: pageLimit }, (_, index) => (
-            <a
-              key={index + 1}
-              href="#"
-              className={`${Styles.pageButton} ${
-                index === 0 ? Styles["active-page"] : ""
-              }`}
-              onClick={() => handlePageClick(index + 1)}
-              data-page={index + 1}
-            >
-              {index + 1}
-            </a>
-          ))}
-        </div>
-      );
+    const displayedPages: (number | string)[] = [];
+    const pageRange = 3;
+
+    if (pageLimit <= pageRange) {
+      for (let i = 1; i <= pageLimit; i++) {
+        displayedPages.push(i);
+      }
     } else {
-      // If there are more than 6 pages, display 1 2 3 4 5 ... [number of pages]
-      return (
-        <div className="flex items-center ">
-          {Array.from({ length: 5 }, (_, index) => (
-            <a
-              key={index + 1}
-              href="#"
-              className={`${Styles.pageButton} ${
-                index === 0 ? Styles["active-page"] : ""
-              }`}
-              onClick={() => handlePageClick(index + 1)}
-              data-page={index + 1}
-            >
-              {index + 1}
-            </a>
-          ))}
-          <span className="px-2 py-1 text-gray-600">...</span>
-          <a
-            href="#"
-            className="px-2 py-1 rounded text-gray-600 hover:bg-gray-200"
-            onClick={() => handlePageClick(pageLimit)}
-          >
-            {pageLimit}
-          </a>
-        </div>
-      );
+      if (currentPage <= Math.ceil(pageRange / 2)) {
+        for (let i = 1; i <= pageRange - 1; i++) {
+          displayedPages.push(i);
+        }
+        displayedPages.push("...");
+        displayedPages.push(pageLimit);
+      } else if (currentPage >= pageLimit - Math.floor(pageRange / 2)) {
+        displayedPages.push(1);
+        displayedPages.push("...");
+        for (let i = pageLimit - pageRange + 2; i <= pageLimit; i++) {
+          displayedPages.push(i);
+        }
+      } else {
+        displayedPages.push(1);
+        displayedPages.push("...");
+        for (
+          let i = currentPage - Math.floor(pageRange / 2);
+          i <= currentPage + Math.floor(pageRange / 2);
+          i++
+        ) {
+          displayedPages.push(i);
+        }
+        displayedPages.push("...");
+        displayedPages.push(pageLimit);
+      }
     }
+
+    return (
+      <div className="flex items-center">
+        {displayedPages.map((page, index) => (
+          <a
+            key={index}
+            href={typeof page === "number" ? "#" : undefined}
+            className={`${
+              typeof page === "number" ? Styles.pageButton : Styles.pageEllipsis
+            } ${page === currentPage ? Styles["active-page"] : ""}`}
+            onClick={() => {
+              if (typeof page === "number") {
+                console.log("hey");
+                handlePageClick(page);
+              }
+            }}
+            data-page={page === "..." ? undefined : page}
+          >
+            {page}
+          </a>
+        ))}
+      </div>
+    );
   };
 
   return (
