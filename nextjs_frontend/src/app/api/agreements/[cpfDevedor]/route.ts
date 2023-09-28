@@ -2,30 +2,61 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/middlewares/mongodb";
 import Acordos, { Acordo } from "@/models/Acordos";
 
-import {
-  createRandomAcordo,
-  createRandomTenant,
-  createRandomApartment
-} from '@/services/randomizer';
+import { options } from "../../auth/[...nextauth]/options";
+import { getServerSession } from "next-auth/next";
 
-export async function GET(req: NextRequest) {
+import Devedores, { Devedor } from "@/models/Devedores";
+
+export async function GET(request: NextRequest) {
   connectToDatabase();
 
-  // const cpfDevedor = req.nextUrl.href.split("/").pop() as string;
+  const session = await getServerSession(options);
+  if (!session) {
+    return NextResponse.redirect("/auth/signin");
+  }
 
-  // const acordoList: Acordo[] = await Acordos.find({ cpfDevedor });
-  // const acceptedAcordoList = acordoList.filter(acordo =>
-  //   acordo.status === "ACEITO PELAS PARTES");
-  // if (acceptedAcordoList.length > 0) {
-  //   return NextResponse.json(acceptedAcordoList[0]);
-  // }
+  const { pathname } = new URL(request.url);
+  const cpfDevedor = pathname.split("/").pop() as string;
 
-  const apartment = createRandomApartment();
-  const devedor = createRandomTenant(apartment.cnpj, apartment.nome);
-  const newAcordo = createRandomAcordo(devedor.cpf);
-  return NextResponse.json({
-    acordo: newAcordo,
-    devedor: devedor,
-    condominio: apartment
+  const devedor: Devedor | null = await Devedores.findOne({
+    cpf: cpfDevedor
   });
+  const acordo: Acordo | null = await Acordos.findOne({ cpfDevedor });
+
+  return NextResponse.json({
+    acordo,
+    devedor,
+  });
+}
+
+export async function POST(request: NextRequest) {
+  connectToDatabase();
+
+  const session = await getServerSession(options);
+  if (!session) {
+    return NextResponse.redirect("/auth/signin");
+  }
+
+  const { pathname } = new URL(request.url);
+  const { entrada, qtdParcelas, valorTotal } = await request.json();
+  const cpfDevedor = pathname.split("/").pop() as string;
+
+  const acordo: Acordo | null = await Acordos.findOne({ cpfDevedor });
+  if (!acordo) {
+    const usuarioEmail = session.user?.email as string;
+    const newAcordo: Acordo = {
+      status: "Aguardando inadimplente",
+      historicoValores: [],
+      cpfDevedor,
+      entrada,
+      valorTotal,
+      qtdParcelas,
+      usuarioEmail,
+    }
+
+    const acordoCreated = await Acordos.create(newAcordo);
+    return NextResponse.json(acordoCreated);
+  }
+
+  return NextResponse.json(acordo);
 }

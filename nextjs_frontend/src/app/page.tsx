@@ -19,7 +19,7 @@ export default function Home() {
       <section id="home" className="w-full max-h-fit bg-secondary">
         <div className="text-tertiary p-16 flex flex-col gap-4 mb-4 items-center lg:items-start">
           <h1 className="text-7xl font-medium">Boas-vindas à Reco!</h1>
-          <p className="max-w-2xl tracking-wider leading-7 font-medium">
+          <p className="max-w-2xl tracking-wider leading-7 font-extralight">
             É um prazer te ter conosco! Somos um serviço especializado em
             intermediar acordos extrajudiciais de cobranças condominiais de
             forma ágil e eficiente. Nossa plataforma foi projetada para atender
@@ -27,7 +27,7 @@ export default function Home() {
             condôminos, oferecendo uma abordagem inovadora e focada na resolução
             pacífica de conflitos.
           </p>
-          <button className="bg-primary rounded-full w-[252px] h-12">
+          <button className="bg-primary rounded-full w-[252px] h-12 font-medium">
             Junte-se à Reco
           </button>
         </div>
@@ -36,10 +36,19 @@ export default function Home() {
       <section id="features" className="w-full max-h-fit bg-tertiary">
         <div className="flex p-20 ">
           <div className="flex flex-wrap gap-5 items-center justify-center my-10">
-            <h2 className="text-7xl md:text-8xl md:min-w-[550px] font-medium">
-              <strong className="text-primary ">reco</strong> <br />
-              te oferece:
-            </h2>
+            <div>
+              <Image
+                className="dark:invert"
+                alt="reco logo"
+                src="/logo.svg"
+                width={400}
+                height={100}
+                priority
+              />
+              <h2 className="text-5xl md:text-6xl md:min-w-[500px] text-end font-extralight pr-4">
+                te oferece:
+              </h2>
+            </div>
             <div className={Styles.featureCard}>
               <Image
                 className="dark:invert"
@@ -100,9 +109,11 @@ export default function Home() {
             <div className={Styles.userGuideStep}>
               <div>1</div>
 
-              <p>Escolha o condômino que deseja realizar uma negociação</p>
+              <p>
+                Escolha o inadimplente com quem deseja realizar uma negociação
+              </p>
             </div>
-            <div className="relative top-12 right-12 hidden md:block lg:right-[105px] lg:top-10">
+            <div className="relative top-12 right-12 hidden md:block lg:right-[105px] md:top-16">
               <div className={`${Styles.horizontalLine} `}></div>
             </div>
             <div className="relative left-[50%] md:hidden">
@@ -115,7 +126,7 @@ export default function Home() {
                 acordo
               </p>
             </div>
-            <div className="relative top-12 right-12 hidden md:block lg:right-[105px] lg:top-10">
+            <div className="relative top-12 right-12 hidden md:block lg:right-[105px] md:top-16">
               <div className={Styles.horizontalLine}></div>
             </div>
             <div className="relative left-[50%] md:hidden">
@@ -124,7 +135,7 @@ export default function Home() {
             <div className={Styles.userGuideStep}>
               <div>3</div>
               <p>
-                Determine a proposta desejada <br /> e feche a negociação
+                Verifique a proposta <br />e conclua a negociação{" "}
               </p>
             </div>
           </div>
@@ -136,7 +147,7 @@ export default function Home() {
           <h2 className="text-7xl text-tertiary font-medium">
             O que nossos clientes estão dizendo?
           </h2>
-          <p className="tracking-wider leading-7  text-center text-tertiary">
+          <p className="tracking-wider leading-7  font-light text-center text-tertiary">
             Veja o que alguns de nossos clientes estão comentando sobre suas
             experiências na Reco.
           </p>
@@ -200,7 +211,7 @@ export default function Home() {
         <div className="flex flex-wrap items-center justify-center gap-20 p-16 my-20">
           <div className="w-[350px] ">
             <h2 className="text-7xl text-justify font-medium">Planos</h2>
-            <p className="text-justify text-lg text-secondary font-medium">
+            <p className="text-justify text-lg text-secondary font-light">
               Conheça os planos da nossa plataforma! <br /> <br />O plano Básico
               é descomplicado, ideal para conhecer a plataforma. Já o plano
               Premium oferece recursos avançados e suporte especializado para

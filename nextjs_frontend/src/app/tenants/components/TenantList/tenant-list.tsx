@@ -1,32 +1,26 @@
 "use client";
 
-import DebtorCard from "@/components/DebtorCard/debtor-card";
 import { useEffect, useState } from "react";
 
-import { Condomino } from "@/models/Devedores";
+import { Devedor } from "@/models/Devedores";
 import Search from "@/components/Search/search";
+import DebtorCard from "../DebtorCard/debtor-card";
 import Dropdown from "@/components/Dropdown/dropdown";
 import Paginator from "@/components/Paginator/paginator";
+import { filterByCodominiumAndMonths, getUniqueMonths } from "@/services/tableUtils";
 
 interface TenantListProps {
-  tenants: Condomino[];
+  tenants: Devedor[];
 }
-
-const statusList: string[] = [
-  "Todos",
-  "Em dia",
-  "1 mês de atraso",
-  "2 meses de atraso",
-  "3 meses ou mais de atraso"
-];
 
 const tenantsPerPage = 7;
 
 export default function TenantList({ tenants }: TenantListProps) {
-  const [filteredTenants, setFilteredTenants] = useState<Condomino[]>(tenants);
+  const [filteredTenants, setFilteredTenants] = useState<Devedor[]>(tenants);
   const [condomiunsList, setCondomiunsList] = useState<string[]>([]);
+  const [monthsLateList, setMonthsLateList] = useState<string[]>([]);
   const [condominium, setCondominium] = useState<string>("Todos");
-  const [status, setStatus] = useState<string>("Todos");
+  const [monthsLate, setMonthsLate] = useState<string>("Todos");
   const [page, setPage] = useState(1);
 
   const totalPageCount = Math.ceil(filteredTenants.length / tenantsPerPage);
@@ -41,23 +35,24 @@ export default function TenantList({ tenants }: TenantListProps) {
     const uniqueCondomiuns = condomiuns.filter((condominium, index) => {
       return condomiuns.indexOf(condominium) === index;
     });
+    const uniqueMonths = getUniqueMonths(
+      tenants.map((x) => x.mensalidadesAtrasadas)
+    );
+
     setCondomiunsList(["Todos", ...uniqueCondomiuns]);
+    setMonthsLateList(["Todos", ...uniqueMonths]);
   }, [tenants]);
 
   useEffect(() => {
     setFilteredTenants(
-      tenants.filter((tenant) => {
-        const condominiumFilter = condominium === "Todos" || tenant.nomeCondominio === condominium;
-        const statusFilter =
-          status === "Todos" ||
-          (status === "Em dia" && tenant.mensalidadesAtrasadas === 0) ||
-          (status === "1 mês de atraso" && tenant.mensalidadesAtrasadas === 1) ||
-          (status === "2 meses de atraso" && tenant.mensalidadesAtrasadas === 2) ||
-          (status === "3 meses ou mais de atraso" && tenant.mensalidadesAtrasadas >= 3);
-        return condominiumFilter && statusFilter;
-      })
-    );
-  }, [status, condominium, tenants]);
+      tenants.filter((tenant) => filterByCodominiumAndMonths(
+          condominium, tenant.nomeCondominio,
+          monthsLate, tenant.mensalidadesAtrasadas
+      )).sort((a, b) =>
+        a.nome.localeCompare(b.nome) ||
+        a.mensalidadesAtrasadas - b.mensalidadesAtrasadas
+      ));
+  }, [monthsLate, condominium, tenants]);
 
   function handleSearch(search: string) {
     if (search === "") {
@@ -67,42 +62,61 @@ export default function TenantList({ tenants }: TenantListProps) {
 
     setFilteredTenants(
       tenants.filter((tenant) => {
-        return tenant.nome.toLowerCase().includes(searchLower) || tenant.cpf.includes(searchLower);
+        return (
+          tenant.nome.toLowerCase().includes(searchLower) ||
+          tenant.nomeCondominio.toLowerCase().includes(searchLower) ||
+          tenant.cpf.includes(searchLower)
+        );
+        return (
+          tenant.nome.toLowerCase().includes(searchLower) ||
+          tenant.nomeCondominio.toLowerCase().includes(searchLower) ||
+          tenant.cpf.includes(searchLower)
+        );
       })
     );
     setPage(1);
   }
 
   function handlePagination() {
-    return filteredTenants.slice((page - 1) * tenantsPerPage, page * tenantsPerPage);
+    return filteredTenants.slice(
+      (page - 1) * tenantsPerPage,
+      page * tenantsPerPage
+    );
   }
 
   function handleFilterChange(title: string, option: string) {
-    if (title === "Local") {
+    if (title === "Condomínio") {
       setCondominium(option);
     } else {
-      setStatus(option);
+      setMonthsLate(option);
     }
     setPage(1);
   }
 
   return (
-    <div className="flex flex-col items-center justify-between gap-5">
+    <div className="flex flex-col items-center justify-between gap-3">
       <Search onSearch={handleSearch} />
       <div className="flex justify-end items-center w-full gap-5">
-        <span className="text-neutral-400 text-sm font-medium">Filtros:</span>
-        <Dropdown title="Local" options={condomiunsList} onChange={handleFilterChange} />
-        <Dropdown title="Atraso" options={statusList} onChange={handleFilterChange} />
+        <span className=" text-sm font-light">Filtrar por:</span>
+        <Dropdown
+          title="Condomínio"
+          options={condomiunsList}
+          onChange={handleFilterChange}
+        />
+        <Dropdown
+          title="Atraso"
+          options={monthsLateList}
+          onChange={handleFilterChange}
+        />
       </div>
       {handlePagination().map((tenant) => (
-        <DebtorCard
-          key={tenant.cpf}
-          tenant={tenant}
-          isModal={false}
-          isInteractive={true}
-        />
+        <DebtorCard key={tenant.cpf} tenant={tenant} />
       ))}
-      <Paginator currentPage={page} onPageChange={setPage} pageLimit={totalPageCount} />
+      <Paginator
+        currentPage={page}
+        onPageChange={setPage}
+        pageLimit={totalPageCount}
+      />
     </div>
   );
 }

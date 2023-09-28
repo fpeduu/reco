@@ -1,96 +1,128 @@
-// TenantModal.tsx
-import { serverURL } from "@/config";
-import { useProposalContext } from "@/contexts/ProposalContext";
-import { Condomino } from "@/models/Devedores";
-import { useRouter } from "next/navigation";
-import React from "react";
-import DebtorCard from "@/components/DebtorCard/debtor-card";
+"use client";
 
-interface TenantInfo {
-  name: string;
-  address: string;
-  // Add more tenant information fields as needed
-}
+import React, { useEffect, useState } from "react";
+
+import { useProposalContext } from "@/contexts/ProposalContext";
+import { RegrasProposta } from "@/models/Usuarios";
+import { Acordo } from "@/models/Acordos";
+import { serverURL } from "@/config";
+
+import ModalContent, {
+  NegotiationData
+} from "./components/Modal-content";
+import Confirmation from "./components/Confirmation";
 
 interface TenantModalProps {
   open: boolean;
   onClose: () => void;
 }
 
-const TenantModal: React.FC<TenantModalProps> = ({ open, onClose }) => {
-  const router = useRouter();
+async function fetchProposalInfos(cpf: string) {
+  return await fetch(`${serverURL}/api/proposal/${cpf}/`)
+    .then((response) => response.json())
+    .catch((error) => {
+      console.error(error);
+      return null 
+    }) as RegrasProposta | null;
+}
+
+async function createAgreement(
+  cpf: string,
+  entrada: number,
+  valorParcela: number,
+  qtdParcelas: number
+) {
+  return await fetch(`${serverURL}/api/agreements/${cpf}/`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ entrada, valorParcela, qtdParcelas })
+  }).then((response) => response.json())
+    .catch((error) => {
+        console.error(error);
+        return null 
+    }) as Acordo | null;
+}
+
+export default function TenantModal({ open, onClose }: TenantModalProps) {
   const { debtor } = useProposalContext();
 
-  function handleStartAgreement() {
-    router.push(`${serverURL}/proposal/${debtor.cpf}`);
+  const [confirmed, setConfirmed] = useState<boolean>(false);
+  const [negotiation, setNegotiation] = useState<NegotiationData>({
+    bestValue: 0, worstValue: 0, bestInstallments: 0,
+    worstInstallments: 0, piorParcela: 0, melhorParcela: 0
+  });
+
+  async function onConfirm() {
+    createAgreement(debtor.cpf, negotiation.bestValue,
+                    negotiation.bestInstallments,
+                    negotiation.melhorParcela as number
+    ).then((data) => {
+      if (data) {
+        setConfirmed(true);
+      } else {
+        alert("Erro ao criar acordo");
+        console.error(data);
+      }
+    });
   }
 
-  const closeModal = () => {
-    onClose();
-  };
-  return (
-    <div>
-      {open && (
-        <div
-          className="relative z-10"
-          aria-labelledby="modal-title"
-          role="dialog"
-          aria-modal="true">
-          <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+  useEffect(() => {
+    if (open) fetchProposalInfos(debtor.cpf).then((data) => {
+      if (data) {
+        const value = debtor.valorDivida;
+        let bestValue = 0, worstValue = 0;
+        if (data.melhorEntrada) {
+          bestValue = data.melhorEntrada * value;
+        }
+        if (data.piorEntrada) {
+          worstValue = data.piorEntrada * value;
+        }
+        setNegotiation({
+          bestValue,
+          worstValue,
+          piorParcela: data.piorParcela,
+          melhorParcela: data.melhorParcela,
+          bestInstallments: (value - bestValue) / data.melhorParcela,
+          worstInstallments: (value - worstValue) / data.piorParcela
+        })
+      }
+    });
+  }, [open]);
+  
+  return open && (
+    <div
+      className="relative z-10"
+      aria-labelledby="modal-title"
+      role="dialog"
+      aria-modal="true">
 
-          <div className="fixed inset-0 z-10 h-screen overflow-y-auto">
-            <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-              <div className="relative p-8 transform overflow-hidden rounded-2xl bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-5xl">
-                <div className="bg-white sm:p-6 sm:pb-4">
-                  <div className="sm:flex sm:items-start ">
-                    <button
-                      onClick={closeModal}
-                      className="absolute top-2 right-6 text-5xl h-0 text-gray-500 hover:text-gray-700">
-                      &times;
-                    </button>
-                    <div className="mt-3 gap-5 w-full text-center sm:ml-4 sm:mt-0 sm:text-left">
-                      <h1 className="font-bold text-3xl leading-10" id="modal-title">
-                        Confira as informações
-                      </h1>
-                      <h2 className="text-xl font-medium mt-2 leading-10">
-                        Você selecionou o seguinte inadimplente:
-                      </h2>
-                      <div className="w-full max-w-3xl my-5">
-                        <DebtorCard
-                          tenant={debtor}
-                          isModal={true}
-                          isInteractive={false}
-                        />
-                      </div>
-                      <h2 className="text-xl font-medium leading-10">
-                        É com esta pessoa que deseja iniciar o acordo?
-                      </h2>
-                    </div>
-                  </div>
-                </div>
-                <div className=" px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                  <div className="flex flex-row justify-center place-items-center gap-5 w-full">
-                    <button
-                      onClick={handleStartAgreement}
-                      className="w-1/2 py-3 px-2 rounded-full text-tertiary
-                       text-s font-medium text-center bg-secondary">
-                      Sim, negociar com esta pessoa
-                    </button>
-                    <button
-                      onClick={closeModal}
-                      className="w-1/2 py-3 px-2 rounded-full text-tertiary
-                       text-s font-medium text-center bg-[#808080]">
-                      Não, negociar com outra pessoa
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
+      <div className="fixed inset-0 bg-gray-500 bg-opacity-75
+                      transition-opacity">
+      </div>
+
+      <div className="fixed inset-0 z-10 h-screen overflow-y-auto">
+        <div className="flex min-h-full items-end justify-center p-4 text-center
+                        sm:items-center sm:p-0">
+          <div className="relative p-6 transform overflow-hidden rounded-2xl
+                        bg-white text-left shadow-xl transition-all sm:my-8
+                          sm:w-full sm:max-w-4xl">
+            <button onClick={onClose}
+              className="absolute top-10 right-14 text-5xl h-0
+                        text-gray-500 hover:text-gray-700">
+              &times;
+            </button>
+            {confirmed ?
+            <Confirmation cpfDevedor={debtor.cpf}/> : 
+            <ModalContent
+              onClose={onClose}
+              onConfirm={onConfirm}
+              negotiationData={negotiation}
+            />}
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
 };
-
-export default TenantModal;
