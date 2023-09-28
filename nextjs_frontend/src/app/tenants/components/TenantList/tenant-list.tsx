@@ -7,7 +7,10 @@ import Search from "@/components/Search/search";
 import DebtorCard from "../DebtorCard/debtor-card";
 import Dropdown from "@/components/Dropdown/dropdown";
 import Paginator from "@/components/Paginator/paginator";
-import { filterByCodominiumAndMonths, getUniqueMonths } from "@/services/tableUtils";
+import {
+  filterByCodominiumAndMonths,
+  getUniqueMonths,
+} from "@/services/tableUtils";
 
 interface TenantListProps {
   tenants: Devedor[];
@@ -45,13 +48,21 @@ export default function TenantList({ tenants }: TenantListProps) {
 
   useEffect(() => {
     setFilteredTenants(
-      tenants.filter((tenant) => filterByCodominiumAndMonths(
-          condominium, tenant.nomeCondominio,
-          monthsLate, tenant.mensalidadesAtrasadas
-      )).sort((a, b) =>
-        a.nome.localeCompare(b.nome) ||
-        a.mensalidadesAtrasadas - b.mensalidadesAtrasadas
-      ));
+      tenants
+        .filter((tenant) =>
+          filterByCodominiumAndMonths(
+            condominium,
+            tenant.nomeCondominio,
+            monthsLate,
+            tenant.mensalidadesAtrasadas
+          )
+        )
+        .sort(
+          (a, b) =>
+            a.nome.localeCompare(b.nome) ||
+            a.mensalidadesAtrasadas - b.mensalidadesAtrasadas
+        )
+    );
   }, [monthsLate, condominium, tenants]);
 
   function handleSearch(search: string) {
@@ -62,11 +73,6 @@ export default function TenantList({ tenants }: TenantListProps) {
 
     setFilteredTenants(
       tenants.filter((tenant) => {
-        return (
-          tenant.nome.toLowerCase().includes(searchLower) ||
-          tenant.nomeCondominio.toLowerCase().includes(searchLower) ||
-          tenant.cpf.includes(searchLower)
-        );
         return (
           tenant.nome.toLowerCase().includes(searchLower) ||
           tenant.nomeCondominio.toLowerCase().includes(searchLower) ||
