@@ -1,10 +1,5 @@
 import { NegotiationData } from "@/types/negotiation.dto";
-import { Proposta } from "@/models/Acordos";
-
-export interface IProposal extends Proposta {
-  message: string;
-  confirmMessage: string;
-}
+import { IProposal } from "../../types/messages.dto";
 
 export function formatProposal(totalValue: number, value: number, installment: number) {
   const newValue = totalValue * value;
@@ -17,7 +12,7 @@ export function formatProposal(totalValue: number, value: number, installment: n
     if (installment > 0) {
       proposalString += " e ";
     }
-  } else {
+  } else if (installment > 1) {
     proposalString = "em ";
   }
 
@@ -42,8 +37,7 @@ export function firstProposal(chatData: NegotiationData) {
   });
   const bestValue = chatData.rules.melhorEntrada;
   const confirmMessage = formatProposal(
-    chatData.valorDivida,
-    bestValue,
+    chatData.valorDivida, bestValue,
     chatData.rules.melhorParcela
   );
   const firstInstallmentValue =
@@ -72,15 +66,14 @@ export function secondProposal(chatData: NegotiationData) {
     (chatData.valorDivida - chatData.valorDivida * currentValue) / currentInstallment;
   let confirmMessage = "";
 
-  if (firstInstallment === currentInstallment) {
+  if (firstInstallment === 1) {
     confirmMessage = formatProposal(chatData.valorDivida, currentValue, currentInstallment);
-    proposalMessage += `Uma alternativa seria ${confirmMessage}. Essa opção lhe atende melhor?`;
   } else {
     (currentValue = 0), (currentInstallment = firstInstallment - 1);
     confirmMessage = formatProposal(chatData.valorDivida, 0, currentInstallment);
     installmentValue = chatData.valorDivida / currentInstallment;
-    proposalMessage += `Uma alternativa seria <b>${confirmMessage}</b>. Essa opção lhe atende melhor?`;
   }
+  proposalMessage += `Uma alternativa seria <b>${confirmMessage}</b>. Essa opção lhe atende melhor?`;
 
   const proposal: IProposal = {
     autor: "Bot",
@@ -96,14 +89,23 @@ export function secondProposal(chatData: NegotiationData) {
 
 export function thirdProposal(chatData: NegotiationData) {
   const proposalMessage = `${chatData.nome}, vamos tentar chegar a um acordo. Informe abaixo um <b>valor de entrada</b> e a <b>quantidade de parcelas</b> que seriam ideais para você. E, se puder, <b>justifique sua proposta</b>.`;
+
+  const confirmMessage = formatProposal(chatData.valorDivida,
+    chatData.rules.piorEntrada, chatData.rules.piorParcela);
+  const installmentValue = (chatData.valorDivida - chatData.valorDivida
+    * chatData.rules.piorEntrada) / chatData.rules.piorParcela;
   const proposal: IProposal = {
     autor: "User",
     aceito: false,
-    entrada: 0,
+    entrada: chatData.rules.piorEntrada,
     message: proposalMessage,
-    confirmMessage: "",
-    valorParcela: 0,
-    qtdParcelas: 0
+    confirmMessage: confirmMessage,
+    valorParcela: installmentValue,
+    qtdParcelas: chatData.rules.piorParcela
   };
   return proposal;
+}
+
+export function lastProposalMessage(newProposal: string) {
+  return "Sinto muito, mas este acordo não é viável para nós. O que você acha de tentarmos o seguinte acordo: <b>" + newProposal + "</b>?";
 }
