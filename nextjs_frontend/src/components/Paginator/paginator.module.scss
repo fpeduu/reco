@@ -4,7 +4,7 @@
   outline: none;
 }
 .pageButton {
-  @apply w-10 h-10 flex justify-center items-center rounded-xl p-1 mx-2
+  @apply w-8 h-8 flex justify-center items-center rounded mx-2 pt-1 text-sm font-medium
       hover:bg-red-600 hover:bg-opacity-20;
   //   &.active {
   //     @apply bg-secondary text-white hover:bg-opacity-100 focus:outline-none;

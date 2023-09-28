@@ -92,7 +92,7 @@ export default function Paginator({
             <a
               key={index + 1}
               href="#"
-              className={`px-5 py-3 rounded-md ${Styles.pageButton} ${
+              className={`${Styles.pageButton} ${
                 index === 0 ? Styles["active-page"] : ""
               }`}
               onClick={() => handlePageClick(index + 1)}
@@ -111,12 +111,11 @@ export default function Paginator({
             <a
               key={index + 1}
               href="#"
-              className={`px-2 py-1 rounded-md ${
-                index === 0
-                  ? "bg-secondary text-white active-page"
-                  : "text-gray-600 hover:bg-gray-200"
+              className={`${Styles.pageButton} ${
+                index === 0 ? Styles["active-page"] : ""
               }`}
               onClick={() => handlePageClick(index + 1)}
+              data-page={index + 1}
             >
               {index + 1}
             </a>
@@ -124,7 +123,7 @@ export default function Paginator({
           <span className="px-2 py-1 text-gray-600">...</span>
           <a
             href="#"
-            className="px-2 py-1 rounded-md text-gray-600 hover:bg-gray-200"
+            className="px-2 py-1 rounded text-gray-600 hover:bg-gray-200"
             onClick={() => handlePageClick(pageLimit)}
           >
             {pageLimit}
@@ -136,28 +135,22 @@ export default function Paginator({
 
   return (
     <div
-      className="flex justify-center items-center rounded-xl
-                    border-y-[1px] border-secondary gap-5
-                    bg-[#d9d9d9]"
+      className="flex justify-center items-center 
+                    gap-5
+                    "
     >
-      <button
-        className="bg-secondary rounded-l-lg py-3 px-5"
-        onClick={handlePreviousPage}
-      >
+      <button className=" py-3 px-5" onClick={handlePreviousPage}>
         <Image
-          src="/icons/left-arrow.svg"
+          src="/icons/arrow_left.svg"
           alt="Previous Page"
           width={10}
           height={15}
         />
       </button>
       {renderPagination()}
-      <button
-        className="bg-secondary rounded-r-lg py-3 px-5"
-        onClick={handleNextPage}
-      >
+      <button className=" py-3 px-5" onClick={handleNextPage}>
         <Image
-          src="/icons/right-arrow.svg"
+          src="/icons/arrow_right.svg"
           alt="Next Page"
           width={10}
           height={15}
