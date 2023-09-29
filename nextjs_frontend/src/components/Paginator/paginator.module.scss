@@ -1,0 +1,16 @@
+.active-page {
+  background-color: black;
+  color: white;
+  outline: none;
+  &:hover {
+    background-color: black !important;
+    color: white !important;
+  }
+}
+.pageButton {
+  @apply w-8 h-8 flex justify-center items-center rounded mx-2 pt-1 text-sm font-medium
+      hover:bg-red-600 hover:bg-opacity-20;
+}
+.pageEllipsis {
+  @apply w-8 h-8 flex justify-center items-center rounded mx-2 pt-1 text-sm font-medium;
+}
