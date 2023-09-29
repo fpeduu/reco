@@ -26,11 +26,11 @@ export default function StatusBarCheckItem({
           }`}
         >
           {checkStatus === "Completo" ? (
-            <Image src="/icons/check.svg" alt="check" width={21} height={15} />
+            <Image src="/icons/check.svg" alt="check"
+                   width={21} height={15} />
           ) : (
             <span
-              className={
-                "font-normal tex-xl " +
+              className={"font-light tex-xl " +
                 (checkStatus === "Em andamento"
                   ? "text-white"
                   : "text-slate-500")
@@ -40,7 +40,7 @@ export default function StatusBarCheckItem({
             </span>
           )}
         </span>
-        <p className="w-24 mt-5 mb-6 -translate-x-5 text-center">
+        <p className="w-24 mt-5 mb-6 -translate-x-5 text-center font-normal">
           {title}
         </p>
         <StatusBarCard checkStatus={checkStatus} />
@@ -53,8 +53,8 @@ export default function StatusBarCheckItem({
         />
       )}
       {step < 5 && checkStatus === "Em andamento" && (
-        <span
-          className={`w-1/2 h-2 top-4 left-8 flex absolute rounded-2xl bg-amber-500`}
+        <span className="w-1/2 h-2 top-4 left-8 flex
+                         absolute rounded-2xl bg-amber-500"
         />
       )}
     </div>

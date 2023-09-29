@@ -17,10 +17,9 @@ Clone ou faça o download do repositório, e siga os passos abaixo:
 #### Frontend
 - NEXT_PUBLIC_API_URL: URL da API (usualmente, https://localhost:3000)
 - MONGODB_URI: URI de conexão com o MongoDB
-- GOOGLE_ID: ID do Google Cloud, para autenticação
-- GOOGLE_SECRET: Secret do Google Cloud, para autenticação
 - NEXTAUTH_SECRET: Secret do NextAuth, hash de 32 dígitos, para uso da biblioteca "next-auth"
 - NEXTAUTH_URL: URL do NextAuth (usualmente, https://localhost:3000/api/auth)
+- BACKEND_SERVER_URL: URL do servidor (usualmente, https://localhost:8080)
 
 #### Backend
 - MONGODB_URI: URI de conexão com o MongoDB

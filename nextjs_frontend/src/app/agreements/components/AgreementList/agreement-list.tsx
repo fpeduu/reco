@@ -2,40 +2,35 @@
 
 import Dropdown from "@/components/Dropdown/dropdown";
 import Paginator from "@/components/Paginator/paginator";
-import { StatusType, AcordoIdentificado } from "@/models/Acordos";
+import { StatusType } from "@/models/Acordos";
 import { useEffect, useState } from "react";
 import AgreementCard from "../AgreementCard/agreement-card";
-import { Devedor } from "@/models/Devedores";
 import {
   filterByCodominiumAndMonths,
   getUniqueMonths
 } from "@/services/tableUtils";
+import { DevedorAcordo } from "@/types/acordo.dto";
 
 interface AgreementListProps {
   searchQuery: string;
   title: string;
   description: string;
-  agreements: AcordoIdentificado[];
-  tenants: Devedor[];
+  agreements: DevedorAcordo[];
   filterByProgress: boolean;
 }
 const agreementStatusList: (StatusType | "Todos")[] = [
   "Todos", "Aguardando inadimplente", "Conversa iniciada",
-  "Primeira proposta", "Segunda proposta", "Proposta do inadimplente",
-  "Aguardando aprovação", "Acordo aceito", "Acordo recusado", 
+  "Primeira proposta", "Segunda proposta",
+  "Proposta do inadimplente", "Aguardando aprovação"
 ]
 const agreementsPerPage = 6;
 
 export default function AgreementList({
-  searchQuery,
-  title,
-  description,
-  agreements,
-  tenants,
-  filterByProgress,
+  searchQuery, title, description,
+  agreements, filterByProgress,
 }: AgreementListProps) {
-  const [filteredAgreements, setFilteredAgreements] =
-    useState<AcordoIdentificado[]>(agreements);
+  const [filteredAgreements, setFilteredAgreements] = 
+    useState<DevedorAcordo[]>(agreements);
 
   const [condominiums, setCondominiums] = useState<string[]>([]);
   const [monthsLateList, setMonthsLateList] = useState<string[]>([]);
@@ -63,7 +58,7 @@ export default function AgreementList({
       return apartments.indexOf(condominium) === index;
     });
     const uniqueMonths = getUniqueMonths(
-      tenants.map((x) => x.mensalidadesAtrasadas)
+      agreements.map((x) => x.mensalidadesAtrasadas)
     );
 
     setCondominiums(["Todos", ...uniqueCondomiuns]);
@@ -73,26 +68,18 @@ export default function AgreementList({
   useEffect(() => {
     setFilteredAgreements(
       agreements.filter((agreement) => {
-        const tenant = getTenant(agreement.cpfDevedor);
         const firstFilter = filterByCodominiumAndMonths(
           condominium, agreement.nomeCondominio,
-          paymentStatus, tenant?.mensalidadesAtrasadas as number
+          paymentStatus, agreement.mensalidadesAtrasadas as number
         )
-        const progressFilter =
-          progress === "Todos" || agreement.status === progress;
+        const progressFilter = progress === "Todos"
+          || agreement.acordo.status === progress;
         return (firstFilter &&
           (filterByProgress ? progressFilter : true)
         );
       })
     );
-  }, [
-    condominium,
-    agreements,
-    filterByProgress,
-    progress,
-    tenants,
-    paymentStatus,
-  ]);
+  }, [condominium, agreements, filterByProgress, progress, paymentStatus]);
 
   useEffect(() => {
     handleSearch(searchQuery);
@@ -107,8 +94,8 @@ export default function AgreementList({
     setFilteredAgreements(
       agreements.filter((agreement) => {
         return (
-          agreement.nomeDevedor.toLowerCase().includes(searchLower) ||
-          agreement.cpfDevedor.includes(searchLower)
+          agreement.nome.toLowerCase().includes(searchLower) ||
+          agreement.cpf.includes(searchLower)
         );
       })
     );
@@ -133,12 +120,6 @@ export default function AgreementList({
     setPage(1);
   }
 
-  function getTenant(cpf: string) {
-    let tenant = tenants.find((tenant) => tenant.cpf === cpf);
-    if (!tenant) return null;
-    return tenant;
-  }
-
   return (
     <div className="w-full flex flex-col items-center justify-between gap-5">
       <div className="w-full flex justify-between items-start">
@@ -150,7 +131,7 @@ export default function AgreementList({
           <span className="text-sm font-light">Filtrar por:</span>
           {filterByProgress && (
             <Dropdown
-              title="Status"
+              title="Progresso"
               options={agreementStatusList}
               onChange={handleFilterChange}
             />
@@ -172,7 +153,6 @@ export default function AgreementList({
           <AgreementCard
             key={index}
             agreement={agreement}
-            tenant={getTenant(agreement.cpfDevedor)}
           />
         ))}
       </div>

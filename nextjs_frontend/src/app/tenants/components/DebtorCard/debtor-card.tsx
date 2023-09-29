@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 
-import { useProposalContext } from "@/contexts/ProposalContext";
 import TenantModal from "../TenantModal/tenant-modal";
 import { Devedor } from "@/models/Devedores";
 
@@ -11,11 +10,9 @@ interface DebtorCardProps {
 }
 
 export default function DebtorCard({ tenant }: DebtorCardProps) {
-  const context = useProposalContext();
   const [modalOpen, setModalOpen] = useState(false);
 
   function handleStartAgreement() {
-    context.setDebtor(tenant);
     setModalOpen(true);
   }
 
@@ -69,7 +66,7 @@ export default function DebtorCard({ tenant }: DebtorCardProps) {
           </button>
         </div>
       </div>
-      <TenantModal open={modalOpen} onClose={closeModal} />
+      <TenantModal open={modalOpen} onClose={closeModal} debtor={tenant}/>
     </>
   );
 }
