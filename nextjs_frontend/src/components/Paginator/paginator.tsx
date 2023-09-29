@@ -16,19 +16,22 @@ export default function Paginator({
     if (currentPage > 1) {
       const newPage = currentPage - 1;
       onPageChange(newPage);
-      currentPage = newPage;
-    }
-    const pageElements = document.querySelectorAll("[data-page]");
-    pageElements.forEach((element) => {
-      element.classList.remove(Styles["active-page"]);
-    });
-    const clickedPageElement = document.querySelector(
-      `[data-page="${currentPage}"]`
-    ) as HTMLElement;
 
-    if (clickedPageElement) {
-      clickedPageElement.classList.add(Styles["active-page"]);
-      clickedPageElement.focus();
+      setTimeout(() => {
+        const pageElements = document.querySelectorAll("[data-page]");
+        pageElements.forEach((element) => {
+          element.classList.remove(Styles["active-page"]);
+        });
+
+        const clickedPageElement = document.querySelector(
+          `[data-page="${newPage}"]`
+        ) as HTMLElement;
+
+        if (clickedPageElement) {
+          clickedPageElement.classList.add(Styles["active-page"]);
+          clickedPageElement.focus();
+        }
+      }, 0);
     }
   }
 
@@ -36,38 +39,45 @@ export default function Paginator({
     if (currentPage < pageLimit) {
       const newPage = currentPage + 1;
       onPageChange(newPage);
-      currentPage = newPage;
-    }
-    const pageElements = document.querySelectorAll("[data-page]");
-    pageElements.forEach((element) => {
-      element.classList.remove(Styles["active-page"]);
-    });
 
-    const clickedPageElement = document.querySelector(
-      `[data-page="${currentPage}"]`
-    ) as HTMLElement;
+      setTimeout(() => {
+        const pageElements = document.querySelectorAll("[data-page]");
+        pageElements.forEach((element) => {
+          element.classList.remove(Styles["active-page"]);
+        });
 
-    if (clickedPageElement) {
-      clickedPageElement.classList.add(Styles["active-page"]);
-      clickedPageElement.focus();
+        const clickedPageElement = document.querySelector(
+          `[data-page="${newPage}"]`
+        ) as HTMLElement;
+
+        if (clickedPageElement) {
+          clickedPageElement.classList.add(Styles["active-page"]);
+          clickedPageElement.focus();
+        }
+      }, 0);
     }
   }
 
   function handlePageClick(page: number) {
     onPageChange(page);
-    const pageElements = document.querySelectorAll("[data-page]");
-    pageElements.forEach((element) => {
-      element.classList.remove(Styles["active-page"]);
-    });
-    const clickedPageElement = document.querySelector(
-      `[data-page="${page}"]`
-    ) as HTMLElement;
+    currentPage = page;
 
-    if (clickedPageElement) {
-      clickedPageElement.classList.add(Styles["active-page"]);
+    setTimeout(() => {
+      const clickedPageElement = document.querySelector(
+        `[data-page="${page}"]`
+      ) as HTMLElement;
+      console.log(clickedPageElement);
 
-      clickedPageElement.focus();
-    }
+      const pageElements = document.querySelectorAll("[data-page]");
+      pageElements.forEach((element) => {
+        element.classList.remove(Styles["active-page"]);
+      });
+
+      if (clickedPageElement) {
+        clickedPageElement.classList.add(Styles["active-page"]);
+        clickedPageElement.focus();
+      }
+    }, 0);
   }
 
   const renderPagination = () => {
@@ -117,7 +127,7 @@ export default function Paginator({
             } ${page === currentPage ? Styles["active-page"] : ""}`}
             onClick={() => {
               if (typeof page === "number") {
-                console.log("hey");
+                console.log(page);
                 handlePageClick(page);
               }
             }}
