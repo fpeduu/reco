@@ -2,16 +2,17 @@
 
 import React, { useEffect, useState } from "react";
 
-import { useProposalContext } from "@/contexts/ProposalContext";
 import { RegrasProposta } from "@/models/Usuarios";
 import { Acordo } from "@/models/Acordos";
 import { serverURL } from "@/config";
 
 import ModalContent, { INegotiationData } from "./components/Modal-content";
 import Confirmation from "./components/Confirmation";
+import { Devedor } from "@/models/Devedores";
 
 interface TenantModalProps {
   open: boolean;
+  debtor: Devedor;
   onClose: () => void;
 }
 
@@ -43,9 +44,9 @@ async function createAgreement(
     }) as Acordo | null;
 }
 
-export default function TenantModal({ open, onClose }: TenantModalProps) {
-  const { debtor } = useProposalContext();
-
+export default function TenantModal({
+  open, onClose, debtor
+}: TenantModalProps) {
   const [confirmed, setConfirmed] = useState<boolean>(false);
   const [negotiation, setNegotiation] = useState<INegotiationData>({
     bestValue: 0, worstValue: 0, bestInstallments: 0,
@@ -114,6 +115,7 @@ export default function TenantModal({ open, onClose }: TenantModalProps) {
             {confirmed ?
             <Confirmation cpfDevedor={debtor.cpf}/> : 
             <ModalContent
+              debtor={debtor}
               onClose={onClose}
               onConfirm={onConfirm}
               negotiationData={negotiation}

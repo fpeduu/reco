@@ -2,12 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/middlewares/mongodb";
 import options from "../../auth/[...nextauth]/options";
 import { getServerSession } from "next-auth";
+import { revalidatePath } from "next/cache";
 
 import Acordos, { Acordo, Proposta, StatusType } from "@/models/Acordos";
 import Devedores, { Devedor } from "@/models/Devedores";
 import Usuarios, { Usuario } from "@/models/Usuarios";
 import { NegotiationData } from "@/types/negotiation.dto";
-import { revalidatePath } from "next/cache";
+import { notificate } from "./notification";
+
 
 interface Context {
   params: { chatID: string }
@@ -142,5 +144,6 @@ export async function POST(request: NextRequest, context: Context) {
   );
 
   revalidatePath("/negociacao/[chatID]/page");
+  notificate(devedor, updatedProposal);
   return NextResponse.json(updatedProposal);
 }

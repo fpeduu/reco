@@ -3,56 +3,14 @@
 import { useSession, signIn, signOut } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+
+import { useNotificationContext } from "@/contexts/NotificationContext";
 import { useSideBarContext } from "@/contexts/SideBarContext";
+
 import NotificationFlyMenu from "./components/NotificationFlyMenu/notification-fly-menu";
-import { Notification } from "./components/NotificationFlyMenu/notification-fly-menu";
-
-const notificationList: Notification[] = [
-  {
-    type: "Sucesso",
-    tenantName: "João da Silva",
-    condominiumName: "Condomínio do João",
-    message: "O acordo foi finalizado e falta apenas fazer o dowload"
-  },
-  {
-    type: "Erro",
-    tenantName: "João da Silva",
-    condominiumName: "Condomínio do João",
-    message: "O acordo não foi realizado com sucesso!"
-  },
-  {
-    type: "Aviso",
-    tenantName: "João da Silva",
-    condominiumName: "Condomínio do João",
-    message: "O acordo foi realizado com sucesso!"
-  },
-  {
-    type: "Informação",
-    tenantName: "João da Silva",
-    condominiumName: "Condomínio do João",
-    message: "O acordo foi realizado com sucesso!"
-  },
-  {
-    type: "Sucesso",
-    tenantName: "Maria da Silva",
-    condominiumName: "Condomínio da Maria",
-    message: "O acordo foi finalizado e falta apenas fazer o dowload"
-  },
-  {
-    type: "Erro",
-    tenantName: "Maria da Silva",
-    condominiumName: "Condomínio da Maria",
-    message: "O acordo não foi realizado com sucesso!"
-  }
-];
-
-async function fetchNotifications() {
-  return notificationList;
-}
 
 export default function Header() {
-  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const { notifications, setNotifications } = useNotificationContext();
   const { hideSideBar, setHideSideBar } = useSideBarContext();
   const { data: session } = useSession();
 
@@ -76,12 +34,6 @@ export default function Header() {
     const newNotifications = notifications.filter((_, i) => i !== index);
     setNotifications(newNotifications);
   }
-
-  useEffect(() => {
-    fetchNotifications().then((notifications) => {
-      setNotifications(notifications);
-    });
-  }, []);
 
   return (
     <div className="w-full absolute h-20 pr-28 py-2 flex items-center bg-white text-red-600">

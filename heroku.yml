@@ -1,7 +1,5 @@
 build:
   docker:
-    web: fastapi_backend/Dockerfile
-    worker: telegram_bot/Dockerfile
+    web: python_backend/Dockerfile
 run:
   web: uvicorn main:app --host 0.0.0.0 --port $PORT
-  worker: python main.py

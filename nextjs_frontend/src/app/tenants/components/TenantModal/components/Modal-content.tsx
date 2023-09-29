@@ -2,8 +2,8 @@
 
 import React from "react";
 
-import { useProposalContext } from "@/contexts/ProposalContext";
 import ModalInformation from "./Modal-information";
+import { Devedor } from "@/models/Devedores";
 
 export interface INegotiationData {
   melhorParcela?: number;
@@ -15,16 +15,15 @@ export interface INegotiationData {
 }
 
 interface ModalContentProps {
+  debtor: Devedor;
   onClose: () => void;
   onConfirm: () => void;
   negotiationData: INegotiationData;
 }
 
 export default function ModalContent({
-  onClose, onConfirm, negotiationData
+  onClose, onConfirm, negotiationData, debtor
 }: ModalContentProps) {
-  const { debtor } = useProposalContext();
-
   const { melhorParcela, piorParcela, bestValue, worstValue, 
     bestInstallments, worstInstallments } = negotiationData;
 
