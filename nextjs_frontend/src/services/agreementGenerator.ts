@@ -158,7 +158,9 @@ export async function downloadAgreement(acordo: DevedorAcordo) {
   const pdfBytes = await generateAgreement(acordo);
   const blob = new Blob([pdfBytes], { type: "application/pdf" });
   const link = document.createElement("a");
-  link.href = window.URL.createObjectURL(blob);
-  link.download = `acordo_${acordo.cpf}.pdf`;
-  link.click();
+  if (typeof window !== 'undefined') {
+    link.href = window.URL.createObjectURL(blob);
+    link.download = `acordo_${acordo.cpf}.pdf`;
+    link.click();
+  }
 }

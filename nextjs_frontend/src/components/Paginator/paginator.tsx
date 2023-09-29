@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Styles from "./paginator.module.scss";
-import { useState } from "react";
 
 interface PaginatorProps {
   onPageChange: (page: number) => void;
@@ -13,7 +12,7 @@ export default function Paginator({
   currentPage,
   pageLimit,
 }: PaginatorProps) {
-  const isMobile = window.innerWidth <= 768;
+  const isMobile = typeof window !== "undefined" && window.innerWidth <= 768;
   function handlePreviousPage() {
     if (currentPage > 1) {
       const newPage = currentPage - 1;

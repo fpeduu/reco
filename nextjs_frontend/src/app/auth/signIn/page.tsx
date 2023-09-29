@@ -13,7 +13,7 @@ export default function SignIn() {
     if (session && session.user) {
       router.push("/tenants");
     }
-  }, [session]);
+  }, [session, router]);
 
   const handleSubmit = async (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();

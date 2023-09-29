@@ -20,7 +20,7 @@ export default function UserInput({ divida, onConfirm }: UserInputProps) {
     if (installmentNumber > 0) {
       setInstallmentValue((divida - valueNumber) / installmentNumber);
     }
-  }, [value, installment]);
+  }, [value, installment, divida, setInstallmentValue]);
 
   function onSubmit(event: any) {
     event.preventDefault();

@@ -12,7 +12,7 @@ export default function TenantProfileCard({ tenant }: TenantProfileCardProps) {
   const linkRef = useRef<HTMLSpanElement>(null);
 
   function handleCopyLink() {
-    if (!linkRef.current) return;
+    if (!linkRef.current || typeof window === "undefined") return;
     navigator.clipboard.writeText(`${window.location.origin}/negociacao/${params.cpfDevedor}`);
     linkRef.current.textContent = "Link copiado!";
   }

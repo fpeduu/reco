@@ -121,7 +121,7 @@ export default function Chat({ chatData }: ChatProps) {
     }
 
     setMessages(newMessages);
-  }, [chatData])
+  }, [chatData]);
 
 
   async function onConfirmPredefinedProposal(index: number) {
@@ -204,7 +204,7 @@ export default function Chat({ chatData }: ChatProps) {
     setUserProposal({ installment, reason, value });
     const canBeAccepted = installment <= chatData.rules.piorParcela;
     const installmentValue = (chatData.valorDivida - value)
-                              / installment;
+                              / Math.max(installment, 1);
     await updateProposal(chatData.cpf, {
       aceito: canBeAccepted, autor: "User", entrada: value,
       qtdParcelas: installment, motivo: reason,

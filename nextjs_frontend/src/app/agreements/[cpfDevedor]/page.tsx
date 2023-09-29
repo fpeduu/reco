@@ -53,7 +53,7 @@ export default function AgreementStatus({ params }: AgreementStatusProps) {
 
       const { entrada, qtdParcelas } = response.acordo;
       const totalInstallmentValue = response.valorDivida - entrada;
-      setInstallmentValue(totalInstallmentValue / qtdParcelas);
+      setInstallmentValue(totalInstallmentValue / Math.max(qtdParcelas, 1));
     });
   }, [params]);
 

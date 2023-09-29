@@ -81,15 +81,12 @@ export default function AgreementList({
     );
   }, [condominium, agreements, filterByProgress, progress, paymentStatus]);
 
-  useEffect(() => {
-    handleSearch(searchQuery);
-  }, [searchQuery]);
 
-  function handleSearch(search: string) {
-    if (search === "") {
+  useEffect(() => {
+    if (searchQuery === "") {
       return setFilteredAgreements(agreements);
     }
-    const searchLower = search.toLowerCase();
+    const searchLower = searchQuery.toLowerCase();
 
     setFilteredAgreements(
       agreements.filter((agreement) => {
@@ -100,7 +97,7 @@ export default function AgreementList({
       })
     );
     setPage(1);
-  }
+  }, [searchQuery, agreements, setFilteredAgreements]);
 
   function handlePagination() {
     return filteredAgreements.slice(
