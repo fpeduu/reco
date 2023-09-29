@@ -83,37 +83,62 @@ export default function Paginator({
 
   const renderPagination = () => {
     const displayedPages: (number | string)[] = [];
-    const pageRange = isMobile ? 2 : 5;
-
-    if (pageLimit <= pageRange) {
-      for (let i = 1; i <= pageLimit; i++) {
-        displayedPages.push(i);
-      }
-    } else {
-      if (currentPage <= Math.ceil(pageRange / 2)) {
-        for (let i = 1; i <= pageRange - 1; i++) {
-          displayedPages.push(i);
-        }
-        displayedPages.push("...");
-        displayedPages.push(pageLimit);
-      } else if (currentPage >= pageLimit - Math.floor(pageRange / 2)) {
-        displayedPages.push(1);
-        displayedPages.push("...");
-        for (let i = pageLimit - pageRange + 2; i <= pageLimit; i++) {
+    const pageRange = isMobile ? 3 : 5;
+    if (!isMobile) {
+      if (pageLimit <= pageRange) {
+        for (let i = 1; i <= pageLimit; i++) {
           displayedPages.push(i);
         }
       } else {
-        displayedPages.push(1);
-        displayedPages.push("...");
-        for (
-          let i = currentPage - Math.floor(pageRange / 2);
-          i <= currentPage + Math.floor(pageRange / 2);
-          i++
-        ) {
+        if (currentPage <= Math.ceil(pageRange / 2)) {
+          for (let i = 1; i <= pageRange - 1; i++) {
+            displayedPages.push(i);
+          }
+          displayedPages.push("...");
+          displayedPages.push(pageLimit);
+        } else if (currentPage >= pageLimit - Math.floor(pageRange / 2)) {
+          displayedPages.push(1);
+          displayedPages.push("...");
+          for (let i = pageLimit - pageRange + 2; i <= pageLimit; i++) {
+            displayedPages.push(i);
+          }
+        } else {
+          displayedPages.push(1);
+          displayedPages.push("...");
+          for (
+            let i = currentPage - Math.floor(pageRange / 2);
+            i <= currentPage + Math.floor(pageRange / 2);
+            i++
+          ) {
+            displayedPages.push(i);
+          }
+          displayedPages.push("...");
+          displayedPages.push(pageLimit);
+        }
+      }
+    } else {
+      if (pageLimit <= pageRange) {
+        for (let i = 1; i <= pageLimit; i++) {
           displayedPages.push(i);
         }
-        displayedPages.push("...");
-        displayedPages.push(pageLimit);
+      } else {
+        if (currentPage <= Math.ceil(pageRange / 2)) {
+          for (let i = 1; i <= pageRange; i++) {
+            displayedPages.push(i);
+          }
+        } else if (currentPage >= pageLimit - Math.floor(pageRange / 2)) {
+          for (let i = pageLimit - pageRange + 1; i <= pageLimit; i++) {
+            displayedPages.push(i);
+          }
+        } else {
+          for (
+            let i = currentPage - Math.floor(pageRange / 2);
+            i <= currentPage + Math.floor(pageRange / 2);
+            i++
+          ) {
+            displayedPages.push(i);
+          }
+        }
       }
     }
 
