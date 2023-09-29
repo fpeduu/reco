@@ -13,6 +13,7 @@ export default function Paginator({
   currentPage,
   pageLimit,
 }: PaginatorProps) {
+  const isMobile = window.innerWidth <= 768;
   function handlePreviousPage() {
     if (currentPage > 1) {
       const newPage = currentPage - 1;
@@ -82,7 +83,7 @@ export default function Paginator({
 
   const renderPagination = () => {
     const displayedPages: (number | string)[] = [];
-    const pageRange = 5;
+    const pageRange = isMobile ? 2 : 5;
 
     if (pageLimit <= pageRange) {
       for (let i = 1; i <= pageLimit; i++) {
