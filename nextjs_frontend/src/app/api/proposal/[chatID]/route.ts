@@ -7,6 +7,7 @@ import Acordos, { Acordo, Proposta, StatusType } from "@/models/Acordos";
 import Devedores, { Devedor } from "@/models/Devedores";
 import Usuarios, { Usuario } from "@/models/Usuarios";
 import { NegotiationData } from "@/types/negotiation.dto";
+import { revalidatePath } from "next/cache";
 
 export async function GET(request: NextRequest) {
   connectToDatabase();
@@ -32,13 +33,14 @@ export async function GET(request: NextRequest) {
     });
   }
 
+  const lastOne = userInfos.regrasProposta.length - 1;
+  let lastRule = userInfos.regrasProposta[lastOne];
   for (const rule of userInfos.regrasProposta) {
-    if (rule.mesesAtraso === devedor.mensalidadesAtrasadas) {
-      return NextResponse.json(rule);
+    if (devedor.mensalidadesAtrasadas <= rule.mesesAtraso)  {
+      lastRule = rule;
+      break;
     }
   }
-  const lastOne = userInfos.regrasProposta.length - 1;
-  const lastRule = userInfos.regrasProposta[lastOne];
 
   const proposal: Acordo | null = await Acordos.findOne({
     cpfDevedor
@@ -72,18 +74,16 @@ export async function POST(request: NextRequest) {
   const cpfDevedor = pathname.split("/").pop() as string;
   const newProposal: Proposta = await request.json();
 
-  const proposal: Acordo | null = await Acordos.findOne({
+  const agreement: Acordo | null = await Acordos.findOne({
     cpfDevedor
   });
-  if (!proposal) {
-    return NextResponse.json({
-      "error": "No proposal found"
-    });
+  if (!agreement) {
+    return NextResponse.json({ "error": "No proposal found" });
   }
 
   let status: StatusType = "Aguardando inadimplente";
   const session = await getServerSession(options);
-  const history = proposal.historicoValores;
+  const history = agreement.historicoValores;
   if (session && history.length > 0 &&
       history[history.length - 1].aceito) {
     if (newProposal.aceito) {
@@ -108,34 +108,37 @@ export async function POST(request: NextRequest) {
       break;
   }
 
-  if (status === "Acordo aceito" || status === "Acordo recusado") {
-    const devedor: Devedor | null = await Devedores.findOne({
-      cpf: cpfDevedor,
-    });
-    if (!devedor) {
-      return NextResponse.json({
-        "error": "No debtor found"
-      });
-    }
-    proposal.entrada = devedor.valorDivida * newProposal.entrada;
-    proposal.qtdParcelas = newProposal.qtdParcelas;
+  const devedor: Devedor | null = await Devedores.findOne({
+    cpf: cpfDevedor,
+  });
+  if (!devedor) {
+    return NextResponse.json({ "error": "No debtor found" });
+  }
+  if (newProposal.autor === "User") {
+    agreement.entrada = newProposal.entrada;
   } else {
+    agreement.entrada = devedor.valorDivida * newProposal.entrada;
+  }
+  agreement.qtdParcelas = newProposal.qtdParcelas;
+
+  if (status !== "Acordo aceito" && status !== "Acordo recusado") {
     history.push(newProposal);
   }
 
-  proposal.dataAcordo = new Date();
-  proposal.status = status;
+  agreement.dataAcordo = new Date();
+  agreement.status = status;
 
   const updatedProposal = await Acordos.findOneAndUpdate(
     { cpfDevedor },
     { $set: {
-      dataAcordo: proposal.dataAcordo,
-      status, entrada: proposal.entrada,
-      qtdParcelas: proposal.qtdParcelas,
+      dataAcordo: agreement.dataAcordo,
+      status, entrada: agreement.entrada,
+      qtdParcelas: agreement.qtdParcelas,
       historicoValores: history,
     } },
     { new: true }
   );
 
+  revalidatePath("/negociacao/[chatID]/page");
   return NextResponse.json(updatedProposal);
 }
