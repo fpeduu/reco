@@ -39,7 +39,7 @@ export default function Home() {
       {/* FEATURES SECTION*/}
       <section id="features" className="w-full max-h-fit bg-neutral-200 relative">
         <div className="w-full h-208 absolute right-0 -top-96 bg-[url(/images/grafismo3.svg)] bg-right-top bg-no-repeat bg-contain" />
-        <div className="flex justify-center p-20">
+        <div className="flex justify-center p-20 mt-32 mb-20">
           <div className="grid grid-cols-2 gap-12 my-10">
             <div>
               <Image alt="reco logo" src="/logo.svg" width={400} height={100} priority />
@@ -135,13 +135,13 @@ export default function Home() {
       <section id="pricing" className="w-full max-h-fit bg-neutral-200">
         <div className="flex flex-wrap items-center justify-center gap-20 px-16 py-32 bg-[url(/images/grafismo1.svg)] bg-no-repeat bg-right">
           <div className="w-[350px]">
-            <h2 className="text-7xl text-justify font-medium">Planos</h2>
+            <h2 className="mb-10 text-7xl text-justify font-medium">Planos</h2>
             <p className="text-justify text-lg text-secondary font-light">
               Conheça os planos da nossa plataforma! <br /> <br />O plano Básico é descomplicado,
               ideal para conhecer a plataforma. Já o plano Premium oferece recursos avançados e
               suporte especializado para acordos justos e sustentáveis.
             </p>
-            <h4 className="font-medium text-2xl mt-5">Métodos de pagamento</h4>
+            <h4 className="font-medium text-2xl mt-10">Métodos de pagamento</h4>
             <div className="flex flex-wrap gap-9 mt-4 justify-center md:justify-start">
               <Image alt="paypal icon" src="/icons/paypal.svg" width={35} height={35} priority />
               <Image alt="pix icon" src="/icons/pix.svg" width={40} height={40} priority />
