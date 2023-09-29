@@ -93,6 +93,23 @@ export default function AddTenantModal({ onClose }: AddTenantModalProps) {
                 </div>
 
                 <div className="mb-4">
+                  <label
+                    htmlFor="mensalidadesAtrasadas"
+                    className="font-normal"
+                  >
+                    Mensalidades Atrasadas
+                  </label>
+                  <input
+                    onChange={handleFormChange}
+                    className="w-full px-3 py-2 border border-gray-300 shadow rounded-md h-10 focus:ring-primary-500 focus:border-primary-500"
+                    type="text"
+                    name="mensalidadesAtrasadas"
+                    id="mensalidadesAtrasadas"
+                    placeholder="Digite as Mensalidades Atrasadas"
+                  />
+                </div>
+
+                <div className="mb-4">
                   <label htmlFor="nomeCondominio" className="font-normal">
                     Nome do Condomínio
                   </label>
