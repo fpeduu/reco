@@ -3,15 +3,22 @@ import mongoose from "mongoose";
 export type StatusType =
   | "Aguardando inadimplente"
   | "Conversa iniciada"
-  | "Valor reserva informado"
-  | "Valor reserva alcançado"
-  | "Negociação concluída"
-  | "Baixar acordo finalizado";
+  | "Primeira proposta"
+  | "Segunda proposta"
+  | "Proposta do inadimplente"
+  | "Aguardando aprovação"
+  | "Acordo aceito"
+  | "Acordo recusado";
+
+export type AuthorType = "Bot" | "User";
 
 export interface Proposta {
+  autor: AuthorType;
+  aceito: boolean;
   entrada: number;
-  valorParcela: number;
+  motivo?: string;
   qtdParcelas: number;
+  valorParcela: number;
 }
 
 export interface Acordo {
@@ -24,11 +31,6 @@ export interface Acordo {
   valorTotal: number;
   qtdParcelas: number;
   historicoValores: Proposta[];
-}
-
-export interface AcordoIdentificado extends Acordo {
-  nomeDevedor: string;
-  nomeCondominio: string;
 }
 
 const AcordoSchema = new mongoose.Schema({
@@ -48,7 +50,14 @@ const AcordoSchema = new mongoose.Schema({
   entrada: Number,
   valorTotal: Number,
   qtdParcelas: Number,
-  historicoValores: [{ entrada: Number, valorParcela: Number, qtdParcelas: Number }]
+  historicoValores: [{
+    autor: String,
+    motivo: String,
+    entrada: Number,
+    aceito: Boolean,
+    qtdParcelas: Number,
+    valorParcela: Number,
+  }]
 });
 
 export default mongoose.models.Acordos || mongoose.model("Acordos", AcordoSchema);

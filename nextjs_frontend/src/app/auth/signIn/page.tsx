@@ -13,7 +13,7 @@ export default function SignIn() {
     if (session && session.user) {
       router.push("/tenants");
     }
-  }, [session]);
+  }, [session, router]);
 
   const handleSubmit = async (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -35,20 +35,20 @@ export default function SignIn() {
     <div className="flex flex-wrap w-full h-full">
       <div className="bg-[#d9d9d9] flex items-center justify-center w-full md:w-1/2 ">
         <div className="w-48 lg:w-96">
-          <h1 className="text-3xl font-medium leading-10 md:text-6xl">
+          <h1 className="text-3xl font-lightbold leading-10 md:text-6xl">
             Acessar o sistema
           </h1>
-          <h3 className="font-medium text-xl md:text-2xl">
+          <h3 className="font-normal text-xl md:text-2xl">
             Entre na sua conta e comece a utilizar a usar nosso serviço
           </h3>
         </div>
       </div>
       <div className="w-full flex flex-col justify-center h-full items-center md:w-1/2 bg-tertiary">
         <form className="w-4/6" onSubmit={handleSubmit}>
-          <h3 className="text-center font-medium mb-5 text-xl md:text-2xl">
+          <h3 className="text-center font-normal mb-5 text-xl md:text-2xl">
             Olá! que bom te ver de novo!
           </h3>
-          <label htmlFor="email" className="font-medium">
+          <label htmlFor="email" className="font-normal">
             Email
           </label>
           <input
@@ -58,7 +58,7 @@ export default function SignIn() {
             id="email"
             placeholder="Digite seu email"
           />
-          <label htmlFor="password" className="font-medium">
+          <label htmlFor="password" className="font-normal">
             Senha
           </label>
           <input
@@ -75,31 +75,25 @@ export default function SignIn() {
                 id="rememberMe"
                 className="shadow hover:border-gray-400 md:h-5 md:w-5"
               />
-              <label
-                htmlFor="rememberMe"
-                className="ml-2 text-sm font-medium pt-[2px]"
-              >
+              <label htmlFor="rememberMe" className="ml-2 text-sm font-normal">
                 Lembre de mim
               </label>
             </div>
             <div className="md:w-1/2 flex justify-end">
-              <Link
-                href="#"
-                className="text-sm font-medium hover:underline pt-[2px]"
-              >
+              <Link href="#" className="text-sm font-normal hover:underline ">
                 Esqueci minha senha
               </Link>
             </div>
           </div>
           <button
             type="submit"
-            className="w-full bg-secondary text-white font-medium rounded-md h-12 hover:text-gray-300 mt-8"
+            className="w-full bg-secondary text-white font-normal rounded-md h-12 hover:text-gray-300 mt-8"
           >
             Login
           </button>
           <Link
             href="#"
-            className="flex justify-center text-sm font-medium hover:underline mt-8 mb-20 pt-[2px]"
+            className="flex justify-center text-sm font-normal hover:underline mt-8 mb-20 pt-[2px]"
           >
             Não tem nenhuma conta ainda? Entre em contato!
           </Link>

@@ -1,28 +1,52 @@
 import { Devedor } from "@/models/Devedores";
+import Image from "next/image";
+import { useParams } from "next/navigation";
+import { useRef } from "react";
 
 interface TenantProfileCardProps {
   tenant: Devedor;
 }
 
 export default function TenantProfileCard({ tenant }: TenantProfileCardProps) {
+  const params = useParams();
+  const linkRef = useRef<HTMLSpanElement>(null);
+
+  function handleCopyLink() {
+    if (!linkRef.current || typeof window === "undefined") return;
+    navigator.clipboard.writeText(`${window.location.origin}/negociacao/${params.cpfDevedor}`);
+    linkRef.current.textContent = "Link copiado!";
+  }
+
+  function handleButtonBlur() {
+    if (!linkRef.current) return;
+    linkRef.current.textContent = "Copiar link";
+  }
+
   return (
-    <div className="w-1/3 h-40 py-6 px-10 flex flex-col justify-between rounded-2xl bg-white">
-      <span className="text-xl font-bold">Perfil do inadimplente</span>
+    <div className="w-128 h-40 py-6 pl-10 pr-5 flex flex-col justify-between rounded-2xl bg-white">
+      <span className="text-xl font-medium">Perfil do inadimplente</span>
       <div className="flex items-center justify-between">
-        <div className="flex flex-col justify-between">
-          <span className="text-lg font-medium">{tenant.nome}</span>
-          <span className="text-xs">
-            <span className="font-semibold">CPF:</span>&nbsp;
-            {tenant.cpf}
-          </span>
-          <span className="text-sm">
-            <span className="font-semibold">Local:</span>&nbsp;
-            {tenant.nomeCondominio}
-          </span>
-        </div>
-        <div className="py-2 px-4 rounded-md text-sm bg-rose-100 text-red-500">
-          <span className="font-semibold">Atraso:</span>&nbsp;
-          <span className="text-black">{tenant.mensalidadesAtrasadas} meses</span>
+        <div className="w-full flex flex-col justify-between">
+          <span className="text-lg font-normal">{tenant.nome}</span>
+          <div className="w-full flex justify-between">
+            <div className="flex flex-col">
+              <span className="text-xs font-light">
+                <span className="font-normal">CPF:</span>&nbsp;
+                {tenant.cpf}
+              </span>
+              <span className="text-sm font-light">
+                <span className="font-normal">Condomínio:</span>&nbsp;
+                {tenant.nomeCondominio}
+              </span>
+            </div>
+            <button
+              onClick={handleCopyLink}
+              onBlur={handleButtonBlur}
+              className="h-8 px-3 self-end flex items-center justify-between gap-2 bg-indigo-50 text-sm font-normal text-sky-600 rounded-md">
+              <Image src="/icons/clip.svg" alt="clip" width={21} height={21} />
+              <span ref={linkRef}>Copiar link</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>

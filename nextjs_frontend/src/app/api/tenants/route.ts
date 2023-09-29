@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { options } from "../auth/[...nextauth]/options";
 import { getServerSession } from "next-auth/next";
 
@@ -23,8 +23,25 @@ export async function GET() {
       },
     },
     { $match: { acordos: { $size: 0 } } },
-    { $unset: "acordos" }
+    { $unset: "acordos" },
   ]);
 
   return NextResponse.json(devedores);
+}
+
+export async function POST(req: NextRequest) {
+  const session = await getServerSession(options);
+  if (!session) {
+    return NextResponse.redirect("/auth/signin");
+  }
+
+  const devedor: Devedor = await req.json();
+  devedor.emailAdministrador = session.user?.email ?? "";
+
+  connectToDatabase();
+
+  const newDevedor = new Devedores(devedor);
+  await newDevedor.save();
+
+  return NextResponse.json(newDevedor);
 }

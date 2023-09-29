@@ -1,9 +1,11 @@
-import Acordos, { Acordo, AcordoIdentificado } from "@/models/Acordos";
 import { NextResponse } from "next/server";
-import Devedores, { Devedor } from "@/models/Devedores";
-import { connectToDatabase } from "@/middlewares/mongodb";
 import { getServerSession } from "next-auth";
 import options from "../auth/[...nextauth]/options";
+
+import { connectToDatabase } from "@/middlewares/mongodb";
+import Devedores from "@/models/Devedores";
+
+import { DevedorAcordo } from "@/types/acordo.dto";
 
 export async function GET() {
   connectToDatabase();
@@ -14,28 +16,18 @@ export async function GET() {
     return NextResponse.redirect("/auth/signin");
   }
 
-  const devedores: Devedor[] = await Devedores.find({
-    emailAdministrador: session.user?.email,
-  });
+  const devedoresAndAcordos: DevedorAcordo[] = await Devedores.aggregate([
+    { $match: { emailAdministrador: session.user?.email } },
+    {
+      $lookup: {
+        from: "acordos",
+        localField: "cpf",
+        foreignField: "cpfDevedor",
+        as: "acordo",
+      },
+    },
+    { $unwind: { path: "$acordo" } },
+  ]);
 
-  const agreementPromises = devedores.map(async (devedor) => {
-    const agreement: Acordo | null = await Acordos.findOne({
-      cpfDevedor: devedor.cpf
-    });
-
-    if (!agreement) {
-      return null;
-    }
-
-    return {
-      ...agreement,
-      nomeDevedor: devedor.nome,
-      nomeCondominio: devedor.nomeCondominio,
-    };
-  }).filter((item) => item) as Promise<AcordoIdentificado>[];
-
-  const acordos: AcordoIdentificado[] = await Promise.all(
-    agreementPromises);
-
-  return NextResponse.json(acordos);
+  return NextResponse.json(devedoresAndAcordos);
 }

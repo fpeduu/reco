@@ -5,7 +5,7 @@ import Header from "@/components/Header/header";
 import SideBar from "@/components/SideBar/sidebar";
 import Footer from "@/components/Footer/footer";
 import { NextAuthProvider } from "./providers";
-import { ProposalProvider } from "../contexts/ProposalContext";
+import { NotificationProvider } from "../contexts/NotificationContext";
 import { SideBarProvider } from "@/contexts/SideBarContext";
 import NoirPro from "@/config/fonts";
 
@@ -25,7 +25,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${NoirPro.className} ${inter.className}`}>
         <NextAuthProvider>
-          <ProposalProvider>
+          <NotificationProvider>
             <SideBarProvider>
               <Header />
               <div className="w-full flex">
@@ -36,7 +36,7 @@ export default function RootLayout({
               </div>
               <Footer />
             </SideBarProvider>
-          </ProposalProvider>
+          </NotificationProvider>
         </NextAuthProvider>
       </body>
     </html>

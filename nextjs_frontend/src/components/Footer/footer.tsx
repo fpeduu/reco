@@ -5,12 +5,12 @@ import { useSession } from "next-auth/react";
 
 export default function Footer() {
   const { data: session } = useSession();
-  const bgClass = session ? "bg-gray-100" : "bg-primary";
+  const bgClass = session ? "bg-gray-100" : "bg-neutral-950";
+  const textClass = session ? "text-neutral-950" : "text-neutral-200";
 
   return (
     <div
-      className={`flex w-full ml-16 sm:ml-0 justify-evenly p-20 ${Styles.footerSection}`}
-    >
+      className={`flex w-full ml-16 sm:ml-0 justify-evenly p-20 ${textClass} ${bgClass} ${Styles.footerSection}`}>
       <span>
         <p> Início </p>
         <a href="/">Página inicial</a>

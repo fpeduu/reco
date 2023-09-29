@@ -5,19 +5,15 @@ interface CurrencyCardProps {
   iconSize: number;
   title: string;
   value: number;
-  desccriptionTitle: string;
-  description: string;
-  isUpArrow: boolean;
+  description?: string;
+  descriptionStyle?: string;
+  desccriptionTitle?: string;
 }
 
 export default function CurrencyCard({
-  icon,
-  iconSize,
-  title,
-  value,
+  icon, iconSize, title, value,
   desccriptionTitle,
-  description,
-  isUpArrow
+  description, descriptionStyle
 }: CurrencyCardProps) {
   return (
     <div className="h-28 py-4 px-6 flex items-center justify-between gap-5 bg-white rounded-2xl">
@@ -25,23 +21,19 @@ export default function CurrencyCard({
         <Image src={icon} alt="icon" width={iconSize} height={iconSize} />
       </div>
       <div className="flex flex-col justify-between">
-        <span className="font-semibold">{title}</span>
-        <span className="text-2xl font-bold">
-          {value.toLocaleString("pt-BR", {
+        <span className="font-medium">{title}</span>
+        <span className="text-2xl font-medium">
+          {value?.toLocaleString("pt-BR", {
             style: "currency",
             currency: "BRL"
           })}
         </span>
-        <span className="flex items-center text-sm font-medium text-neutral-400">
-          {desccriptionTitle}:&nbsp;
-          <Image
-            className="mb-1"
-            src={isUpArrow ? "/icons/upwards_arrow_green.svg" : "/icons/downards_arrow_red.svg"}
-            alt="arrow"
-            width={12}
-            height={12}
-          />
-          <span className={isUpArrow ? "text-green-600" : "text-rose-400"}>{description}</span>
+        <span className="flex items-center text-sm
+                         font-normal text-neutral-400">
+          {desccriptionTitle}&nbsp;
+          <span className={descriptionStyle}>
+            {description}
+          </span>
         </span>
       </div>
     </div>

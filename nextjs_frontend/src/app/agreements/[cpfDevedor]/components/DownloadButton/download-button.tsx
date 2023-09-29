@@ -2,17 +2,15 @@
 
 import { downloadAgreement } from "@/services/agreementGenerator";
 import Image from "next/image";
-import { Acordo } from "@/models/Acordos";
-import { Devedor } from "@/models/Devedores";
+import { DevedorAcordo } from "@/types/acordo.dto";
 
 interface DownloadButtonProps {
-  acordo: Acordo;
-  devedor: Devedor;
+  agreement: DevedorAcordo;
 }
 
-export default function DownloadButton({ devedor, acordo }: DownloadButtonProps) {
+export default function DownloadButton({ agreement }: DownloadButtonProps) {
   function handleDownloadAgreement() {
-    downloadAgreement(devedor, acordo);
+    downloadAgreement(agreement);
   }
 
   return (

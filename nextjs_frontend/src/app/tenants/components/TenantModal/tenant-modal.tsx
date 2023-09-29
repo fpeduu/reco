@@ -2,23 +2,22 @@
 
 import React, { useEffect, useState } from "react";
 
-import { useProposalContext } from "@/contexts/ProposalContext";
 import { RegrasProposta } from "@/models/Usuarios";
 import { Acordo } from "@/models/Acordos";
 import { serverURL } from "@/config";
 
-import ModalContent, {
-  NegotiationData
-} from "./components/Modal-content";
+import ModalContent, { INegotiationData } from "./components/Modal-content";
 import Confirmation from "./components/Confirmation";
+import { Devedor } from "@/models/Devedores";
 
 interface TenantModalProps {
   open: boolean;
+  debtor: Devedor;
   onClose: () => void;
 }
 
 async function fetchProposalInfos(cpf: string) {
-  return await fetch(`${serverURL}/api/proposal/${cpf}/`)
+  return await fetch(`${serverURL}/api/tenants/${cpf}/`)
     .then((response) => response.json())
     .catch((error) => {
       console.error(error);
@@ -45,11 +44,11 @@ async function createAgreement(
     }) as Acordo | null;
 }
 
-export default function TenantModal({ open, onClose }: TenantModalProps) {
-  const { debtor } = useProposalContext();
-
+export default function TenantModal({
+  open, onClose, debtor
+}: TenantModalProps) {
   const [confirmed, setConfirmed] = useState<boolean>(false);
-  const [negotiation, setNegotiation] = useState<NegotiationData>({
+  const [negotiation, setNegotiation] = useState<INegotiationData>({
     bestValue: 0, worstValue: 0, bestInstallments: 0,
     worstInstallments: 0, piorParcela: 0, melhorParcela: 0
   });
@@ -116,6 +115,7 @@ export default function TenantModal({ open, onClose }: TenantModalProps) {
             {confirmed ?
             <Confirmation cpfDevedor={debtor.cpf}/> : 
             <ModalContent
+              debtor={debtor}
               onClose={onClose}
               onConfirm={onConfirm}
               negotiationData={negotiation}

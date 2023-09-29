@@ -5,13 +5,13 @@ const config: Config = {
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
-    "node_modules/preline/dist/*.js",
+    "node_modules/preline/dist/*.js"
   ],
   plugins: [require("preline/plugin")],
   theme: {
     extend: {
       fontFamily: {
-        sans: ["var(--font-NoirPro)"],
+        sans: ["var(--font-NoirPro)"]
       },
       colors: {
         primary: "#f23322",
@@ -21,10 +21,18 @@ const config: Config = {
           0: "#0fa958",
           1: "#ffc700",
           2: "#ff7a00",
-          3: "#ff0000",
-        },
+          3: "#ff0000"
+        }
       },
-    },
-  },
+      spacing: {
+        "128": "32rem",
+        "160": "40rem",
+        "192": "48rem",
+        "208": "52rem",
+        "224": "56rem",
+        "232": "58rem"
+      }
+    }
+  }
 };
 export default config;

@@ -2,48 +2,38 @@
 
 import Dropdown from "@/components/Dropdown/dropdown";
 import Paginator from "@/components/Paginator/paginator";
-import { StatusType, AcordoIdentificado } from "@/models/Acordos";
+import { StatusType } from "@/models/Acordos";
 import { useEffect, useState } from "react";
 import AgreementCard from "../AgreementCard/agreement-card";
-import { Devedor } from "@/models/Devedores";
+import {
+  filterByCodominiumAndMonths,
+  getUniqueMonths
+} from "@/services/tableUtils";
+import { DevedorAcordo } from "@/types/acordo.dto";
 
 interface AgreementListProps {
   searchQuery: string;
   title: string;
   description: string;
-  agreements: AcordoIdentificado[];
-  tenants: Devedor[];
+  agreements: DevedorAcordo[];
   filterByProgress: boolean;
 }
-
 const agreementStatusList: (StatusType | "Todos")[] = [
-  "Todos",
-  "Aguardando inadimplente",
-  "Conversa iniciada",
-  "Valor reserva alcançado"
-];
-
-const paymentStatusList: string[] = [
-  "Todos",
-  "Em dia",
-  "1 mês de atraso",
-  "2 meses de atraso",
-  "3 meses ou mais de atraso"
-];
-
+  "Todos", "Aguardando inadimplente", "Conversa iniciada",
+  "Primeira proposta", "Segunda proposta",
+  "Proposta do inadimplente", "Aguardando aprovação"
+]
 const agreementsPerPage = 6;
 
 export default function AgreementList({
-  searchQuery,
-  title,
-  description,
-  agreements,
-  tenants,
-  filterByProgress
+  searchQuery, title, description,
+  agreements, filterByProgress,
 }: AgreementListProps) {
-  const [filteredAgreements, setFilteredAgreements] = useState<AcordoIdentificado[]>(agreements);
+  const [filteredAgreements, setFilteredAgreements] = 
+    useState<DevedorAcordo[]>(agreements);
 
   const [condominiums, setCondominiums] = useState<string[]>([]);
+  const [monthsLateList, setMonthsLateList] = useState<string[]>([]);
 
   const [progress, setProgress] = useState<string>("Todos");
   const [condominium, setCondominium] = useState<string>("Todos");
@@ -51,61 +41,69 @@ export default function AgreementList({
 
   const [page, setPage] = useState(1);
 
-  const totalPageCount = Math.ceil(filteredAgreements.length / agreementsPerPage);
+  const totalPageCount = Math.ceil(
+    filteredAgreements.length / agreementsPerPage
+  );
 
   useEffect(() => {
-    const condominiums = agreements.map((agreement) => agreement.nomeCondominio);
-    const uniqueCondomiuns = condominiums.filter((condominium, index) => {
-      return condominiums.indexOf(condominium) === index;
+    // @ts-ignore
+    import("preline");
+  }, []);
+
+  useEffect(() => {
+    const apartments = agreements.map(
+      (agreement) => agreement.nomeCondominio
+    );
+    const uniqueCondomiuns = apartments.filter((condominium, index) => {
+      return apartments.indexOf(condominium) === index;
     });
+    const uniqueMonths = getUniqueMonths(
+      agreements.map((x) => x.mensalidadesAtrasadas)
+    );
+
     setCondominiums(["Todos", ...uniqueCondomiuns]);
+    setMonthsLateList(["Todos", ...uniqueMonths]);
   }, [agreements]);
 
   useEffect(() => {
     setFilteredAgreements(
       agreements.filter((agreement) => {
-        const tenant = getTenant(agreement.cpfDevedor);
-        const progressFilter = progress === "Todos" || agreement.status === progress;
-        const condominiumFilter =
-          condominium === "Todos" || agreement.nomeCondominio === condominium;
-        const paymentStatusFilter =
-          tenant?.mensalidadesAtrasadas !== undefined
-            ? paymentStatus === "Todos" ||
-              (paymentStatus === "Em dia" && tenant?.mensalidadesAtrasadas === 0) ||
-              (paymentStatus === "1 mês de atraso" && tenant?.mensalidadesAtrasadas === 1) ||
-              (paymentStatus === "2 meses de atraso" && tenant?.mensalidadesAtrasadas === 2) ||
-              (paymentStatus === "3 meses ou mais de atraso" && tenant.mensalidadesAtrasadas >= 3)
-            : true;
-        return (
-          (filterByProgress ? progressFilter : true) && condominiumFilter && paymentStatusFilter
+        const firstFilter = filterByCodominiumAndMonths(
+          condominium, agreement.nomeCondominio,
+          paymentStatus, agreement.mensalidadesAtrasadas as number
+        )
+        const progressFilter = progress === "Todos"
+          || agreement.acordo.status === progress;
+        return (firstFilter &&
+          (filterByProgress ? progressFilter : true)
         );
       })
     );
-  }, [condominium, agreements, filterByProgress, progress, tenants, paymentStatus]);
+  }, [condominium, agreements, filterByProgress, progress, paymentStatus]);
+
 
   useEffect(() => {
-    handleSearch(searchQuery);
-  }, [searchQuery]);
-
-  function handleSearch(search: string) {
-    if (search === "") {
+    if (searchQuery === "") {
       return setFilteredAgreements(agreements);
     }
-    const searchLower = search.toLowerCase();
+    const searchLower = searchQuery.toLowerCase();
 
     setFilteredAgreements(
       agreements.filter((agreement) => {
         return (
-          agreement.nomeDevedor.toLowerCase().includes(searchLower) ||
-          agreement.cpfDevedor.includes(searchLower)
+          agreement.nome.toLowerCase().includes(searchLower) ||
+          agreement.cpf.includes(searchLower)
         );
       })
     );
     setPage(1);
-  }
+  }, [searchQuery, agreements, setFilteredAgreements]);
 
   function handlePagination() {
-    return filteredAgreements.slice((page - 1) * agreementsPerPage, page * agreementsPerPage);
+    return filteredAgreements.slice(
+      (page - 1) * agreementsPerPage,
+      page * agreementsPerPage
+    );
   }
 
   function handleFilterChange(title: string, option: string) {
@@ -119,21 +117,15 @@ export default function AgreementList({
     setPage(1);
   }
 
-  function getTenant(cpf: string) {
-    let tenant = tenants.find((tenant) => tenant.cpf === cpf);
-    if (!tenant) return null;
-    return tenant;
-  }
-
   return (
     <div className="w-full flex flex-col items-center justify-between gap-5">
       <div className="w-full flex justify-between items-start">
         <div className="flex flex-col gap-3">
-          <h1 className="text-4xl font-extrabold">{title}</h1>
-          <p className="text-lg font-medium">{description}</p>
+          <h1 className="text-4xl font-semibold">{title}</h1>
+          <p className="text-lg font-light">{description}</p>
         </div>
         <div className="flex justify-end items-center gap-5">
-          <span className="text-neutral-400 text-sm font-medium">Filtros:</span>
+          <span className="text-sm font-light">Filtrar por:</span>
           {filterByProgress && (
             <Dropdown
               title="Progresso"
@@ -141,8 +133,16 @@ export default function AgreementList({
               onChange={handleFilterChange}
             />
           )}
-          <Dropdown title="Condomínio" options={condominiums} onChange={handleFilterChange} />
-          <Dropdown title="Status" options={paymentStatusList} onChange={handleFilterChange} />
+          <Dropdown
+            title="Condomínio"
+            options={condominiums}
+            onChange={handleFilterChange}
+          />
+          <Dropdown
+            title="Atraso"
+            options={monthsLateList}
+            onChange={handleFilterChange}
+          />
         </div>
       </div>
       <div className="w-full grid grid-cols-3 gap-5">
@@ -150,11 +150,14 @@ export default function AgreementList({
           <AgreementCard
             key={index}
             agreement={agreement}
-            tenant={getTenant(agreement.cpfDevedor)}
           />
         ))}
       </div>
-      <Paginator currentPage={page} onPageChange={setPage} pageLimit={totalPageCount} />
+      <Paginator
+        currentPage={page}
+        onPageChange={setPage}
+        pageLimit={totalPageCount}
+      />
     </div>
   );
 }

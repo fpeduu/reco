@@ -1,8 +1,7 @@
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
-import { Acordo } from "@/models/Acordos";
-import { Devedor } from "@/models/Devedores";
+import { DevedorAcordo } from "@/types/acordo.dto";
 
-async function generateAgreement(devedor: Devedor, acordo: Acordo) {
+async function generateAgreement(devedor: DevedorAcordo) {
   const pdfDoc = await PDFDocument.create();
   const timesBoldFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
   const timesRomanFont = await pdfDoc.embedFont(StandardFonts.TimesRoman);
@@ -25,21 +24,21 @@ async function generateAgreement(devedor: Devedor, acordo: Acordo) {
   });
 
   const today = new Date();
+  const { acordo } = devedor;
   const firstPaymentMonth = today.getMonth() + 2;
   const lastPaymentMonth = firstPaymentMonth + acordo.qtdParcelas;
-  const firstPaymentYear =
-    firstPaymentMonth > 12 ? today.getFullYear() + 1 : today.getFullYear();
-  const lastPaymentYear =
-    lastPaymentMonth > 12
-      ? today.getFullYear() + Math.floor(lastPaymentMonth / 12)
-      : today.getFullYear();
+  const firstPaymentYear = firstPaymentMonth > 12
+    ? today.getFullYear() + 1 : today.getFullYear();
+  const lastPaymentYear = lastPaymentMonth > 12
+    ? today.getFullYear() + Math.floor(lastPaymentMonth / 12)
+    : today.getFullYear();
 
-  const firstPaymentDay = `${acordo.dataAcordo?.getDay()}/${
-    firstPaymentMonth % 12
-  }/${firstPaymentYear}`;
-  const lastPaymentDay = `${acordo.dataAcordo?.getDay()}/${
-    lastPaymentMonth % 12
-  }/${lastPaymentYear}`;
+  if (acordo.dataAcordo === undefined) {
+    acordo.dataAcordo = new Date();
+  }
+  const day = new Date(acordo.dataAcordo).getDate();
+  const firstPaymentDay = `${day}/${firstPaymentMonth % 12}/${firstPaymentYear}`;
+  const lastPaymentDay = `${day}/${lastPaymentMonth % 12}/${lastPaymentYear}`;
 
   const juros = 0.12;
   const totalDebit = (acordo.valorTotal * (1 + juros));
@@ -155,11 +154,13 @@ Segunda testemunha
   return await pdfDoc.save();
 }
 
-export async function downloadAgreement(devedor: Devedor, acordo: Acordo) {
-  const pdfBytes = await generateAgreement(devedor, acordo);
+export async function downloadAgreement(acordo: DevedorAcordo) {
+  const pdfBytes = await generateAgreement(acordo);
   const blob = new Blob([pdfBytes], { type: "application/pdf" });
   const link = document.createElement("a");
-  link.href = window.URL.createObjectURL(blob);
-  link.download = `acordo_${devedor.cpf}.pdf`;
-  link.click();
+  if (typeof window !== 'undefined') {
+    link.href = window.URL.createObjectURL(blob);
+    link.download = `acordo_${acordo.cpf}.pdf`;
+    link.click();
+  }
 }
