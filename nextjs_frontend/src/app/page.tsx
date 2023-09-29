@@ -20,12 +20,11 @@ export default function Home() {
         <div className="text-tertiary p-16 flex flex-col gap-4 mb-4 items-center lg:items-start">
           <h1 className="text-7xl font-medium">Boas-vindas à Reco!</h1>
           <p className="max-w-2xl tracking-wider leading-7 font-extralight">
-            É um prazer te ter conosco! Somos um serviço especializado em
-            intermediar acordos extrajudiciais de cobranças condominiais de
-            forma ágil e eficiente. Nossa plataforma foi projetada para atender
-            às necessidades de administradoras, conselheiros fiscais, síndicos e
-            condôminos, oferecendo uma abordagem inovadora e focada na resolução
-            pacífica de conflitos.
+            É um prazer te ter conosco! Somos um serviço especializado em intermediar acordos
+            extrajudiciais de cobranças condominiais de forma ágil e eficiente. Nossa plataforma foi
+            projetada para atender às necessidades de administradoras, conselheiros fiscais,
+            síndicos e condôminos, oferecendo uma abordagem inovadora e focada na resolução pacífica
+            de conflitos.
           </p>
           <button className="bg-primary rounded-full w-[252px] h-12 font-medium">
             Junte-se à Reco
@@ -37,21 +36,13 @@ export default function Home() {
         <div className="flex p-20 ">
           <div className="flex flex-wrap gap-5 items-center justify-center my-10">
             <div>
-              <Image
-                className="dark:invert"
-                alt="reco logo"
-                src="/logo.svg"
-                width={400}
-                height={100}
-                priority
-              />
+              <Image alt="reco logo" src="/logo.svg" width={400} height={100} priority />
               <h2 className="text-5xl md:text-6xl md:min-w-[500px] text-end font-extralight pr-4">
                 te oferece:
               </h2>
             </div>
             <div className={Styles.featureCard}>
               <Image
-                className="dark:invert"
                 alt="brain analysis icon"
                 src="/icons/brain_analysis.svg"
                 width={80}
@@ -61,14 +52,12 @@ export default function Home() {
               <div>
                 <h5>Análises avançadas</h5>
                 <p>
-                  Nossa Inteligência Artificial fornece as melhores propostas às
-                  suas negociações.
+                  Nossa Inteligência Artificial fornece as melhores propostas às suas negociações.
                 </p>
               </div>
             </div>
             <div className={Styles.featureCard}>
               <Image
-                className="dark:invert"
                 alt="laptopicon"
                 src="/icons/laptop_autom.svg"
                 width={80}
@@ -77,14 +66,11 @@ export default function Home() {
               />
               <div>
                 <h5>Automatização</h5>
-                <p>
-                  Todo o processo é automático e programado para sua satisfação.
-                </p>
+                <p>Todo o processo é automático e programado para sua satisfação.</p>
               </div>
             </div>
             <div className={Styles.featureCard}>
               <Image
-                className="dark:invert"
                 alt="security icon"
                 src="/icons/security.png"
                 width={70}
@@ -93,9 +79,7 @@ export default function Home() {
               />
               <div>
                 <h5>Sistema Seguro</h5>
-                <p>
-                  Tranquilize-se! Seus dados estarão bem seguros e armazenados.
-                </p>
+                <p>Tranquilize-se! Seus dados estarão bem seguros e armazenados.</p>
               </div>
             </div>
           </div>
@@ -109,9 +93,7 @@ export default function Home() {
             <div className={Styles.userGuideStep}>
               <div>1</div>
 
-              <p>
-                Escolha o inadimplente com quem deseja realizar uma negociação
-              </p>
+              <p>Escolha o inadimplente com quem deseja realizar uma negociação</p>
             </div>
             <div className="relative top-12 right-12 hidden md:block lg:right-[105px] md:top-16">
               <div className={`${Styles.horizontalLine} `}></div>
@@ -121,10 +103,7 @@ export default function Home() {
             </div>
             <div className={Styles.userGuideStep}>
               <div>2</div>
-              <p>
-                Aguarde nossa tecnologia gerar as melhores propostas para seu
-                acordo
-              </p>
+              <p>Aguarde nossa tecnologia gerar as melhores propostas para seu acordo</p>
             </div>
             <div className="relative top-12 right-12 hidden md:block lg:right-[105px] md:top-16">
               <div className={Styles.horizontalLine}></div>
@@ -148,59 +127,40 @@ export default function Home() {
             O que nossos clientes estão dizendo?
           </h2>
           <p className="tracking-wider leading-7  font-light text-center text-tertiary">
-            Veja o que alguns de nossos clientes estão comentando sobre suas
-            experiências na Reco.
+            Veja o que alguns de nossos clientes estão comentando sobre suas experiências na Reco.
           </p>
           <div className="flex flex-wrap justify-center mt-16 gap-16 lg:gap-6">
             <div className={Styles.depositionCard}>
               <div>
-                <Image
-                  className=""
-                  src="/castiel.jpg"
-                  alt="deposition image"
-                  width={80}
-                  height={80}
-                />
+                <Image src="/castiel.jpg" alt="deposition image" width={80} height={80} />
               </div>
               <h6>Castiel Veilmont</h6>
               <p>Gerente Financeira da Semog</p>
               <small>
-                “A Reco aumentou a produtividade do setor de cobranças da SEMOG.
-                Conseguimos fechar muitos acordos em menos tempo.”
+                “A Reco aumentou a produtividade do setor de cobranças da SEMOG. Conseguimos fechar
+                muitos acordos em menos tempo.”
               </small>
             </div>
             <div className={Styles.depositionCard}>
               <div>
-                <Image
-                  className=""
-                  src="/castiel.jpg"
-                  alt="deposition image"
-                  width={80}
-                  height={80}
-                />
+                <Image src="/castiel.jpg" alt="deposition image" width={80} height={80} />
               </div>
               <h6>Castiel Veilmont</h6>
               <p>Gerente Financeira da Semog</p>
               <small>
-                “A Reco aumentou a produtividade do setor de cobranças da SEMOG.
-                Conseguimos fechar muitos acordos em menos tempo.”
+                “A Reco aumentou a produtividade do setor de cobranças da SEMOG. Conseguimos fechar
+                muitos acordos em menos tempo.”
               </small>
             </div>
             <div className={Styles.depositionCard}>
               <div>
-                <Image
-                  className=""
-                  src="/castiel.jpg"
-                  alt="deposition image"
-                  width={80}
-                  height={80}
-                />
+                <Image src="/castiel.jpg" alt="deposition image" width={80} height={80} />
               </div>
               <h6>Castiel Veilmont</h6>
               <p>Gerente Financeira da Semog</p>
               <small>
-                “A Reco aumentou a produtividade do setor de cobranças da SEMOG.
-                Conseguimos fechar muitos acordos em menos tempo.”
+                “A Reco aumentou a produtividade do setor de cobranças da SEMOG. Conseguimos fechar
+                muitos acordos em menos tempo.”
               </small>
             </div>
           </div>
@@ -212,39 +172,16 @@ export default function Home() {
           <div className="w-[350px] ">
             <h2 className="text-7xl text-justify font-medium">Planos</h2>
             <p className="text-justify text-lg text-secondary font-light">
-              Conheça os planos da nossa plataforma! <br /> <br />O plano Básico
-              é descomplicado, ideal para conhecer a plataforma. Já o plano
-              Premium oferece recursos avançados e suporte especializado para
-              acordos justos e sustentáveis.
+              Conheça os planos da nossa plataforma! <br /> <br />O plano Básico é descomplicado,
+              ideal para conhecer a plataforma. Já o plano Premium oferece recursos avançados e
+              suporte especializado para acordos justos e sustentáveis.
             </p>
             <h4 className="font-medium text-2xl mt-5">Métodos de pagamento</h4>
             <div className="flex flex-wrap gap-9 mt-4 justify-center md:justify-start">
+              <Image alt="paypal icon" src="/icons/paypal.svg" width={35} height={35} priority />
+              <Image alt="pix icon" src="/icons/pix.svg" width={40} height={40} priority />
+              <Image alt="visa icon" src="/icons/visa.svg" width={50} height={50} priority />
               <Image
-                className="dark:invert"
-                alt="paypal icon"
-                src="/icons/paypal.svg"
-                width={35}
-                height={35}
-                priority
-              />
-              <Image
-                className="dark:invert"
-                alt="pix icon"
-                src="/icons/pix.svg"
-                width={40}
-                height={40}
-                priority
-              />
-              <Image
-                className="dark:invert"
-                alt="visa icon"
-                src="/icons/visa.svg"
-                width={50}
-                height={50}
-                priority
-              />
-              <Image
-                className="dark:invert"
                 alt="mastercard icon"
                 src="/icons/mastercard.svg"
                 width={40}

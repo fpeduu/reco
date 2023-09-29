@@ -11,6 +11,10 @@ interface HistoryLineItemProps {
 export default function HistoryLineItem({
   divida, proposal, align, connect
 }: HistoryLineItemProps) {
+  const value: number = divida && proposal && proposal.entrada > 0 ?
+    proposal.autor === "User" ? proposal.entrada :
+    divida * proposal.entrada : 0;
+
   return (
     <div className="w-full flex justify-center gap-5">
       {align === "left" && (
@@ -23,11 +27,11 @@ export default function HistoryLineItem({
         <h1 className="text-xl font-semibold mb-3">
           {!proposal || proposal.autor === "Bot" ? "Sistema" : "Devedor"}
         </h1>
-        {proposal && divida && (
+        {proposal && (
           <>
             {proposal.entrada > 0 && <span className="text-sm text-zinc-500">
               <span className="font-medium">Valor de entrada:</span>&nbsp;
-              {(divida * proposal.entrada).toLocaleString("pt-BR", {
+              {value.toLocaleString("pt-BR", {
                 style: "currency",
                 currency: "BRL"
               })}
