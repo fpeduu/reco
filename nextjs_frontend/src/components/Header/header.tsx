@@ -56,6 +56,9 @@ export default function Header() {
   const { hideSideBar, setHideSideBar } = useSideBarContext();
   const { data: session } = useSession();
 
+  const bgClass = session ? "bg-white" : "bg-neutral-950";
+  const textClass = session ? "text-red-600" : "text-neutral-200";
+
   function handleLogin() {
     signIn(undefined, {
       callbackUrl: "/tenants/"
@@ -84,7 +87,7 @@ export default function Header() {
   }, []);
 
   return (
-    <div className="w-full absolute h-20 pr-28 py-2 flex items-center bg-white text-red-600">
+    <div className={`w-full absolute h-20 pr-28 py-2 flex items-center ${bgClass} ${textClass}`}>
       {session && (
         <button
           onClick={handleSidebarToggle}
@@ -92,10 +95,19 @@ export default function Header() {
           <Image src="/icons/sidebar_toggle.svg" alt="Sidebar Toggle" width={24} height={24} />
         </button>
       )}
-      <span className="w-full flex justify-center items-center">
-        <span className="w-1/3 invisible"></span>
-        <Link href="/" className="w-1/3 flex justify-center items-center">
-          <Image src="/logo.svg" alt="Reco Logo" width={125} height={31} priority />
+      <span
+        className={
+          "w-full flex items-center " + (session ? "justify-center" : "justify-between pl-16")
+        }>
+        {session && <span className="w-1/3 invisible"></span>}
+        <Link href="/" className={"flex justify-center items-center " + (session ? "w-1/3" : "")}>
+          <Image
+            src={session ? "/logo.svg" : "/logo_cinza.svg"}
+            alt="Reco Logo"
+            width={125}
+            height={31}
+            priority
+          />
         </Link>
         <span className="w-1/3 flex justify-end items-center gap-2 font-semibold underline">
           {session ? (
