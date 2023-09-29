@@ -67,7 +67,6 @@ export default function Paginator({
       const clickedPageElement = document.querySelector(
         `[data-page="${page}"]`
       ) as HTMLElement;
-      console.log(clickedPageElement);
 
       const pageElements = document.querySelectorAll("[data-page]");
       pageElements.forEach((element) => {
@@ -128,7 +127,6 @@ export default function Paginator({
             } ${page === currentPage ? Styles["active-page"] : ""}`}
             onClick={() => {
               if (typeof page === "number") {
-                console.log(page);
                 handlePageClick(page);
               }
             }}
