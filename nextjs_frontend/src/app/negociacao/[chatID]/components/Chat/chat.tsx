@@ -13,13 +13,13 @@ import {
   lastProposalMessage
 } from "./utils";
 
-import Message from "../Message/Message";
+import Message from "../Message/message";
 import {
   AcceptProposal,
   ProposalDenied,
   UserInputMessage,
   WaitForApproval
-} from "../Message/Messages";
+} from "../Message/messages";
 import UserInput from "../UserInput/user-input";
 
 async function updateProposal(chatID: string, data: Proposta) {

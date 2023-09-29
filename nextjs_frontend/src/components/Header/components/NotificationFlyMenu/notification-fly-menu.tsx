@@ -1,6 +1,6 @@
 import { Popover } from "@headlessui/react";
 import Image from "next/image";
-import NotificationCard from "./NotificationCard/notification-card";
+import NotificationCard from "../NotificationCard/notification-card";
 import Styles from "./notification-fly-menu.module.scss";
 
 export interface Notification {

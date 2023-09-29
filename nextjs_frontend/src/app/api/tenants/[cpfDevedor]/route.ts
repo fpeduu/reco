@@ -4,11 +4,14 @@ import { connectToDatabase } from "@/middlewares/mongodb";
 import Devedores, { Devedor } from "@/models/Devedores";
 import Usuarios, { Usuario } from "@/models/Usuarios";
 
-export async function GET(request: NextRequest) {
+interface Context {
+  params: { cpfDevedor: string }
+}
+
+export async function GET(request: NextRequest, context: Context) {
   connectToDatabase();
 
-  const { pathname } = new URL(request.url);
-  const cpfDevedor = pathname.split("/").pop() as string;
+  const { cpfDevedor } = context.params;
   const devedor: Devedor | null = await Devedores.findOne({
     cpf: cpfDevedor,
   });

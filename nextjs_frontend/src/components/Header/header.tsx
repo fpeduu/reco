@@ -5,8 +5,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useSideBarContext } from "@/contexts/SideBarContext";
-import NotificationFlyMenu from "../NotificationFlyMenu/notification-fly-menu";
-import { Notification } from "../NotificationFlyMenu/notification-fly-menu";
+import NotificationFlyMenu from "./components/NotificationFlyMenu/notification-fly-menu";
+import { Notification } from "./components/NotificationFlyMenu/notification-fly-menu";
 
 const notificationList: Notification[] = [
   {

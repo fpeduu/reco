@@ -9,11 +9,14 @@ import Usuarios, { Usuario } from "@/models/Usuarios";
 import { NegotiationData } from "@/types/negotiation.dto";
 import { revalidatePath } from "next/cache";
 
-export async function GET(request: NextRequest) {
+interface Context {
+  params: { chatID: string }
+}
+
+export async function GET(request: NextRequest, context: Context) {
   connectToDatabase();
 
-  const { pathname } = new URL(request.url);
-  const cpfDevedor = pathname.split("/").pop() as string;
+  const cpfDevedor = context.params.chatID;
   const devedor: Devedor | null = await Devedores.findOne({
     cpf: cpfDevedor,
   });
@@ -67,11 +70,10 @@ export async function GET(request: NextRequest) {
   return NextResponse.json(response);
 }
 
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest, context: Context) {
   connectToDatabase();
 
-  const { pathname } = new URL(request.url);
-  const cpfDevedor = pathname.split("/").pop() as string;
+  const cpfDevedor = context.params.chatID;
   const newProposal: Proposta = await request.json();
 
   const agreement: Acordo | null = await Acordos.findOne({

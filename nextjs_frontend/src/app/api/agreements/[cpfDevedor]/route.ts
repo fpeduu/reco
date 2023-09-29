@@ -8,7 +8,11 @@ import { getServerSession } from "next-auth/next";
 import Devedores from "@/models/Devedores";
 import { DevedorAcordo } from "@/types/acordo.dto";
 
-export async function GET(request: NextRequest) {
+interface Context {
+  params: { cpfDevedor: string }
+}
+
+export async function GET(request: NextRequest, context: Context) {
   connectToDatabase();
 
   const session = await getServerSession(options);
@@ -16,9 +20,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect("/auth/signin");
   }
 
-  const { pathname } = new URL(request.url);
-  const cpfDevedor = pathname.split("/").pop() as string;
-
+  const { cpfDevedor } = context.params;
   const devedoresAndAcordos: DevedorAcordo[] = await Devedores.aggregate([
     { $match: {
       emailAdministrador: session.user?.email,
@@ -41,7 +43,7 @@ export async function GET(request: NextRequest) {
   return NextResponse.json(devedoresAndAcordos[0]);
 }
 
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest, context: Context) {
   connectToDatabase();
 
   const session = await getServerSession(options);
@@ -49,9 +51,8 @@ export async function POST(request: NextRequest) {
     return NextResponse.redirect("/auth/signin");
   }
 
-  const { pathname } = new URL(request.url);
   const { entrada, qtdParcelas, valorTotal } = await request.json();
-  const cpfDevedor = pathname.split("/").pop() as string;
+  const { cpfDevedor } = context.params;
 
   const acordo: Acordo | null = await Acordos.findOne({ cpfDevedor });
   if (!acordo) {

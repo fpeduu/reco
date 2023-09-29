@@ -1,6 +1,6 @@
 import { serverURL } from "@/config";
 
-import Chat from "./components/Chat/Chat";
+import Chat from "./components/Chat/chat";
 import ChatLoading from "./loading";
 
 import { NegotiationData } from "@/types/negotiation.dto";
