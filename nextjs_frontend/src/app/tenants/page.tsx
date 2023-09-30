@@ -8,6 +8,7 @@ import TenantList from "./components/TenantList/tenant-list";
 import { Devedor } from "@/models/Devedores";
 import Button from "@/components/Button/button";
 import AddTenantModal from "./components/AddTenantModal/add-tenant-modal";
+import ImportTenantModal from "./components/ImportTenantModal/import-tenant-modal";
 
 async function fetchTenants() {
   return (await fetch(`${serverURL}/api/tenants/`)
@@ -22,6 +23,7 @@ export default function AgreementsPage() {
   const { data: session } = useSession({ required: true });
   const [tenants, setTenants] = useState<Devedor[]>([]);
   const [addingTenant, setAddingTenant] = useState<boolean>(false);
+  const [importingTenant, setImportingTenant] = useState<boolean>(false);
 
   useEffect(() => {
     async function getTenants() {
@@ -30,7 +32,7 @@ export default function AgreementsPage() {
     }
 
     getTenants();
-  }, [addingTenant]);
+  }, [addingTenant, importingTenant]);
 
   return (
     <div className="containerLayout">
@@ -45,10 +47,13 @@ export default function AgreementsPage() {
           <h2 className="font-medium text-2xl">Lista de Inadimplentes</h2>
           <span className="font-light text-xs ml-2">(Total: {tenants.length})</span>
         </div>
-
-        <Button onClick={() => setAddingTenant(true)}>Adicionar</Button>
+        <span className="flex items-center gap-6">
+          <Button onClick={() => setImportingTenant(true)}>Importar</Button>
+          <Button onClick={() => setAddingTenant(true)}>Adicionar</Button>
+        </span>
       </div>
       {addingTenant && <AddTenantModal onClose={() => setAddingTenant(false)} />}
+      {importingTenant && <ImportTenantModal onClose={() => setImportingTenant(false)} />}
 
       <TenantList tenants={tenants} />
       <span className="hidden">

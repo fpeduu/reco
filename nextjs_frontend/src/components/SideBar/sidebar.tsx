@@ -59,17 +59,6 @@ export default function SideBar() {
                         {!hideSideBar && <span>Negociações</span>}
                       </Link>
                     </li>
-                    <li className="w-full flex place-items-center">
-                      <Link
-                        href="/importar/"
-                        className={
-                          Styles.navitem + " " + (pathname === "/importar" ? Styles.active : "")
-                        }>
-                        <AddCircleOutlineIcon sx={{ width: 22, height: 23 }} />
-
-                        {!hideSideBar && <span>Importar devedores</span>}
-                      </Link>
-                    </li>
                   </>
                 )}
               </ul>
