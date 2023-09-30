@@ -19,13 +19,13 @@ export default function Header() {
 
   function handleLogin() {
     signIn(undefined, {
-      callbackUrl: "/tenants/"
+      callbackUrl: "/tenants/",
     });
   }
 
   function handleLogout() {
     signOut({
-      callbackUrl: "/"
+      callbackUrl: "/",
     });
   }
 
@@ -39,20 +39,37 @@ export default function Header() {
   }
 
   return (
-    <div className={`w-full absolute h-20 pr-28 py-2 flex items-center ${bgClass} ${textClass}`}>
+    <div
+      className={`w-full absolute h-20 py-2 flex items-center ${
+        session ? "pr-28" : "pr-0"
+      } ${bgClass} ${textClass}`}
+    >
       {session && (
         <button
           onClick={handleSidebarToggle}
-          className="w-16 fixed sm:static flex justify-center items-center">
-          <Image src="/icons/sidebar_toggle.svg" alt="Sidebar Toggle" width={24} height={24} />
+          className="w-16 fixed sm:static flex justify-center items-center"
+        >
+          <Image
+            src="/icons/sidebar_toggle.svg"
+            alt="Sidebar Toggle"
+            width={24}
+            height={24}
+          />
         </button>
       )}
       <span
         className={
-          "w-full flex items-center " + (session ? "justify-center" : "justify-between pl-16")
-        }>
+          "w-full flex items-center " +
+          (session ? "justify-center" : "justify-between px-4")
+        }
+      >
         {session && <span className="w-1/3 invisible"></span>}
-        <Link href="/" className={"flex justify-center items-center " + (session ? "w-1/3" : "")}>
+        <Link
+          href="/"
+          className={
+            "flex justify-center items-center " + (session ? "w-1/3" : "")
+          }
+        >
           <Image
             src={session ? "/logo.svg" : "/logo_cinza.svg"}
             alt="Reco Logo"
@@ -61,15 +78,27 @@ export default function Header() {
             priority
           />
         </Link>
-        <span className="w-1/3 flex justify-end items-center gap-2 font-semibold underline">
+        <span
+          className={` flex justify-end items-center gap-2 font-semibold underline ${
+            session ? "justify-end w-1/3" : "justify-start px-4"
+          }`}
+        >
           {session ? (
             <>
               <NotificationFlyMenu
                 notifications={notifications}
                 onRemoveCard={handleRemoveNotification}
               />
-              <button onClick={handleLogout} className="flex place-items-center gap-2">
-                <Image src="/icons/logout.svg" alt="Logout Logo" width={24} height={24} />
+              <button
+                onClick={handleLogout}
+                className="flex place-items-center gap-2"
+              >
+                <Image
+                  src="/icons/logout.svg"
+                  alt="Logout Logo"
+                  width={24}
+                  height={24}
+                />
                 Sair
               </button>
             </>
