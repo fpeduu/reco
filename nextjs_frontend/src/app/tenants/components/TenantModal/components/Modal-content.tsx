@@ -22,46 +22,41 @@ interface ModalContentProps {
 }
 
 export default function ModalContent({
-  onClose, onConfirm, negotiationData, debtor
+  onClose,
+  onConfirm,
+  negotiationData,
+  debtor
 }: ModalContentProps) {
-  const { melhorParcela, piorParcela, bestValue, worstValue, 
-    bestInstallments, worstInstallments } = negotiationData;
+  const { melhorParcela, piorParcela, bestValue, worstValue, bestInstallments, worstInstallments } =
+    negotiationData;
 
   return (
     <div className="bg-white p-16 flex justify-center">
       <div className="mt-3 max-w-2xl w-full gap-5 sm:ml-4 sm:mt-0 sm:text-left">
-        <h1 className="font-medium text-4xl leading-10 text-center mb-2" 
-            id="modal-title">
+        <h1 className="font-medium text-4xl leading-10 text-center mb-2" id="modal-title">
           Confira as informações:
         </h1>
         <p className="text-base font-light text-center">
-          Você escolheu negociar com o inadimplente abaixo. <br/>
+          Você escolheu negociar com o inadimplente abaixo. <br />
           Ao confirmar, geraremos um link redirecionando à negociação.
         </p>
 
         <div className="w-full my-8 gap-2 flex flex-col">
-          <div className="flex-1 p-4 gap-10 flex flex-wrap items-center
+          <div
+            className="flex-1 p-4 flex flex-wrap items-center
                           min-h-max justify-start rounded-md shadow bg-tertiary">
-            <div className="flex flex-col items-start gap-2 mr-auto">
-              <span className="font-normal text-lg">
-                {debtor.nome}
-              </span>
+            <div className="flex flex-col items-start gap-2 w-1/2">
+              <span className="font-normal text-lg">{debtor.nome}</span>
               <span className="text-sm font-light">
                 {debtor.cpf} | {debtor.nomeCondominio}
               </span>
             </div>
-            <div className="flex flex-col items-start gap-2">
-              <span className="font-normal text-sm">
-                Atraso:
-              </span>
-              <span className="text-sm font-light">
-                {debtor.mensalidadesAtrasadas} meses
-              </span>
+            <div className="flex flex-col items-start gap-2 mr-20">
+              <span className="font-normal text-sm">Atraso:</span>
+              <span className="text-sm font-light">{debtor.mensalidadesAtrasadas} meses</span>
             </div>
             <div className="flex flex-col items-start gap-2">
-              <span className="font-normal text-sm">
-                Dívida:
-              </span>
+              <span className="font-normal text-sm">Dívida:</span>
               <span className="text-sm font-light">
                 R$ {debtor.valorDivida?.toLocaleString("pt-BR")}
               </span>
@@ -98,5 +93,5 @@ export default function ModalContent({
         </div>
       </div>
     </div>
-  )
+  );
 }
