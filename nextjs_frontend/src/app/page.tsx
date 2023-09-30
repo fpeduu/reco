@@ -11,6 +11,7 @@ import FeatureCard from "./components/FeatureCard/feature-card";
 export default function Home() {
   const router = useRouter();
   const { data: session } = useSession();
+  const marginClass = session ? "ml-16" : "ml-0";
 
   if (session && session.user) {
     router.push("/tenants");

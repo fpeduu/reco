@@ -7,10 +7,12 @@ export default function Footer() {
   const { data: session } = useSession();
   const bgClass = session ? "bg-gray-100" : "bg-neutral-950";
   const textClass = session ? "text-neutral-950" : "text-neutral-200";
+  const invertClass = session ? "invert-0" : "invert";
 
   return (
     <div
-      className={`flex w-full ml-16 sm:ml-0 justify-evenly p-20 ${textClass} ${bgClass} ${Styles.footerSection}`}>
+      className={`flex flex-wrap gap-6 w-full justify-evenly p-20 ${textClass} ${bgClass} ${Styles.footerSection}`}
+    >
       <span>
         <p> Início </p>
         <a href="/">Página inicial</a>
@@ -28,7 +30,7 @@ export default function Footer() {
       </span>
       <span>
         <p> Contato </p>
-        <div className="flex gap-2">
+        <div className={`flex gap-2 ${invertClass}`}>
           <a href="#">
             <Image
               src="/icons/instagram.svg"
@@ -57,10 +59,10 @@ export default function Footer() {
             />
           </a>
         </div>
-        <a href="#" className="flex gap-3">
+        <a href="#" className={`flex gap-3`}>
           <Image
             src="/icons/email.svg"
-            className="dark:invert"
+            className={`dark:invert ${invertClass}`}
             alt="E-mail Logo"
             width={24}
             height={24}

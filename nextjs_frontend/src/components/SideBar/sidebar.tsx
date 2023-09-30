@@ -6,8 +6,6 @@ import Styles from "./sidebar.module.scss";
 import { usePathname } from "next/navigation";
 import { useSideBarContext } from "@/contexts/SideBarContext";
 
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-
 export default function SideBar() {
   const { hideSideBar } = useSideBarContext();
   const { data: session } = useSession();
@@ -48,44 +46,28 @@ export default function SideBar() {
                   </Link>
                 </li>
                 {session && (
-                  <>
-                    <li className="w-full flex place-items-center">
-                      <Link
-                        href="/agreements/"
-                        className={
-                          Styles.navitem +
-                          " " +
-                          (pathname === "/agreements" ? Styles.active : "")
+                  <li className="w-full flex place-items-center">
+                    <Link
+                      href="/agreements/"
+                      className={
+                        Styles.navitem +
+                        " " +
+                        (pathname === "/agreements" ? Styles.active : "")
+                      }
+                    >
+                      <Image
+                        src={
+                          pathname === "/agreements"
+                            ? "/icons/history.svg"
+                            : "/icons/history_stroke.svg"
                         }
-                      >
-                        <Image
-                          src={
-                            pathname === "/agreements"
-                              ? "/icons/history.svg"
-                              : "/icons/history_stroke.svg"
-                          }
-                          alt="History icon"
-                          width={22}
-                          height={23}
-                        />
-                        {!hideSideBar && <span>Negociações</span>}
-                      </Link>
-                    </li>
-                    <li className="w-full flex place-items-center">
-                      <Link
-                        href="/importar/"
-                        className={
-                          Styles.navitem +
-                          " " +
-                          (pathname === "/importar" ? Styles.active : "")
-                        }
-                      >
-                        <AddCircleOutlineIcon sx={{ width: 22, height: 23 }} />
-
-                        {!hideSideBar && <span>Importar devedores</span>}
-                      </Link>
-                    </li>
-                  </>
+                        alt="History icon"
+                        width={22}
+                        height={23}
+                      />
+                      {!hideSideBar && <span>Negociações</span>}
+                    </Link>
+                  </li>
                 )}
               </ul>
             </div>
@@ -98,7 +80,7 @@ export default function SideBar() {
               <ul className="flex flex-col gap-2">
                 <li className="w-full flex place-items-center">
                   <Link
-                    href="#"
+                    href="/settings/"
                     className={
                       Styles.navitem +
                       " " +
@@ -120,7 +102,7 @@ export default function SideBar() {
                 </li>
                 <li className="w-full flex place-items-center">
                   <Link
-                    href="#"
+                    href="/help/"
                     className={
                       Styles.navitem +
                       " " +
