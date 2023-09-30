@@ -8,10 +8,11 @@ export default function Footer() {
   const bgClass = session ? "bg-gray-100" : "bg-neutral-950";
   const textClass = session ? "text-neutral-950" : "text-neutral-200";
   const invertClass = session ? "invert-0" : "invert";
+  const marginClass = session ? "ml-10 md:m-0" : "ml-0";
 
   return (
     <div
-      className={`flex flex-wrap gap-6 w-full justify-evenly p-20 ${textClass} ${bgClass} ${Styles.footerSection}`}
+      className={`flex flex-wrap gap-6 w-full mx-4 justify-center md:justify-evenly p-20 ${marginClass} ${textClass} ${bgClass} ${Styles.footerSection}`}
     >
       <span>
         <p> Início </p>
