@@ -3,11 +3,11 @@
     overflow-hidden shadow sm:shadow-none;
 
   .navitem {
-    @apply w-full flex items-center rounded-xl p-3 gap-3 
+    @apply w-full flex items-center rounded-xl p-3 gap-3 font-light
       hover:bg-red-600 hover:bg-opacity-20;
 
     &.active {
-      @apply bg-red-600 text-white hover:bg-opacity-100;
+      @apply bg-red-600 text-white hover:bg-opacity-100 font-normal;
     }
   }
 }
