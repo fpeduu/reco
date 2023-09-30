@@ -35,26 +35,20 @@ export default function AgreementsPage() {
   return (
     <div className="containerLayout">
       <div className="my-10">
-        <h1 className="text-4xl font-bold leading-10">
-          Olá, {session?.user?.name}!
-        </h1>
+        <h1 className="text-4xl font-semibold leading-10">Olá, {session?.user?.name}!</h1>
         <h2 className="text-lg font-light leading-10">
           Confira os inadimplentes e realize novas negociações
         </h2>
       </div>
       <div className="mb-3 flex items-center justify-between">
         <div className="flex items-center">
-          <h2 className="font-semibold text-2xl">Lista de Inadimplentes</h2>
-          <span className="font-light text-xs ml-2">
-            (Total: {tenants.length})
-          </span>
+          <h2 className="font-medium text-2xl">Lista de Inadimplentes</h2>
+          <span className="font-light text-xs ml-2">(Total: {tenants.length})</span>
         </div>
 
         <Button onClick={() => setAddingTenant(true)}>Adicionar</Button>
       </div>
-      {addingTenant && (
-        <AddTenantModal onClose={() => setAddingTenant(false)} />
-      )}
+      {addingTenant && <AddTenantModal onClose={() => setAddingTenant(false)} />}
 
       <TenantList tenants={tenants} />
       <span className="hidden">
