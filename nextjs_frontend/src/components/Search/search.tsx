@@ -32,7 +32,7 @@ export default function Search({ onSearch }: SearchProps) {
           type="text"
           value={search}
           onChange={handleSearch}
-          className="w-full py-2"
+          className="w-full py-2 font-light"
           placeholder="Digite o nome, CPF ou condomínio do inadimplente"
         />
       </div>

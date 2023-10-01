@@ -12,7 +12,7 @@ export default function HistoryLineItem({
   divida,
   proposal,
   align,
-  connect,
+  connect
 }: HistoryLineItemProps) {
   const value: number =
     divida && proposal && proposal.entrada > 0
@@ -26,18 +26,10 @@ export default function HistoryLineItem({
       {align === "left" && (
         <>
           <span className="w-1/4 invisible"></span>
-          <HistoryLineConnection
-            accepted={proposal ? proposal.aceito : null}
-            connect={connect}
-          />
+          <HistoryLineConnection accepted={proposal ? proposal.aceito : null} connect={connect} />
         </>
       )}
-      <div
-        className={
-          "w-1/4 flex flex-col " +
-          (align === "left" ? "items-start" : "items-end")
-        }
-      >
+      <div className={"w-1/4 flex flex-col " + (align === "left" ? "items-start" : "items-end")}>
         <h1 className="text-xl font-semibold mb-3">
           {!proposal || proposal.autor === "Bot" ? "Sistema" : "Devedor"}
         </h1>
@@ -48,19 +40,22 @@ export default function HistoryLineItem({
                 <span className="font-medium">Valor de entrada:</span>&nbsp;
                 {value.toLocaleString("pt-BR", {
                   style: "currency",
-                  currency: "BRL",
+                  currency: "BRL"
                 })}
               </span>
             )}
             <span className="text-sm text-zinc-500">
               +
               <span className="font-medium">
-                {proposal.qtdParcelas} parcelas&nbsp;
+                {proposal.qtdParcelas > 1
+                  ? `${proposal.qtdParcelas} parcelas`
+                  : `${proposal.qtdParcelas} parcela`}
+                &nbsp;
               </span>
-              de{" "}
+              de&nbsp;
               {proposal.valorParcela.toLocaleString("pt-BR", {
                 style: "currency",
-                currency: "BRL",
+                currency: "BRL"
               })}
             </span>
             {proposal.motivo && (
@@ -70,11 +65,11 @@ export default function HistoryLineItem({
               </span>
             )}
             {proposal.aceito ? (
-              <span className="w-24 h-8 px-2 flex items-center justify-center rounded-md font-medium bg-emerald-50 text-emerald-600">
+              <span className="w-24 h-8 px-2 flex items-center justify-center rounded-md bg-emerald-50 text-emerald-600">
                 Aceito
               </span>
             ) : (
-              <span className="w-24 h-8 px-2 flex items-center justify-center rounded-md font-medium bg-rose-100 text-red-600">
+              <span className="w-24 h-8 px-2 flex items-center justify-center rounded-md bg-rose-100 text-red-600">
                 Recusado
               </span>
             )}
@@ -83,10 +78,7 @@ export default function HistoryLineItem({
       </div>
       {align === "right" && (
         <>
-          <HistoryLineConnection
-            accepted={proposal ? proposal.aceito : null}
-            connect={connect}
-          />
+          <HistoryLineConnection accepted={proposal ? proposal.aceito : null} connect={connect} />
           <span className="w-1/4 invisible"></span>
         </>
       )}

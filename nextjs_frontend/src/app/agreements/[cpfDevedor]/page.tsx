@@ -111,26 +111,32 @@ export default function AgreementStatus({ params }: AgreementStatusProps) {
           value={agreement.acordo.entrada}
           descriptionStyle="text-green-600"
           description={`+ ${
-            agreement.acordo.qtdParcelas
-          } parcelas de ${installmentValue.toLocaleString()}`}
+            agreement.acordo.qtdParcelas > 1
+              ? `${agreement.acordo.qtdParcelas} parcelas`
+              : `${agreement.acordo.qtdParcelas} parcela`
+          } de ${installmentValue.toLocaleString("pt-br", { style: "currency", currency: "BRL" })}`}
         />
       </div>
       <h2 className="text-4xl font-medium">Andamento</h2>
       <div className="w-full h-fit bg-white rounded-2xl">
-        <nav className="flex border-b border-b-slate-300">
+        <nav className="h-10 flex border-b border-b-slate-300 relative">
           <button
             onClick={switchToTimeline}
             className={
-              "w-1/2 md:w-56 p-5 pb-0 border-b text-sm " +
-              (subpage === "timeline" ? "text-red-600 border-b-red-600" : "text-slate-500")
+              "w-1/2 md:w-56 h-10 p-5 pb-0 absolute border-b text-sm " +
+              (subpage === "timeline"
+                ? "text-red-600 border-b-red-600"
+                : "text-slate-500 border-b-slate-300")
             }>
             Linha do Tempo
           </button>
           <button
             onClick={switchToDetails}
             className={
-              "w-1/2 md:w-56 p-5 pb-0 border-b text-sm " +
-              (subpage === "details" ? "text-red-600 border-b-red-600" : "text-slate-500")
+              "w-1/2 md:w-56 h-10 p-5 pb-0 absolute left-56 border-b text-sm " +
+              (subpage === "details"
+                ? "text-red-600 border-b-red-600"
+                : "text-slate-500 border-b-slate-300")
             }>
             Detalhes
           </button>

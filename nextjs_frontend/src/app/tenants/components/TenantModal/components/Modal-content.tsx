@@ -45,13 +45,13 @@ export default function ModalContent({
           <div
             className="flex-1 p-4 gap-10 flex flex-wrap items-center
                           min-h-max justify-start rounded-md shadow bg-tertiary">
-            <div className="flex flex-col items-start gap-2 mr-auto">
+            <div className="flex flex-col items-start gap-2 w-1/2">
               <span className="font-normal text-lg">{debtor.nome}</span>
               <span className="text-sm font-light">
                 {debtor.cpf} | {debtor.nomeCondominio}
               </span>
             </div>
-            <div className="flex flex-col items-start gap-2">
+            <div className="flex flex-col items-start gap-2 mr-20">
               <span className="font-normal text-sm">Atraso:</span>
               <span className="text-sm font-light">{debtor.mensalidadesAtrasadas} meses</span>
             </div>

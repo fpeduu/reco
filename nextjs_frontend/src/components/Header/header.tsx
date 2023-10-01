@@ -78,14 +78,16 @@ export default function Header() {
                 notifications={notifications}
                 onRemoveCard={handleRemoveNotification}
               />
-              <button onClick={handleLogout} className="flex place-items-center gap-2">
+              <button onClick={handleLogout} className="flex place-items-center gap-2 font-light">
                 <Image src="/icons/logout.svg" alt="Logout Logo" width={24} height={24} />
                 Sair
               </button>
             </>
           ) : (
             <>
-              <button onClick={handleLogin}>Entrar</button>
+              <button onClick={handleLogin} className="font-light">
+                Entrar
+              </button>
               <button className="bg-primary rounded-full py-2 px-10 ml-6 text-white">
                 Contato
               </button>

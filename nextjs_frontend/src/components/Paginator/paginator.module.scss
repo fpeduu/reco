@@ -8,9 +8,9 @@
   }
 }
 .pageButton {
-  @apply w-8 h-8 flex justify-center items-center rounded mx-2 pt-1 text-sm font-medium
+  @apply w-8 h-8 flex justify-center items-center rounded mx-2 text-sm font-normal
       hover:bg-red-600 hover:bg-opacity-20;
 }
 .pageEllipsis {
-  @apply w-8 h-8 flex justify-center items-center rounded mx-2 pt-1 text-sm font-medium;
+  @apply w-8 h-8 flex justify-center items-center rounded mx-2 text-sm font-normal;
 }

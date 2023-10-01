@@ -29,6 +29,7 @@ async function createAgreement(
   cpf: string,
   entrada: number,
   valorParcela: number,
+  valorTotal: number,
   qtdParcelas: number
 ) {
   return (await fetch(`${serverURL}/api/agreements/${cpf}/`, {
@@ -36,7 +37,7 @@ async function createAgreement(
     headers: {
       "Content-Type": "application/json"
     },
-    body: JSON.stringify({ entrada, valorParcela, qtdParcelas })
+    body: JSON.stringify({ entrada, valorParcela, valorTotal, qtdParcelas })
   })
     .then((response) => response.json())
     .catch((error) => {
@@ -61,6 +62,7 @@ export default function TenantModal({ open, onClose, debtor }: TenantModalProps)
       debtor.cpf,
       negotiation.bestValue,
       negotiation.bestInstallments,
+      debtor.valorDivida,
       negotiation.melhorParcela as number
     ).then((data) => {
       if (data) {
@@ -104,9 +106,9 @@ export default function TenantModal({ open, onClose, debtor }: TenantModalProps)
           className="fixed inset-0 bg-gray-500 bg-opacity-75
                       transition-opacity"></div>
 
-        <div className="fixed inset-0 z-40 h-screen overflow-y-auto">
+        <div className="fixed inset-0 z-10 h-screen overflow-y-auto">
           <div
-            className="flex min-h-full items-center justify-center p-4 text-center
+            className="flex min-h-full items-end justify-center p-4 text-center
                         sm:items-center sm:p-0">
             <div
               className="relative p-6 transform overflow-hidden rounded-2xl

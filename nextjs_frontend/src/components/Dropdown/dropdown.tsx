@@ -23,22 +23,17 @@ export default function DropDown({ title, options, onChange }: DropDownProps) {
         type="button"
         className="hs-dropdown-toggle py-3 px-4 inline-flex
                     justify-center items-center gap-2 rounded-md border
-                    font-normal bg-secondary text-white shadow-sm align-middle
+                    font-light bg-secondary text-white shadow-sm align-middle
                     focus:outline-none focus:ring-2 focus:ring-offset-2
-                    focus:ring-offset-white focus:white transition-all text-sm"
-      >
+                    focus:ring-offset-white focus:white transition-all text-sm">
         {selectedOption === "Todos" ? title : selectedOption}
         <svg
           width="14"
           height="11"
           viewBox="0 0 14 11"
           fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M7 10.5L0.937822 -1.88258e-07L13.0622 8.71687e-07L7 10.5Z"
-            fill="white"
-          />
+          xmlns="http://www.w3.org/2000/svg">
+          <path d="M7 10.5L0.937822 -1.88258e-07L13.0622 8.71687e-07L7 10.5Z" fill="white" />
         </svg>
       </button>
 
@@ -47,16 +42,14 @@ export default function DropDown({ title, options, onChange }: DropDownProps) {
                             duration cursor-pointer
                             hs-dropdown-open:opacity-100 opacity-0 hidden
                             min-w-[15rem] bg-white shadow-md rounded-lg
-                            p-2 mt-2 divide-y divide-gray-200 z-10"
-      >
+                            p-2 mt-2 divide-y divide-gray-200 z-10">
         <div className="py-2 first:pt-0 last:pb-0 w-full">
           {options.map((option) => (
             <button
               key={option}
               data-value={option}
               onClick={handleSelectOption}
-              className={Styles.dropdownOption}
-            >
+              className={Styles.dropdownOption}>
               {option}
             </button>
           ))}
