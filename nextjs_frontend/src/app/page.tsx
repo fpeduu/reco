@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Styles from "./landing.module.scss";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import PricingCard from "./components/PricingCard/pricing-card";
 import DepositionCard from "./components/DepositionCard/deposition-card";
 import FeatureCard from "./components/FeatureCard/feature-card";
@@ -18,6 +18,12 @@ export default function Home() {
       router.push("/tenants");
     }
   }, [session]);
+
+  function handleLogin() {
+    signIn(undefined, {
+      callbackUrl: "/tenants/",
+    });
+  }
 
   return (
     <div className="w-full max-h-fit flex flex-col">
@@ -35,7 +41,10 @@ export default function Home() {
             Somos um serviço especializado em intermediar acordos extrajudiciais
             de cobranças condominiais de forma ágil e eficiente.
           </p>
-          <button className="mt-10 bg-primary rounded-full w-[252px] h-12 font-medium">
+          <button
+            onClick={handleLogin}
+            className="mt-10 bg-primary rounded-full w-[252px] h-12 font-medium"
+          >
             Junte-se à Reco
           </button>
         </div>
@@ -201,6 +210,21 @@ export default function Home() {
             <PricingCard title="Básico" value={859.9} dailyAgreements={20} />
             <PricingCard title="Básico" value={929.9} dailyAgreements={30} />
           </div>
+        </div>
+      </section>
+      {/* CUSTOM PLAN SECTION */}
+      <section id="customPlan" className="w-full max-h-fit bg-neutral-950">
+        <div className="flex flex-wrap px-16 py-16 flex-col text-white justify-center">
+          <h2 className="text-4xl mb-10 md:text-7xl text-center font-medium md:text-start">
+            Plano personalizado
+          </h2>
+          <p className="font-light text-justify max-w-2xl">
+            Sente que nenhum plano encaixou para você? Não tem problema, aqui na
+            reco você pode ter o seu próprio plano personalizado!
+          </p>
+          <button className="mt-10 bg-primary rounded-full w-[252px] h-12 font-medium">
+            Personalize seu plano
+          </button>
         </div>
       </section>
     </div>
