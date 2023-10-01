@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import AgreementCard from "../AgreementCard/agreement-card";
 import {
   filterByCodominiumAndMonths,
-  getUniqueMonths
+  getUniqueMonths,
 } from "@/services/tableUtils";
 import { DevedorAcordo } from "@/types/acordo.dto";
 
@@ -19,17 +19,24 @@ interface AgreementListProps {
   filterByProgress: boolean;
 }
 const agreementStatusList: (StatusType | "Todos")[] = [
-  "Todos", "Aguardando inadimplente", "Conversa iniciada",
-  "Primeira proposta", "Segunda proposta",
-  "Proposta do inadimplente", "Aguardando aprovação"
-]
+  "Todos",
+  "Aguardando inadimplente",
+  "Conversa iniciada",
+  "Primeira proposta",
+  "Segunda proposta",
+  "Proposta do inadimplente",
+  "Aguardando aprovação",
+];
 const agreementsPerPage = 6;
 
 export default function AgreementList({
-  searchQuery, title, description,
-  agreements, filterByProgress,
+  searchQuery,
+  title,
+  description,
+  agreements,
+  filterByProgress,
 }: AgreementListProps) {
-  const [filteredAgreements, setFilteredAgreements] = 
+  const [filteredAgreements, setFilteredAgreements] =
     useState<DevedorAcordo[]>(agreements);
 
   const [condominiums, setCondominiums] = useState<string[]>([]);
@@ -51,9 +58,7 @@ export default function AgreementList({
   }, []);
 
   useEffect(() => {
-    const apartments = agreements.map(
-      (agreement) => agreement.nomeCondominio
-    );
+    const apartments = agreements.map((agreement) => agreement.nomeCondominio);
     const uniqueCondomiuns = apartments.filter((condominium, index) => {
       return apartments.indexOf(condominium) === index;
     });
@@ -69,18 +74,17 @@ export default function AgreementList({
     setFilteredAgreements(
       agreements.filter((agreement) => {
         const firstFilter = filterByCodominiumAndMonths(
-          condominium, agreement.nomeCondominio,
-          paymentStatus, agreement.mensalidadesAtrasadas as number
-        )
-        const progressFilter = progress === "Todos"
-          || agreement.acordo.status === progress;
-        return (firstFilter &&
-          (filterByProgress ? progressFilter : true)
+          condominium,
+          agreement.nomeCondominio,
+          paymentStatus,
+          agreement.mensalidadesAtrasadas as number
         );
+        const progressFilter =
+          progress === "Todos" || agreement.acordo.status === progress;
+        return firstFilter && (filterByProgress ? progressFilter : true);
       })
     );
   }, [condominium, agreements, filterByProgress, progress, paymentStatus]);
-
 
   useEffect(() => {
     if (searchQuery === "") {
@@ -119,12 +123,12 @@ export default function AgreementList({
 
   return (
     <div className="w-full flex flex-col items-center justify-between gap-5">
-      <div className="w-full flex justify-between items-start">
+      <div className="w-full flex flex-col md:flex-row justify-between items-start">
         <div className="flex flex-col gap-3">
           <h1 className="text-4xl font-semibold">{title}</h1>
           <p className="text-lg font-light">{description}</p>
         </div>
-        <div className="flex justify-end items-center gap-5">
+        <div className="flex flex-wrap mt-4 justify-center md:mt-0 md:flex-nowrap md:justify-end  items-center gap-5">
           <span className="text-sm font-light">Filtrar por:</span>
           {filterByProgress && (
             <Dropdown
@@ -145,12 +149,9 @@ export default function AgreementList({
           />
         </div>
       </div>
-      <div className="w-full grid grid-cols-3 gap-5">
+      <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-5">
         {handlePagination().map((agreement, index) => (
-          <AgreementCard
-            key={index}
-            agreement={agreement}
-          />
+          <AgreementCard key={index} agreement={agreement} />
         ))}
       </div>
       <Paginator
