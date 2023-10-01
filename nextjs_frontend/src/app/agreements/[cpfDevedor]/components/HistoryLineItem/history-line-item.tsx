@@ -44,7 +44,7 @@ export default function HistoryLineItem({
                 })}
               </span>
             )}
-            <span className="text-sm text-zinc-500">
+            <span className="text-sm text-zinc-500 whitespace-nowrap">
               +
               <span className="font-medium">
                 {proposal.qtdParcelas > 1
@@ -59,7 +59,7 @@ export default function HistoryLineItem({
               })}
             </span>
             {proposal.motivo && (
-              <span className="text-sm text-zinc-500">
+              <span className="text-sm text-zinc-500 w-40">
                 <span className="font-medium">Motivo:</span>&nbsp;
                 {proposal.motivo}
               </span>

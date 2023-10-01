@@ -28,7 +28,7 @@ export default function CurrencyCard({
             currency: "BRL"
           })}
         </span>
-        <span className="flex items-center text-sm
+        <span className="flex items-center text-sm whitespace-nowrap
                          font-normal text-neutral-400">
           {desccriptionTitle}&nbsp;
           <span className={descriptionStyle}>

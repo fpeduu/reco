@@ -7,15 +7,17 @@ import { useSession } from "next-auth/react";
 import PricingCard from "./components/PricingCard/pricing-card";
 import DepositionCard from "./components/DepositionCard/deposition-card";
 import FeatureCard from "./components/FeatureCard/feature-card";
+import { useEffect } from "react";
 
 export default function Home() {
   const router = useRouter();
   const { data: session } = useSession();
-  const marginClass = session ? "ml-16" : "ml-0";
 
-  if (session && session.user) {
-    router.push("/tenants");
-  }
+  useEffect(() => {
+    if (session && session.user) {
+      router.push("/tenants");
+    }
+  }, [session])
 
   return (
     <div className="w-full max-h-fit flex flex-col">

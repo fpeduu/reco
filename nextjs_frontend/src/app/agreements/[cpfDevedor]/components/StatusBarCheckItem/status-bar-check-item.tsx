@@ -9,11 +9,13 @@ interface StatusBarCheckItemProps {
 }
 
 export default function StatusBarCheckItem({ step, checkStatus, title }: StatusBarCheckItemProps) {
+  const itIsNotLastStep = step < 5;
+
   return (
     <div
       className={
-        "relative flex justify-center md:justify-start" +
-        (step < 5 ? " w-32 md:w-60" : "w-32 md:w-auto")
+        "relative flex justify-center md:justify-start w-32 " +
+        (itIsNotLastStep ? "md:w-60" : "md:w-auto")
       }>
       <div className="w-10 flex flex-col">
         <span
@@ -41,14 +43,14 @@ export default function StatusBarCheckItem({ step, checkStatus, title }: StatusB
         </p>
         <StatusBarCard checkStatus={checkStatus} />
       </div>
-      {step < 5 && (
+      {itIsNotLastStep && (
         <span
           className={`w-full h-2 top-4 left-8 md:flex absolute hidden ${
             checkStatus === "Completo" ? "bg-emerald-500" : "bg-gray-100"
           }`}
         />
       )}
-      {step < 5 && checkStatus === "Em andamento" && (
+      {itIsNotLastStep && checkStatus === "Em andamento" && (
         <span
           className="w-1/2 h-2 top-4 left-8 hidden md:flex
                          absolute rounded-2xl bg-amber-500"

@@ -8,7 +8,7 @@ export default function AgreementDecision({
   onRejectAgreement,
 }: AgreementDecisionProps) {
   return (
-    <div className="flex gap-2 w-full md:w-fit justify-center">
+    <div className="flex gap-2 w-fit justify-center md:w-full md:justify-end">
       <button
         className="font-semibold py-4 px-6 text-center
                 bg-red-100 text-red-500 rounded-lg shadow
