@@ -41,7 +41,7 @@ export default function Header() {
   return (
     <div
       className={`w-full absolute h-20 py-2 flex items-center ${
-        session ? "pr-28" : "px-10"
+        session ? "pr-28" : "md:px-10"
       } ${bgClass} ${textClass}`}
     >
       {session && (
