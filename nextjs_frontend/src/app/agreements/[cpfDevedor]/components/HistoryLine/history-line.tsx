@@ -16,10 +16,7 @@ export default function HistoryLine({ divida, history }: HistoryLineProps) {
 
   useEffect(() => {
     if (draggableRef.current) {
-      const touchStart$ = fromEvent<TouchEvent>(
-        draggableRef.current,
-        "touchstart"
-      );
+      const touchStart$ = fromEvent<TouchEvent>(draggableRef.current, "touchstart");
       const touchMove$ = fromEvent<TouchEvent>(document, "touchmove");
       const touchEnd$ = fromEvent<TouchEvent>(document, "touchend");
 
@@ -47,7 +44,7 @@ export default function HistoryLine({ divida, history }: HistoryLineProps) {
             if (draggableRef.current) {
               draggableRef.current.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
             }
-          },
+          }
         });
 
       subscriptionRef.current = dragSubscription;
@@ -61,7 +58,7 @@ export default function HistoryLine({ divida, history }: HistoryLineProps) {
   }, []);
 
   return (
-    <div ref={draggableRef}>
+    <div ref={draggableRef} className="w-full">
       <HistoryLineItem align="right" connect={true} />
       {history.map((proposal, index) => (
         <HistoryLineItem
