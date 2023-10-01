@@ -93,29 +93,33 @@ export default function AgreementStatus({ params }: AgreementStatusProps) {
   return (
     <div className="containerLayout flex flex-col gap-10">
       <h1 className="text-4xl font-medium">Detalhes da negociação</h1>
-      <div className="flex items-end justify-center lg:justify-start flex-wrap lg:flex-nowrap gap-20">
+      <div className="flex items-end justify-center gap-5 flex-wrap
+                      lg:flex-nowrap lg:justify-start 2xl:gap-20">
         <TenantProfileCard tenant={agreement} />
-        <CurrencyCard
-          icon="/icons/dollar_sign.svg"
-          iconSize={34}
-          title="Valor em débito"
-          value={agreement.valorDivida}
-          desccriptionTitle="Em atraso:"
-          description={`${agreement.mensalidadesAtrasadas} meses`}
-          descriptionStyle="text-rose-400"
-        />
-        <CurrencyCard
-          icon="/icons/document.svg"
-          iconSize={26}
-          title="Valor de entrada"
-          value={agreement.acordo.entrada}
-          descriptionStyle="text-green-600"
-          description={`+ ${
-            agreement.acordo.qtdParcelas > 1
-              ? `${agreement.acordo.qtdParcelas} parcelas`
-              : `${agreement.acordo.qtdParcelas} parcela`
-          } de ${installmentValue.toLocaleString("pt-br", { style: "currency", currency: "BRL" })}`}
-        />
+        <div className="flex gap-5 flex-wrap flex-1 justify-center
+                        sm:justify-start 2xl:gap-20">
+          <CurrencyCard
+            icon="/icons/dollar_sign.svg"
+            iconSize={34}
+            title="Valor em débito"
+            value={agreement.valorDivida}
+            desccriptionTitle="Em atraso:"
+            description={`${agreement.mensalidadesAtrasadas} meses`}
+            descriptionStyle="text-rose-400"
+          />
+          <CurrencyCard
+            icon="/icons/document.svg"
+            iconSize={26}
+            title="Valor de entrada"
+            value={agreement.acordo.entrada}
+            descriptionStyle="text-green-600"
+            description={`+ ${
+              agreement.acordo.qtdParcelas > 1
+                ? `${agreement.acordo.qtdParcelas} parcelas`
+                : `${agreement.acordo.qtdParcelas} parcela`
+            } de ${installmentValue.toLocaleString("pt-br", { style: "currency", currency: "BRL" })}`}
+          />
+        </div>
       </div>
       <h2 className="text-4xl font-medium">Andamento</h2>
       <div className="w-full h-fit bg-white rounded-2xl">

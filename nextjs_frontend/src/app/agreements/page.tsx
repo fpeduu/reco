@@ -37,7 +37,7 @@ export default function AgreementsPage() {
   });
 
   return (
-    <div className="containerLayout flex flex-col gap-20">
+    <div className="containerLayout flex flex-col py-2 gap-5 xl:gap-20">
       <Search onSearch={setSearchQuery} />
       <AgreementList
         searchQuery={searchQuery}

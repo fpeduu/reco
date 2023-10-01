@@ -18,7 +18,8 @@ export default function StatusBarBig({ status }: StatusBarBigProps) {
   const step = getStatusStep(status);
 
   return (
-    <span className="w-full p-1 flex flex-wrap justify-center md:flex-nowrap mb-10">
+    <span className="w-full p-1 flex flex-wrap justify-center mb-10 gap-2
+                     md:flex-nowrap md:gap-0">
       {statusList.map((statusItem, index) => (
         <StatusBarCheckItem
           title={statusItem.title}

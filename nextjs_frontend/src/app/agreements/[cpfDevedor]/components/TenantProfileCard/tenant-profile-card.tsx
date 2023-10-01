@@ -23,12 +23,13 @@ export default function TenantProfileCard({ tenant }: TenantProfileCardProps) {
   }
 
   return (
-    <div className="w-128 h-40 py-6 pl-10 pr-5 flex flex-col justify-between rounded-2xl bg-white">
+    <div className="w-128 py-6 pl-10 pr-5 flex flex-col
+                    justify-between rounded-2xl bg-white lg:h-full xl:h-40">
       <span className="text-xl font-medium">Perfil do inadimplente</span>
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between h-full">
         <div className="w-full flex flex-col justify-between">
           <span className="text-lg font-normal">{tenant.nome}</span>
-          <div className="w-full flex justify-between">
+          <div className="w-full flex justify-between flex-wrap lg:flex-nowrap">
             <div className="flex flex-col">
               <span className="text-xs font-light">
                 <span className="font-normal">CPF:</span>&nbsp;
@@ -42,7 +43,9 @@ export default function TenantProfileCard({ tenant }: TenantProfileCardProps) {
             <button
               onClick={handleCopyLink}
               onBlur={handleButtonBlur}
-              className="h-8 px-3 self-end flex items-center justify-between gap-2 bg-indigo-50 text-sm font-normal text-sky-600 rounded-md">
+              className="h-8 px-3 self-end flex items-center justify-between
+                         gap-2 bg-indigo-50 text-sm font-normal text-sky-600
+                         rounded-md">
               <Image src="/icons/clip.svg" alt="clip" width={21} height={21} />
               <span ref={linkRef}>Copiar link</span>
             </button>

@@ -123,13 +123,18 @@ export default function AgreementList({
 
   return (
     <div className="w-full flex flex-col items-center justify-between gap-5">
-      <div className="w-full flex flex-col md:flex-row justify-between items-start">
+      <div className="w-full flex flex-col justify-between items-start 
+                      px-5 gap-2 lg:gap-0 md:px-0 lg:flex-row">
         <div className="flex flex-col gap-3">
           <h1 className="text-4xl font-semibold">{title}</h1>
           <p className="text-lg font-light">{description}</p>
         </div>
-        <div className="flex flex-wrap mt-4 justify-center md:mt-0 md:flex-nowrap md:justify-end  items-center gap-5">
-          <span className="text-sm font-light">Filtrar por:</span>
+        <div className="flex flex-wrap mt-4 justify-center 
+                        items-center gap-5 w-full sm:flex-row sm:w-auto
+                        md:mt-0 md:flex-nowrap md:justify-end">
+          <span className="text-sm font-light whitespace-nowrap">
+            Filtrar por:
+          </span>
           {filterByProgress && (
             <Dropdown
               title="Progresso"
@@ -149,7 +154,8 @@ export default function AgreementList({
           />
         </div>
       </div>
-      <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-5">
+      <div className="w-full grid grid-cols-1 gap-5 px-5
+                      md:grid-cols-3 md:px-0">
         {handlePagination().map((agreement, index) => (
           <AgreementCard key={index} agreement={agreement} />
         ))}
