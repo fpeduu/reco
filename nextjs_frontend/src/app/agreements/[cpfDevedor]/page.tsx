@@ -25,9 +25,9 @@ async function fetchAcceptAgreement(cpf: string, newProposal: Proposta) {
   return (await fetch(`${serverURL}/api/proposal/${cpf}/`, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
+      "Content-Type": "application/json"
     },
-    body: JSON.stringify(newProposal),
+    body: JSON.stringify(newProposal)
   })
     .then((response) => response.json())
     .catch((error) => {
@@ -64,10 +64,7 @@ export default function AgreementStatus({ params }: AgreementStatusProps) {
     lastAgreement.aceito = accept;
 
     setIsLoading(true);
-    const response = await fetchAcceptAgreement(
-      params.cpfDevedor,
-      lastAgreement
-    );
+    const response = await fetchAcceptAgreement(params.cpfDevedor, lastAgreement);
     agreement.acordo.status = response.status;
     setAgreement(agreement);
     setIsLoading(false);
@@ -120,31 +117,25 @@ export default function AgreementStatus({ params }: AgreementStatusProps) {
       </div>
       <h2 className="text-4xl font-medium">Andamento</h2>
       <div className="w-full h-fit bg-white rounded-2xl">
-        <nav className="border-b border-b-slate-300">
+        <nav className="flex border-b border-b-slate-300">
           <button
             onClick={switchToTimeline}
             className={
               "w-1/2 md:w-56 p-5 pb-0 border-b text-sm " +
-              (subpage === "timeline"
-                ? "text-red-600 border-b-red-600"
-                : "text-slate-500")
-            }
-          >
+              (subpage === "timeline" ? "text-red-600 border-b-red-600" : "text-slate-500")
+            }>
             Linha do Tempo
           </button>
           <button
             onClick={switchToDetails}
             className={
               "w-1/2 md:w-56 p-5 pb-0 border-b text-sm " +
-              (subpage === "details"
-                ? "text-red-600 border-b-red-600"
-                : "text-slate-500")
-            }
-          >
+              (subpage === "details" ? "text-red-600 border-b-red-600" : "text-slate-500")
+            }>
             Detalhes
           </button>
         </nav>
-        <div className="max-h-128 overflow-y-auto p-20 flex flex-col items-center">
+        <div className="max-h-128 overflow-y-auto overflow-x-hidden p-20 flex flex-col items-center">
           {subpage === "timeline" && !isLoading ? (
             <>
               <StatusBarBig status={agreement.acordo.status} />
