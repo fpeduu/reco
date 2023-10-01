@@ -30,34 +30,45 @@ export interface Acordo {
   entrada: number;
   valorTotal: number;
   qtdParcelas: number;
+  valorReserva: {
+    entrada: number;
+    qtdParcelas: number;
+  };
   historicoValores: Proposta[];
 }
 
 const AcordoSchema = new mongoose.Schema({
   usuarioEmail: {
     type: String,
-    required: true
+    required: true,
   },
   cpfDevedor: {
     type: String,
-    required: true
+    required: true,
   },
   dataAcordo: {
     type: Date,
-    default: Date.now
+    default: Date.now,
   },
   status: String,
   entrada: Number,
   valorTotal: Number,
   qtdParcelas: Number,
-  historicoValores: [{
-    autor: String,
-    motivo: String,
+  valorReserva: {
     entrada: Number,
-    aceito: Boolean,
     qtdParcelas: Number,
-    valorParcela: Number,
-  }]
+  },
+  historicoValores: [
+    {
+      autor: String,
+      motivo: String,
+      entrada: Number,
+      aceito: Boolean,
+      qtdParcelas: Number,
+      valorParcela: Number,
+    },
+  ],
 });
 
-export default mongoose.models.Acordos || mongoose.model("Acordos", AcordoSchema);
+export default mongoose.models.Acordos ||
+  mongoose.model("Acordos", AcordoSchema);

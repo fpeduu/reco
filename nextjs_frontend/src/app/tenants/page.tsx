@@ -26,14 +26,23 @@ async function createAgreement(
   entrada: number,
   valorParcela: number,
   valorTotal: number,
-  qtdParcelas: number
+  qtdParcelas: number,
+  piorValor: number,
+  pioresParcelas: number
 ) {
   return (await fetch(`${serverURL}/api/agreements/${cpf}/`, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify({ entrada, valorParcela, valorTotal, qtdParcelas })
+    body: JSON.stringify({
+      entrada,
+      valorParcela,
+      valorTotal,
+      qtdParcelas,
+      piorValor,
+      pioresParcelas,
+    }),
   })
     .then((response) => response.json())
     .catch((error) => {
@@ -57,29 +66,37 @@ export default function AgreementsPage() {
     getTenants();
   }, [addingTenant, importingTenant]);
 
-  async function onCreateAgreement(debtor: Devedor, negotiation: INegotiationData) {
+  async function onCreateAgreement(
+    debtor: Devedor,
+    negotiation: INegotiationData
+  ) {
+    console.log(negotiation);
     return createAgreement(
       debtor.cpf,
       negotiation.bestValue,
       negotiation.bestInstallments,
       debtor.valorDivida,
-      negotiation.melhorParcela as number
+      negotiation.melhorParcela as number,
+      negotiation.worstValue,
+      negotiation.worstInstallments
     ).then((agreement) => {
       if (agreement) {
-        setTenants((tenants) => tenants.filter(
-          (tenant) => (tenant.cpf !== debtor.cpf)
-        ));
+        setTenants((tenants) =>
+          tenants.filter((tenant) => tenant.cpf !== debtor.cpf)
+        );
         return true;
       } else {
         return false;
       }
-    })
+    });
   }
 
   return (
     <div className="containerLayout">
       <div className="my-10">
-        <h1 className="text-4xl font-semibold leading-10">Olá, {session?.user?.name}!</h1>
+        <h1 className="text-4xl font-semibold leading-10">
+          Olá, {session?.user?.name}!
+        </h1>
         <h2 className="text-lg font-light leading-10">
           Confira os inadimplentes e realize novas negociações
         </h2>
@@ -96,8 +113,12 @@ export default function AgreementsPage() {
           <Button onClick={() => setAddingTenant(true)}>Adicionar</Button>
         </span>
       </div>
-      {addingTenant && <AddTenantModal onClose={() => setAddingTenant(false)} />}
-      {importingTenant && <ImportTenantModal onClose={() => setImportingTenant(false)} />}
+      {addingTenant && (
+        <AddTenantModal onClose={() => setAddingTenant(false)} />
+      )}
+      {importingTenant && (
+        <ImportTenantModal onClose={() => setImportingTenant(false)} />
+      )}
 
       <TenantList tenants={tenants} onCreateAgreement={onCreateAgreement} />
       <span className="hidden">
