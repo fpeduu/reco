@@ -214,11 +214,11 @@ export default function Home() {
       </section>
       {/* CUSTOM PLAN SECTION */}
       <section id="customPlan" className="w-full max-h-fit bg-neutral-950">
-        <div className="flex flex-wrap px-16 py-16 flex-col text-white justify-center">
+        <div className="flex flex-wrap px-32 py-16 flex-col text-white justify-center">
           <h2 className="text-4xl mb-10 md:text-7xl text-center font-medium md:text-start">
             Plano personalizado
           </h2>
-          <p className="font-light text-justify max-w-2xl">
+          <p className="font-extralight text-xl text-justify max-w-2xl">
             Sente que nenhum plano encaixou para você? Não tem problema, aqui na
             reco você pode ter o seu próprio plano personalizado!
           </p>
