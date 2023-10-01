@@ -42,10 +42,12 @@ export default function AgreementsPage() {
           Confira os inadimplentes e realize novas negociações
         </h2>
       </div>
-      <div className="mb-3 flex items-center justify-between">
+      <div className="mb-3 flex flex-wrap gap-3 items-center justify-between">
         <div className="flex items-center">
           <h2 className="font-medium text-2xl">Lista de Inadimplentes</h2>
-          <span className="font-light text-xs ml-2">(Total: {tenants.length})</span>
+          <span className="font-light text-xs ml-2 whitespace-nowrap">
+            (Total: {tenants.length})
+          </span>
         </div>
         <span className="flex items-center gap-6">
           <Button onClick={() => setImportingTenant(true)}>Importar</Button>
