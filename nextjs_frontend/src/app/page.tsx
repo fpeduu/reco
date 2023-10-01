@@ -206,8 +206,8 @@ export default function Home() {
           </div>
           <div className="flex gap-8 flex-wrap justify-center">
             <PricingCard title="Básico" value={289.9} dailyAgreements={10} />
-            <PricingCard title="Básico" value={359.9} dailyAgreements={20} />
-            <PricingCard title="Básico" value={429.9} dailyAgreements={30} />
+            <PricingCard title="Pro" value={359.9} dailyAgreements={20} />
+            <PricingCard title="Premium" value={429.9} dailyAgreements={30} />
           </div>
         </div>
       </section>
