@@ -89,7 +89,7 @@ export default function Home() {
       </section>
       {/* SECTION USER GUIDE */}
       <section id="userGuide" className="w-full max-h-fit bg-neutral-200 ">
-        <div className="flex flex-col items-center p-16 mb-24">
+        <div className="flex flex-col items-center px-16 pb-16 mb-24">
           <h2 className="text-7xl font-medium">Como funciona?</h2>
           <div className="flex flex-col gap-5 mt-5 md:flex-row lg:gap-10 ">
             <div className={Styles.userGuideStep}>
@@ -214,7 +214,7 @@ export default function Home() {
       </section>
       {/* CUSTOM PLAN SECTION */}
       <section id="customPlan" className="w-full max-h-fit bg-neutral-950">
-        <div className="flex flex-wrap px-32 py-16 flex-col text-white justify-center">
+        <div className="flex flex-wrap px-16 md:px-32 py-16 flex-col text-white">
           <h2 className="text-4xl mb-10 md:text-7xl text-center font-medium md:text-start">
             Plano personalizado
           </h2>
