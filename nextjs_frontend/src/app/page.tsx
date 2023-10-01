@@ -52,16 +52,18 @@ export default function Home() {
         <div className="w-full h-208 absolute right-0 -top-128 xl:bg-[url(/images/grafismo3.svg)] xl:bg-[length:800px_900px] 2xl:bg-[length:1000px_900px] bg-right-top bg-no-repeat bg-contain" />
         <div className="flex justify-center p-20 mt-24 mb-20">
           <div className="flex flex-wrap justify-center  gap-12 my-10">
-            <div className="md:w-128 2xl:w-160">
-              <Image alt="reco logo" src="/logo.svg" width={400} height={100} priority />
-              <h2 className="text-5xl md:text-6xl md:min-w-[500px] text-end font-extralight pr-4">
-                te oferece:
-              </h2>
+            <div className="md:w-128 2xl:w-160 flex items-center justify-end">
+              <div className="md:w-128">
+                <Image alt="reco logo" src="/logo.svg" width={400} height={100} priority />
+                <h2 className="text-5xl md:text-6xl md:min-w-[500px] text-end font-extralight pr-4">
+                  te oferece:
+                </h2>
+              </div>
             </div>
             <FeatureCard
               image="/icons/brain_analysis.svg"
               title="Análises avançadas"
-              description="Nossa Inteligência Artificial fornece as melhores propostas às suas negociações."
+              description="Nosso Sistema Inteligente fornece as melhores propostas às suas negociações."
             />
             <FeatureCard
               image="/icons/laptop_autom.svg"
