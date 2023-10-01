@@ -93,7 +93,7 @@ export default function ImportTenantModal({ onClose }: ImportTenantModalProps) {
   };
 
   return (
-    <div className="fixed z-10 inset-0 items-center justify-center overflow-y-auto">
+    <div className="fixed z-40 inset-0 items-center justify-center overflow-y-auto">
       <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
         <div className="fixed inset-0 transition-opacity" aria-hidden="true">
           <div className="absolute inset-0 bg-gray-800 opacity-50" onClick={onClose} />
