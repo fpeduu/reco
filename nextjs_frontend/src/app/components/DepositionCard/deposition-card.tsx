@@ -19,8 +19,6 @@ export default function DepositionCard({
         <Image
           src={image}
           alt="deposition image"
-          // width={80}
-          // height={80}
           layout="fill"
           objectFit="cover"
         />
