@@ -124,7 +124,7 @@ export default function AgreementStatus({ params }: AgreementStatusProps) {
           <button
             onClick={switchToTimeline}
             className={
-              "w-56 p-5 pb-0 border-b text-sm " +
+              "w-1/2 md:w-56 p-5 pb-0 border-b text-sm " +
               (subpage === "timeline"
                 ? "text-red-600 border-b-red-600"
                 : "text-slate-500")
@@ -135,7 +135,7 @@ export default function AgreementStatus({ params }: AgreementStatusProps) {
           <button
             onClick={switchToDetails}
             className={
-              "w-56 p-5 pb-0 border-b text-sm " +
+              "w-1/2 md:w-56 p-5 pb-0 border-b text-sm " +
               (subpage === "details"
                 ? "text-red-600 border-b-red-600"
                 : "text-slate-500")

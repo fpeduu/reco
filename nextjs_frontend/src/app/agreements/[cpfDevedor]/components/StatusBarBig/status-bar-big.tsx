@@ -11,20 +11,26 @@ const statusList: { title: StatusType }[] = [
   { title: "Primeira proposta" },
   { title: "Segunda proposta" },
   { title: "Proposta do inadimplente" },
-  { title: "Aguardando aprovação" }
+  { title: "Aguardando aprovação" },
 ];
 
 export default function StatusBarBig({ status }: StatusBarBigProps) {
   const step = getStatusStep(status);
 
   return (
-    <span className="w-full p-1 flex justify-center mb-10">
+    <span className="w-full p-1 flex flex-wrap justify-center md:flex-nowrap mb-10">
       {statusList.map((statusItem, index) => (
         <StatusBarCheckItem
           title={statusItem.title}
           step={index}
           key={statusItem.title}
-          checkStatus={step > index ? "Completo" : step === index ? "Em andamento" : "Pendente"}
+          checkStatus={
+            step > index
+              ? "Completo"
+              : step === index
+              ? "Em andamento"
+              : "Pendente"
+          }
         />
       ))}
       <StatusBarCheckItem
