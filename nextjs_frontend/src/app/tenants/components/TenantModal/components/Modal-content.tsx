@@ -22,52 +22,59 @@ interface ModalContentProps {
 }
 
 export default function ModalContent({
-  onClose, onConfirm, negotiationData, debtor
+  onClose,
+  onConfirm,
+  negotiationData,
+  debtor,
 }: ModalContentProps) {
-  const { melhorParcela, piorParcela, bestValue, worstValue, 
-    bestInstallments, worstInstallments } = negotiationData;
+  const {
+    melhorParcela,
+    piorParcela,
+    bestValue,
+    worstValue,
+    bestInstallments,
+    worstInstallments,
+  } = negotiationData;
 
   return (
     <div className="bg-white p-16 flex justify-center">
       <div className="mt-3 max-w-2xl w-full gap-5 sm:ml-4 sm:mt-0 sm:text-left">
-        <h1 className="font-medium text-4xl leading-10 text-center mb-2" 
-            id="modal-title">
+        <h1
+          className="font-medium text-4xl leading-10 text-center mb-2"
+          id="modal-title"
+        >
           Confira as informações:
         </h1>
         <p className="text-base font-light text-center">
-          Você escolheu negociar com o inadimplente abaixo. <br/>
+          Você escolheu negociar com o inadimplente abaixo. <br />
           Ao confirmar, geraremos um link redirecionando à negociação.
         </p>
 
         <div className="w-full my-8 gap-2 flex flex-col">
-          <div className="flex-1 p-4 gap-10 flex flex-wrap items-center
-                          min-h-max justify-start rounded-md shadow bg-tertiary">
+          <div
+            className="flex-1 p-4 gap-10 flex flex-wrap items-center
+                          min-h-max justify-start rounded-md shadow bg-tertiary"
+          >
             <div className="flex flex-col items-start gap-2 mr-auto">
-              <span className="font-normal text-lg">
-                {debtor.nome}
-              </span>
+              <span className="font-normal text-lg">{debtor.nome}</span>
               <span className="text-sm font-light">
                 {debtor.cpf} | {debtor.nomeCondominio}
               </span>
             </div>
             <div className="flex flex-col items-start gap-2">
-              <span className="font-normal text-sm">
-                Atraso:
-              </span>
+              <span className="font-normal text-sm">Atraso:</span>
               <span className="text-sm font-light">
                 {debtor.mensalidadesAtrasadas} meses
               </span>
             </div>
             <div className="flex flex-col items-start gap-2">
-              <span className="font-normal text-sm">
-                Dívida:
-              </span>
+              <span className="font-normal text-sm">Dívida:</span>
               <span className="text-sm font-light">
                 R$ {debtor.valorDivida?.toLocaleString("pt-BR")}
               </span>
             </div>
           </div>
-          <div className="gap-2 flex items-center w-full">
+          <div className="gap-2 flex flex-wrap lg:flex-nowrap items-center w-full">
             <ModalInformation
               title="Melhor proposta"
               value={bestValue}
@@ -85,18 +92,20 @@ export default function ModalContent({
         <div className="flex flex-row justify-center place-items-center gap-5 w-full">
           <button
             onClick={onConfirm}
-            className="w-1/2 py-3 px-2 rounded-full text-tertiary
-              text-lg font-medium text-center bg-secondary">
+            className="md:w-1/2 py-3 px-2 rounded-full text-tertiary
+              md:text-lg font-medium text-center bg-secondary"
+          >
             Confirmar
           </button>
           <button
             onClick={onClose}
-            className="w-1/2 py-3 px-2 rounded-full text-tertiary
-              text-lg font-medium text-center bg-[#808080]">
+            className="md:w-1/2 py-3 px-2 rounded-full text-tertiary
+              md:text-lg font-medium text-center bg-[#808080]"
+          >
             Cancelar
           </button>
         </div>
       </div>
     </div>
-  )
+  );
 }
