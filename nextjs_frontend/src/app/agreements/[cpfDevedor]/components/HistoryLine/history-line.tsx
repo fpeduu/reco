@@ -45,7 +45,6 @@ export default function HistoryLine({ divida, history }: HistoryLineProps) {
         .subscribe({
           next: ({ deltaX, deltaY }) => {
             if (draggableRef.current) {
-              // Update the position of the draggable element
               draggableRef.current.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
             }
           },
@@ -54,7 +53,6 @@ export default function HistoryLine({ divida, history }: HistoryLineProps) {
       subscriptionRef.current = dragSubscription;
     }
 
-    // Cleanup subscription when component unmounts
     return () => {
       if (subscriptionRef.current) {
         subscriptionRef.current.unsubscribe();
