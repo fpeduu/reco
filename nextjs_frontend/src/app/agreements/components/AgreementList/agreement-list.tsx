@@ -123,15 +123,19 @@ export default function AgreementList({
 
   return (
     <div className="w-full flex flex-col items-center justify-between gap-5">
-      <div className="w-full flex flex-col justify-between items-start 
-                      px-5 gap-2 lg:gap-0 md:px-0 lg:flex-row">
+      <div
+        className="w-full flex flex-col justify-between items-start 
+                      px-5 gap-2 lg:gap-0 md:px-0 lg:flex-row"
+      >
         <div className="flex flex-col gap-3">
           <h1 className="text-4xl font-semibold">{title}</h1>
           <p className="text-lg font-light">{description}</p>
         </div>
-        <div className="flex flex-wrap mt-4 justify-center 
+        <div
+          className="flex flex-wrap mt-4 justify-center 
                         items-center gap-5 w-full sm:flex-row sm:w-auto
-                        md:mt-0 md:flex-nowrap md:justify-end">
+                        md:mt-0 md:flex-nowrap md:justify-end"
+        >
           <span className="text-sm font-light whitespace-nowrap">
             Filtrar por:
           </span>
@@ -154,8 +158,10 @@ export default function AgreementList({
           />
         </div>
       </div>
-      <div className="w-full grid grid-cols-1 gap-5 px-5
-                      md:grid-cols-3 md:px-0">
+      <div
+        className="w-full grid grid-cols-1 gap-5 px-5
+                      md:grid-cols-3 md:px-0"
+      >
         {handlePagination().map((agreement, index) => (
           <AgreementCard key={index} agreement={agreement} />
         ))}
@@ -164,6 +170,7 @@ export default function AgreementList({
         currentPage={page}
         onPageChange={setPage}
         pageLimit={totalPageCount}
+        uniqueKey={`pag+${title}`}
       />
     </div>
   );
