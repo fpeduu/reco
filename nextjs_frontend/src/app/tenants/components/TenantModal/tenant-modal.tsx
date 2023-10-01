@@ -44,6 +44,11 @@ export default function TenantModal({
     melhorParcela: 0,
   });
 
+  const close = () => {
+    setConfirmed(false);
+    onClose();
+  };
+
   async function handleConfirm() {
     if (!debtor) return;
     onConfirm(debtor, negotiation).then((isConfirmed) => {
@@ -107,7 +112,7 @@ export default function TenantModal({
                           sm:w-full sm:max-w-4xl"
             >
               <button
-                onClick={onClose}
+                onClick={close}
                 className="absolute sm:top-10 right-8 sm:right-14 text-5xl h-0
                         text-gray-500 hover:text-gray-700"
               >
@@ -118,7 +123,7 @@ export default function TenantModal({
               ) : (
                 <ModalContent
                   debtor={debtor}
-                  onClose={onClose}
+                  onClose={close}
                   onConfirm={handleConfirm}
                   negotiationData={negotiation}
                   setNegotiationData={setNegotiation}
