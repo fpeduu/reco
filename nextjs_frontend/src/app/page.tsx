@@ -80,7 +80,7 @@ export default function Home() {
       </section>
       {/* SECTION USER GUIDE */}
       <section id="userGuide" className="w-full max-h-fit bg-neutral-200 ">
-        <div className="flex flex-col items-center p-16 mb-20">
+        <div className="flex flex-col items-center p-16 mb-24">
           <h2 className="text-7xl font-medium">Como funciona?</h2>
           <div className="flex flex-col gap-5 mt-5 md:flex-row lg:gap-10 ">
             <div className={Styles.userGuideStep}>
@@ -136,19 +136,19 @@ export default function Home() {
               name="Jéssica Lima"
               role="Gerente financeira da SEMOG"
               text="A Reco aumentou a produtividade do setor de cobranças da SEMOG. Conseguimos fechar muitos acordos em menos tempo."
-              image="/images/castiel.jpg"
+              image="/images/jessica.png"
             />
             <DepositionCard
               name="Castiel Veilmont"
-              role="Gerente financeira da SEMOG"
-              text="A Reco aumentou a produtividade do setor de cobranças da SEMOG. Conseguimos fechar muitos acordos em menos tempo."
-              image="/images/castiel.jpg"
+              role="Gerente financeiro da SELECT"
+              text="Desde o processo de registro até a negociação das dívidas, tudo foi simples e direto, o que tornou a experiência do usuário muito agradável."
+              image="/images/castiel.png"
             />
             <DepositionCard
               name="Lilian Oliveira"
-              role="Gerente financeira da SEMOG"
-              text="A Reco aumentou a produtividade do setor de cobranças da SEMOG. Conseguimos fechar muitos acordos em menos tempo."
-              image="/images/castiel.jpg"
+              role="Gerente financeira da ADMINI"
+              text="É uma ferramenta muito útil para agilizar o processo de quitação de débitos. Facilita a comunicação com o condomínio e a visualização das informações financeiras."
+              image="/images/lilian.png"
             />
           </div>
         </div>
