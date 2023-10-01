@@ -23,5 +23,5 @@ body {
 }
 
 .containerLayout {
-  @apply w-full min-h-screen p-10 lg:px-32 lg:py-10 bg-neutral-200 ml-20 md:ml-0;
+  @apply w-full min-h-screen p-10 lg:px-32 lg:py-10 bg-neutral-200;
 }
