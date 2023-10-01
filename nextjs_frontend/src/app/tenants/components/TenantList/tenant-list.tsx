@@ -16,12 +16,18 @@ import TenantModal from "../TenantModal/tenant-modal";
 
 interface TenantListProps {
   tenants: Devedor[];
-  onCreateAgreement: (debtor: Devedor, negotiation: INegotiationData) => Promise<boolean>;
+  onCreateAgreement: (
+    debtor: Devedor,
+    negotiation: INegotiationData
+  ) => Promise<boolean>;
 }
 
 const tenantsPerPage = 7;
 
-export default function TenantList({ tenants, onCreateAgreement }: TenantListProps) {
+export default function TenantList({
+  tenants,
+  onCreateAgreement,
+}: TenantListProps) {
   const [filteredTenants, setFilteredTenants] = useState<Devedor[]>(tenants);
   const [condomiunsList, setCondomiunsList] = useState<string[]>([]);
   const [monthsLateList, setMonthsLateList] = useState<string[]>([]);
@@ -131,13 +137,13 @@ export default function TenantList({ tenants, onCreateAgreement }: TenantListPro
         />
       </div>
       {handlePagination().map((tenant) => (
-        <DebtorCard key={tenant.cpf} tenant={tenant}
-                    openModal={openModal}/>
+        <DebtorCard key={tenant.cpf} tenant={tenant} openModal={openModal} />
       ))}
       <Paginator
         currentPage={page}
         onPageChange={setPage}
         pageLimit={totalPageCount}
+        uniqueKey="pag"
       />
       <TenantModal
         open={modalOpen}
