@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Styles from "./paginator.module.scss";
-import { useState } from "react";
 
 interface PaginatorProps {
   onPageChange: (page: number) => void;
