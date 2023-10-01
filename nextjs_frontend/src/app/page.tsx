@@ -43,7 +43,7 @@ export default function Home() {
           </p>
           <button
             onClick={handleLogin}
-            className="mt-10 bg-primary rounded-full w-[252px] h-12 font-medium"
+            className="mt-10 bg-primary rounded-full w-[252px] h-12 font-medium z-50"
           >
             Junte-se à Reco
           </button>
