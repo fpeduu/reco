@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -8,6 +8,8 @@ import Link from "next/link";
 export default function SignIn() {
   const router = useRouter();
   const { data: session } = useSession();
+
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (session && session.user) {
@@ -21,13 +23,15 @@ export default function SignIn() {
     const password = e.target.password.value;
 
     const result = await signIn("credentials", {
-      redirect: true,
+      redirect: false,
       email,
       password,
     });
 
     if (!result?.error) {
       router.push("/tenants");
+    } else {
+      setError("E-mail ou senha incorretos");
     }
   };
 
@@ -48,6 +52,12 @@ export default function SignIn() {
           <h3 className="text-center font-normal mb-5 text-xl md:text-2xl">
             Olá! que bom te ver de novo!
           </h3>
+
+          {error && (
+            <div className="text-red-400 bg-red-200 rounded p-2 font-normal mb-5 text-sm md:text-base">
+              {error}
+            </div>
+          )}
           <label htmlFor="email" className="font-normal">
             Email
           </label>
