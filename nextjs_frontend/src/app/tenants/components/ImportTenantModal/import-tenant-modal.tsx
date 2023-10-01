@@ -7,6 +7,8 @@ import { useDropzone } from "react-dropzone";
 import Papa from "papaparse";
 import { serverURL } from "@/config";
 import { useRouter } from "next/navigation";
+import Snackbar from "@mui/material/Snackbar";
+import { Alert, AlertColor } from "@mui/material";
 
 interface ImportTenantModalProps {
   onClose: () => void;
@@ -15,6 +17,15 @@ interface ImportTenantModalProps {
 export default function ImportTenantModal({ onClose }: ImportTenantModalProps) {
   const router = useRouter();
   const [droppedFiles, setDroppedFiles] = useState<any[]>([]);
+  const [showSnackbar, setShowSnackbar] = useState<boolean>(false);
+  const [snackbarMessage, setSnackbarMessage] = useState<string>("");
+  const [snackbarType, setSnackbarType] = useState<string>("error");
+
+  const callSnackbar = (message: string, type: string = "error") => {
+    setSnackbarMessage(message);
+    setShowSnackbar(true);
+    setSnackbarType(type);
+  };
 
   const validateCSVHeaders = (file: any) => {
     return new Promise((resolve, reject) => {
@@ -23,9 +34,16 @@ export default function ImportTenantModal({ onClose }: ImportTenantModalProps) {
         skipEmptyLines: true,
         complete: (result: any) => {
           const headers = result.meta.fields;
-          const requiredHeaders = ["cpf", "nome", "valorDivida", "nomeCondominio"];
+          const requiredHeaders = [
+            "cpf",
+            "nome",
+            "valorDivida",
+            "nomeCondominio",
+          ];
 
-          const isValid = requiredHeaders.every((header) => headers.includes(header));
+          const isValid = requiredHeaders.every((header) =>
+            headers.includes(header)
+          );
 
           if (isValid) {
             resolve(true);
@@ -37,7 +55,7 @@ export default function ImportTenantModal({ onClose }: ImportTenantModalProps) {
         },
         error: (error) => {
           reject("Error parsing CSV file.");
-        }
+        },
       });
     });
   };
@@ -48,7 +66,10 @@ export default function ImportTenantModal({ onClose }: ImportTenantModalProps) {
       const isCSV = acceptedFiles.every((file) => csvRegex.test(file.name));
 
       if (!isCSV) {
-        alert("Arquivo inválido. Por favor, selecione apenas arquivos .csv");
+        callSnackbar(
+          "Arquivo inválido. Por favor, selecione apenas arquivos .csv"
+        );
+
         return;
       }
 
@@ -67,11 +88,11 @@ export default function ImportTenantModal({ onClose }: ImportTenantModalProps) {
       if (hasValidHeaders.every((isValid) => isValid)) {
         setDroppedFiles(acceptedFiles);
       } else {
-        alert(
+        callSnackbar(
           "Arquivo inválido. Por favor, verifique se todos os arquivos possuem as colunas 'cpf', 'nome', 'valorDivida' e 'nomeCondominio'."
         );
       }
-    }
+    },
   });
 
   const handleSubmit = async () => {
@@ -80,23 +101,40 @@ export default function ImportTenantModal({ onClose }: ImportTenantModalProps) {
 
     const response = await fetch(`${serverURL}/api/tenants/import`, {
       method: "POST",
-      body: formData
+      body: formData,
     });
 
     if (response.ok) {
-      alert("Devedores adicionados com sucesso!");
+      callSnackbar("Devedores adicionados com sucesso!", "success");
       setDroppedFiles([]);
       router.push("/tenants");
     } else {
-      alert("Erro ao enviar os arquivos.");
+      callSnackbar("Erro ao enviar os arquivos.");
     }
   };
 
   return (
     <div className="fixed z-40 inset-0 items-center justify-center overflow-y-auto">
+      <Snackbar
+        open={showSnackbar}
+        autoHideDuration={6000}
+        onClose={() => setShowSnackbar(false)}
+      >
+        <Alert
+          onClose={() => setShowSnackbar(false)}
+          severity={snackbarType as AlertColor}
+          sx={{ width: "100%" }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
+
       <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
         <div className="fixed inset-0 transition-opacity" aria-hidden="true">
-          <div className="absolute inset-0 bg-gray-800 opacity-50" onClick={onClose} />
+          <div
+            className="absolute inset-0 bg-gray-800 opacity-50"
+            onClick={onClose}
+          />
           <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
             <div className="bg-white mb-10 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
               <div className="mb-10">
@@ -115,10 +153,13 @@ export default function ImportTenantModal({ onClose }: ImportTenantModalProps) {
                   justifyContent: "center",
                   textAlign: "center",
                   border: "2px dashed #000",
-                  height: "200px"
-                }}>
+                  height: "200px",
+                }}
+              >
                 <input {...getInputProps()} />
-                <p className="text-gray-600">Solte seus arquivos aqui ou clique para selecionar.</p>
+                <p className="text-gray-600">
+                  Solte seus arquivos aqui ou clique para selecionar.
+                </p>
               </div>
 
               {droppedFiles.length > 0 && (
