@@ -164,16 +164,15 @@ export default function Home() {
       </section>
       {/* PRICING SECTION */}
       <section id="pricing" className="w-full max-h-fit bg-neutral-200">
-        <div className="flex flex-wrap items-center justify-center gap-20 px-16 py-32 bg-[url(/images/grafismo1.svg)] bg-no-repeat bg-right-bottom md:bg-right">
+        <div className="flex flex-wrap items-center justify-center gap-20 px-16 py-36 bg-[url(/images/grafismo1.svg)] bg-no-repeat bg-right-bottom md:bg-right">
           <div className="w-[350px]">
             <h2 className="mb-10 text-7xl text-justify font-medium">Planos</h2>
             <p className="text-justify text-lg text-secondary font-light">
-              Conheça os planos da nossa plataforma! <br /> <br />O plano Básico
-              é descomplicado, ideal para conhecer a plataforma. Já o plano
-              Premium oferece recursos avançados e suporte especializado para
-              acordos justos e sustentáveis.
+              Conheça os planos da nossa plataforma! <br />
+              Na Reco, você pode escolher o plano que se encaixa melhor na
+              rotina da sua administradora.
             </p>
-            <h4 className="font-medium text-2xl mt-10">Métodos de pagamento</h4>
+            <h4 className="font-medium text-2xl mt-6">Métodos de pagamento</h4>
             <div className="flex flex-wrap gap-5 md:gap-9 mt-4 justify-center md:justify-start">
               <Image
                 alt="paypal icon"
@@ -192,8 +191,8 @@ export default function Home() {
               <Image
                 alt="visa icon"
                 src="/icons/visa.svg"
-                width={50}
-                height={50}
+                width={55}
+                height={55}
                 priority
               />
               <Image
@@ -206,9 +205,9 @@ export default function Home() {
             </div>
           </div>
           <div className="flex gap-8 flex-wrap justify-center">
-            <PricingCard title="Básico" value={789.9} dailyAgreements={10} />
-            <PricingCard title="Básico" value={859.9} dailyAgreements={20} />
-            <PricingCard title="Básico" value={929.9} dailyAgreements={30} />
+            <PricingCard title="Básico" value={289.9} dailyAgreements={10} />
+            <PricingCard title="Pro" value={359.9} dailyAgreements={20} />
+            <PricingCard title="Premium" value={429.9} dailyAgreements={30} />
           </div>
         </div>
       </section>
