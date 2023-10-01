@@ -119,11 +119,11 @@ export default function AgreementStatus({ params }: AgreementStatusProps) {
       </div>
       <h2 className="text-4xl font-medium">Andamento</h2>
       <div className="w-full h-fit bg-white rounded-2xl">
-        <nav className="h-10 flex border-b border-b-slate-300 relative">
+        <nav className="h-16 md:h-10 flex border-b border-b-slate-300 relative">
           <button
             onClick={switchToTimeline}
             className={
-              "w-1/2 md:w-56 h-10 p-5 pb-0 absolute border-b text-sm " +
+              "w-1/2 md:w-56 h-16 md:h-10 p-5 pb-0 absolute border-b text-sm " +
               (subpage === "timeline"
                 ? "text-red-600 border-b-red-600"
                 : "text-slate-500 border-b-slate-300")
@@ -133,7 +133,7 @@ export default function AgreementStatus({ params }: AgreementStatusProps) {
           <button
             onClick={switchToDetails}
             className={
-              "w-1/2 md:w-56 h-10 p-5 pb-0 absolute left-56 border-b text-sm " +
+              "w-1/2 md:w-56 h-16 md:h-10 p-5 pb-0 absolute left-1/2 md:left-56 border-b text-sm " +
               (subpage === "details"
                 ? "text-red-600 border-b-red-600"
                 : "text-slate-500 border-b-slate-300")
