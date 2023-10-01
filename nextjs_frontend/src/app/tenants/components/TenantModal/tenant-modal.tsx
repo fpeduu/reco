@@ -108,7 +108,7 @@ export default function TenantModal({ open, onClose, debtor }: TenantModalProps)
 
         <div className="fixed inset-0 z-10 h-screen overflow-y-auto">
           <div
-            className="flex min-h-full items-end justify-center p-4 text-center
+            className="flex min-h-full items-center justify-center p-4 text-center
                         sm:items-center sm:p-0">
             <div
               className="relative p-6 transform overflow-hidden rounded-2xl
