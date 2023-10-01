@@ -144,7 +144,7 @@ export default function AgreementStatus({ params }: AgreementStatusProps) {
             Detalhes
           </button>
         </nav>
-        <div className="max-h-128 overflow-y-auto p-20 flex flex-col items-end">
+        <div className="max-h-128 overflow-y-auto p-20 flex flex-col items-center">
           {subpage === "timeline" && !isLoading ? (
             <>
               <StatusBarBig status={agreement.acordo.status} />
