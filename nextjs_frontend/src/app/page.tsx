@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Styles from "./landing.module.scss";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import PricingCard from "./components/PricingCard/pricing-card";
 import DepositionCard from "./components/DepositionCard/deposition-card";
 import FeatureCard from "./components/FeatureCard/feature-card";
@@ -18,6 +18,12 @@ export default function Home() {
       router.push("/tenants");
     }
   }, [session]);
+
+  function handleLogin() {
+    signIn(undefined, {
+      callbackUrl: "/tenants/",
+    });
+  }
 
   return (
     <div className="w-full max-h-fit flex flex-col">
@@ -35,7 +41,10 @@ export default function Home() {
             Somos um serviço especializado em intermediar acordos extrajudiciais
             de cobranças condominiais de forma ágil e eficiente.
           </p>
-          <button className="mt-10 bg-primary rounded-full w-[252px] h-12 font-medium">
+          <button
+            onClick={handleLogin}
+            className="mt-10 bg-primary rounded-full w-[252px] h-12 font-medium z-50"
+          >
             Junte-se à Reco
           </button>
         </div>
@@ -80,7 +89,7 @@ export default function Home() {
       </section>
       {/* SECTION USER GUIDE */}
       <section id="userGuide" className="w-full max-h-fit bg-neutral-200 ">
-        <div className="flex flex-col items-center p-16 mb-20">
+        <div className="flex flex-col items-center px-16 pb-16 mb-24">
           <h2 className="text-7xl font-medium">Como funciona?</h2>
           <div className="flex flex-col gap-5 mt-5 md:flex-row lg:gap-10 ">
             <div className={Styles.userGuideStep}>
@@ -136,19 +145,19 @@ export default function Home() {
               name="Jéssica Lima"
               role="Gerente financeira da SEMOG"
               text="A Reco aumentou a produtividade do setor de cobranças da SEMOG. Conseguimos fechar muitos acordos em menos tempo."
-              image="/images/castiel.jpg"
+              image="/images/jessica.png"
             />
             <DepositionCard
               name="Castiel Veilmont"
-              role="Gerente financeira da SEMOG"
-              text="A Reco aumentou a produtividade do setor de cobranças da SEMOG. Conseguimos fechar muitos acordos em menos tempo."
-              image="/images/castiel.jpg"
+              role="Gerente financeiro da SELECT"
+              text="Desde o processo de registro até a negociação das dívidas, tudo foi simples e direto, o que tornou a experiência do usuário muito agradável."
+              image="/images/castiel.png"
             />
             <DepositionCard
               name="Lilian Oliveira"
-              role="Gerente financeira da SEMOG"
-              text="A Reco aumentou a produtividade do setor de cobranças da SEMOG. Conseguimos fechar muitos acordos em menos tempo."
-              image="/images/castiel.jpg"
+              role="Gerente financeira da ADMINI"
+              text="É uma ferramenta muito útil para agilizar o processo de quitação de débitos. Facilita a comunicação com o condomínio e a visualização das informações financeiras."
+              image="/images/lilian.png"
             />
           </div>
         </div>
@@ -201,6 +210,21 @@ export default function Home() {
             <PricingCard title="Básico" value={859.9} dailyAgreements={20} />
             <PricingCard title="Básico" value={929.9} dailyAgreements={30} />
           </div>
+        </div>
+      </section>
+      {/* CUSTOM PLAN SECTION */}
+      <section id="customPlan" className="w-full max-h-fit bg-neutral-950">
+        <div className="flex flex-wrap px-16 md:px-32 py-16 flex-col text-white">
+          <h2 className="text-4xl mb-10 md:text-7xl text-center font-medium md:text-start">
+            Plano personalizado
+          </h2>
+          <p className="font-extralight text-xl text-justify max-w-2xl">
+            Sente que nenhum plano encaixou para você? Não tem problema, aqui na
+            reco você pode ter o seu próprio plano personalizado!
+          </p>
+          <button className="mt-10 bg-primary rounded-full w-[252px] h-12 font-medium">
+            Personalize seu plano
+          </button>
         </div>
       </section>
     </div>
