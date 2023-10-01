@@ -164,7 +164,7 @@ export default function Home() {
       </section>
       {/* PRICING SECTION */}
       <section id="pricing" className="w-full max-h-fit bg-neutral-200">
-        <div className="flex flex-wrap items-center justify-center gap-20 px-16 py-32 bg-[url(/images/grafismo1.svg)] bg-no-repeat bg-right-bottom md:bg-right">
+        <div className="flex flex-wrap items-center justify-center gap-20 px-16 py-36 bg-[url(/images/grafismo1.svg)] bg-no-repeat bg-right-bottom md:bg-right">
           <div className="w-[350px]">
             <h2 className="mb-10 text-7xl text-justify font-medium">Planos</h2>
             <p className="text-justify text-lg text-secondary font-light">
