@@ -40,7 +40,7 @@ async function generateAgreement(devedor: DevedorAcordo) {
   const firstPaymentDay = `${day}/${firstPaymentMonth % 12}/${firstPaymentYear}`;
   const lastPaymentDay = `${day}/${lastPaymentMonth % 12}/${lastPaymentYear}`;
 
-  const totalDebit = acordo.valorTotal;
+  const totalDebit = devedor.valorDivida;
   const totalDebitString = totalDebit.toLocaleString("pt-br", {
     style: "currency",
     currency: "BRL"

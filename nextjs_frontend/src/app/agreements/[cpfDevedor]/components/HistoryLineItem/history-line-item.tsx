@@ -52,7 +52,7 @@ export default function HistoryLineItem({
                   : `${proposal.qtdParcelas} parcela`}
                 &nbsp;
               </span>
-              de{" "}
+              de&nbsp;
               {proposal.valorParcela.toLocaleString("pt-BR", {
                 style: "currency",
                 currency: "BRL"
