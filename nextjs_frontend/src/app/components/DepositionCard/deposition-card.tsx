@@ -9,7 +9,7 @@ interface DepositionCardProps {
 
 export default function DepositionCard({ name, role, text, image }: DepositionCardProps) {
   return (
-    <div className="w-96 h-56 p-8 flex flex-col items-center justify-center text-neutral-950 bg-neutral-200 rounded-2xl shadow-lg">
+    <div className="w-full md:w-96 h-fit md:h-56 p-8 flex flex-col items-center justify-center text-neutral-950 bg-neutral-200 rounded-2xl shadow-lg">
       <div className="w-[80px] h-[80px] rounded-full bg-white overflow-hidden relative bottom-2 -mt-14">
         <Image src={image} alt="deposition image" width={80} height={80} />
       </div>
