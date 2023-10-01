@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -55,6 +55,7 @@ export default function SignIn() {
             className="w-full p-2 mb-5 border border-gray-300 shadow rounded-md h-12 hover:border-gray-400"
             type="email"
             name="email"
+            defaultValue="teste@email.com"
             id="email"
             placeholder="Digite seu email"
           />
@@ -63,6 +64,7 @@ export default function SignIn() {
           </label>
           <input
             className="w-full p-2 mb-5 border border-gray-300 shadow rounded-md h-12 hover:border-gray-400"
+            defaultValue="123"
             type="password"
             name="password"
             id="password"
