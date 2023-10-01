@@ -25,9 +25,9 @@ async function fetchAcceptAgreement(cpf: string, newProposal: Proposta) {
   return (await fetch(`${serverURL}/api/proposal/${cpf}/`, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify(newProposal)
+    body: JSON.stringify(newProposal),
   })
     .then((response) => response.json())
     .catch((error) => {
@@ -64,7 +64,10 @@ export default function AgreementStatus({ params }: AgreementStatusProps) {
     lastAgreement.aceito = accept;
 
     setIsLoading(true);
-    const response = await fetchAcceptAgreement(params.cpfDevedor, lastAgreement);
+    const response = await fetchAcceptAgreement(
+      params.cpfDevedor,
+      lastAgreement
+    );
     agreement.acordo.status = response.status;
     setAgreement(agreement);
     setIsLoading(false);
@@ -93,7 +96,7 @@ export default function AgreementStatus({ params }: AgreementStatusProps) {
   return (
     <div className="containerLayout flex flex-col gap-10">
       <h1 className="text-4xl font-medium">Detalhes da negociação</h1>
-      <div className="flex items-end justify-start gap-20">
+      <div className="flex items-end justify-center lg:justify-start flex-wrap lg:flex-nowrap gap-20">
         <TenantProfileCard tenant={agreement} />
         <CurrencyCard
           icon="/icons/dollar_sign.svg"
@@ -122,16 +125,22 @@ export default function AgreementStatus({ params }: AgreementStatusProps) {
             onClick={switchToTimeline}
             className={
               "w-56 p-5 pb-0 border-b text-sm " +
-              (subpage === "timeline" ? "text-red-600 border-b-red-600" : "text-slate-500")
-            }>
+              (subpage === "timeline"
+                ? "text-red-600 border-b-red-600"
+                : "text-slate-500")
+            }
+          >
             Linha do Tempo
           </button>
           <button
             onClick={switchToDetails}
             className={
               "w-56 p-5 pb-0 border-b text-sm " +
-              (subpage === "details" ? "text-red-600 border-b-red-600" : "text-slate-500")
-            }>
+              (subpage === "details"
+                ? "text-red-600 border-b-red-600"
+                : "text-slate-500")
+            }
+          >
             Detalhes
           </button>
         </nav>
