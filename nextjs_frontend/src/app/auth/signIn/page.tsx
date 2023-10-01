@@ -32,9 +32,9 @@ export default function SignIn() {
   };
 
   return (
-    <div className="flex flex-wrap w-full h-full">
+    <div className="w-full min-h-screen flex flex-wrap ">
       <div className="bg-[#d9d9d9] flex items-center justify-center w-full md:w-1/2 ">
-        <div className="w-48 lg:w-96">
+        <div className="w-48 lg:w-96 my-8">
           <h1 className="text-3xl font-lightbold leading-10 md:text-6xl">
             Acessar o sistema
           </h1>
@@ -43,7 +43,7 @@ export default function SignIn() {
           </h3>
         </div>
       </div>
-      <div className="w-full flex flex-col justify-center h-full items-center md:w-1/2 bg-tertiary">
+      <div className="w-full flex flex-col justify-center  items-center pt-4 md:pt-0 md:w-1/2 bg-tertiary">
         <form className="w-4/6" onSubmit={handleSubmit}>
           <h3 className="text-center font-normal mb-5 text-xl md:text-2xl">
             Olá! que bom te ver de novo!
@@ -93,7 +93,7 @@ export default function SignIn() {
           </button>
           <Link
             href="#"
-            className="flex justify-center text-sm font-normal hover:underline mt-8 mb-20 pt-[2px]"
+            className="flex justify-center text-sm font-normal hover:underline mt-8 mb-10 pt-[2px]"
           >
             Não tem nenhuma conta ainda? Entre em contato!
           </Link>
