@@ -5,9 +5,8 @@ interface StatusBarProps {
   status: StatusType;
 }
 
-const primaryBarLengths = ["w-0", "w-1/5", "w-1/5", "w-2/5", "w-3/5", "w-4/5", "w-full"];
+const primaryBarLengths = ["w-0", "w-1/5", "w-2/5", "w-3/5", "w-4/5", "w-full"];
 const textColors = [
-  "text-red-500",
   "text-red-500",
   "text-amber-500",
   "text-amber-500",
@@ -17,7 +16,6 @@ const textColors = [
 ];
 const primaryBarColors = [
   "bg-red-500",
-  "bg-red-500",
   "bg-amber-500",
   "bg-amber-500",
   "bg-amber-500",
@@ -25,7 +23,6 @@ const primaryBarColors = [
   "bg-emerald-500"
 ];
 const secondaryBarColors = [
-  "bg-red-200",
   "bg-red-200",
   "bg-amber-200",
   "bg-amber-200",

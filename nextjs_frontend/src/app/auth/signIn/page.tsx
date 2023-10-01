@@ -34,7 +34,7 @@ export default function SignIn() {
   return (
     <div className="w-full min-h-screen flex flex-wrap ">
       <div className="bg-[#d9d9d9] flex items-center justify-center w-full md:w-1/2 ">
-        <div className="w-48 lg:w-96 my-8">
+        <div className="w-full px-4 my-2 md:px-0 md:w-48 sm:my-8 lg:w-96">
           <h1 className="text-3xl font-lightbold leading-10 md:text-6xl">
             Acessar o sistema
           </h1>
@@ -44,7 +44,7 @@ export default function SignIn() {
         </div>
       </div>
       <div className="w-full flex flex-col justify-center  items-center pt-4 md:pt-0 md:w-1/2 bg-tertiary">
-        <form className="w-4/6" onSubmit={handleSubmit}>
+        <form className="w-full px-4 sm:w-4/6 sm:px-0" onSubmit={handleSubmit}>
           <h3 className="text-center font-normal mb-5 text-xl md:text-2xl">
             Olá! que bom te ver de novo!
           </h3>

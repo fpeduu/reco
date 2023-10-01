@@ -28,12 +28,12 @@ export default function AgreementsPage() {
 
   const inProgressAgreements = agreements.filter((agreement) => {
     if (!agreement) return;
-    return getStatusStep(agreement.acordo.status) < 6;
+    return getStatusStep(agreement.acordo.status) < 5;
   });
 
   const endedAgreements = agreements.filter((agreement) => {
     if (!agreement) return;
-    return getStatusStep(agreement.acordo.status) === 6;
+    return getStatusStep(agreement.acordo.status) === 5;
   });
 
   return (

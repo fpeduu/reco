@@ -16,6 +16,7 @@ const statusList: { title: StatusType }[] = [
 
 export default function StatusBarBig({ status }: StatusBarBigProps) {
   const step = getStatusStep(status);
+  const isCompleted = step === 5;
 
   return (
     <span className="w-full p-1 flex flex-wrap justify-center mb-10 gap-2
@@ -35,9 +36,9 @@ export default function StatusBarBig({ status }: StatusBarBigProps) {
         />
       ))}
       <StatusBarCheckItem
-        step={6}
-        title={step == 6 ? status : "Acordo aceito"}
-        checkStatus={step === 6 ? "Completo" : "Pendente"}
+        step={5}
+        title={isCompleted ? status : "Acordo aceito"}
+        checkStatus={isCompleted ? "Completo" : "Pendente"}
       />
     </span>
   );

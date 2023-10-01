@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from "react";
 
 import { RegrasProposta } from "@/models/Usuarios";
-import { Acordo } from "@/models/Acordos";
 import { serverURL } from "@/config";
 
 import ModalContent, { INegotiationData } from "./components/Modal-content";
@@ -12,8 +11,12 @@ import { Devedor } from "@/models/Devedores";
 
 interface TenantModalProps {
   open: boolean;
-  debtor: Devedor;
+  debtor: Devedor | null;
   onClose: () => void;
+  onConfirm: (
+    debtor: Devedor,
+    negotiation: INegotiationData,
+  ) => Promise<boolean>;
 }
 
 async function fetchProposalInfos(cpf: string) {
@@ -25,28 +28,12 @@ async function fetchProposalInfos(cpf: string) {
     })) as RegrasProposta | null;
 }
 
-async function createAgreement(
-  cpf: string,
-  entrada: number,
-  valorParcela: number,
-  valorTotal: number,
-  qtdParcelas: number
-) {
-  return (await fetch(`${serverURL}/api/agreements/${cpf}/`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ entrada, valorParcela, valorTotal, qtdParcelas })
-  })
-    .then((response) => response.json())
-    .catch((error) => {
-      console.error(error);
-      return null;
-    })) as Acordo | null;
-}
-
-export default function TenantModal({ open, onClose, debtor }: TenantModalProps) {
+export default function TenantModal({
+  open,
+  debtor,
+  onClose,
+  onConfirm
+}: TenantModalProps) {
   const [confirmed, setConfirmed] = useState<boolean>(false);
   const [negotiation, setNegotiation] = useState<INegotiationData>({
     bestValue: 0,
@@ -57,25 +44,20 @@ export default function TenantModal({ open, onClose, debtor }: TenantModalProps)
     melhorParcela: 0
   });
 
-  async function onConfirm() {
-    createAgreement(
-      debtor.cpf,
-      negotiation.bestValue,
-      negotiation.bestInstallments,
-      debtor.valorDivida,
-      negotiation.melhorParcela as number
-    ).then((data) => {
-      if (data) {
+  async function handleConfirm() {
+    if (!debtor) return;
+    onConfirm(debtor, negotiation).then((isConfirmed) => {
+      if (isConfirmed) {
         setConfirmed(true);
       } else {
         alert("Erro ao criar acordo");
-        console.error(data);
+        console.error(isConfirmed);
       }
-    });
+    })
   }
 
   useEffect(() => {
-    if (open)
+    if (open && debtor)
       fetchProposalInfos(debtor.cpf).then((data) => {
         if (data) {
           const value = debtor.valorDivida;
@@ -98,6 +80,8 @@ export default function TenantModal({ open, onClose, debtor }: TenantModalProps)
         }
       });
   }, [open]);
+
+  if (!debtor) return <></>;
 
   return (
     open && (
@@ -126,7 +110,7 @@ export default function TenantModal({ open, onClose, debtor }: TenantModalProps)
                 <ModalContent
                   debtor={debtor}
                   onClose={onClose}
-                  onConfirm={onConfirm}
+                  onConfirm={handleConfirm}
                   negotiationData={negotiation}
                 />
               )}
