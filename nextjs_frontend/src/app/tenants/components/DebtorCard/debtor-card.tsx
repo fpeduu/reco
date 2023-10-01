@@ -24,12 +24,12 @@ export default function DebtorCard({ tenant }: DebtorCardProps) {
     <>
       <div
         className={`w-full py-4 px-8 flex flex-wrap items-center justify-between rounded-xl shadow bg-white`}>
-        <div className="flex flex-col items-start gap-1 w-2/12">
+        <div className="flex flex-col items-start gap-1  w-full md:w-2/12">
           <span className="font-normal text-xl whitespace-nowrap">{tenant.nome}</span>
         </div>
-        <div className="w-28">
+        <div className="w-28 flex md:block items-center gap-2">
           <p className="font-normal">CPF:</p>
-          <span className="text-xs font-light">{tenant.cpf}</span>
+          <span className="text-xs font-light whitespace-nowrap">{tenant.cpf}</span>
         </div>
         <div className="w-36 pb-1">
           <p className="font-normal">Condomínio:</p>
