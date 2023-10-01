@@ -1,6 +1,6 @@
 .footerSection {
   span {
-    @apply flex flex-col gap-6 text-center md:text-start mt-4 ml-6 md:mt-0;
+    @apply flex flex-col gap-6 text-center md:text-start mt-4 md:ml-6 md:mt-0;
 
     p {
       @apply font-medium text-xl pb-2 border-b border-gray-400;
