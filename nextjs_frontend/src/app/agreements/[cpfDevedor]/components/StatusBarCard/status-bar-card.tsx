@@ -13,10 +13,9 @@ export default function StatusBarCard({ checkStatus }: StatusBarCardProps) {
   return (
     <div
       className={
-        "w-32 -mr-16 whitespace-nowrap py-2 px-4 mb-8 md:mb-0 rounded-md text-sm text-center font-light -translate-x-8 " +
+        "w-32 md:-mr-16 whitespace-nowrap py-2 px-4 mb-8 md:mb-0 rounded-md text-sm text-center font-light self-center md:self-auto md:-translate-x-8 " +
         styles
-      }
-    >
+      }>
       {checkStatus}
     </div>
   );
