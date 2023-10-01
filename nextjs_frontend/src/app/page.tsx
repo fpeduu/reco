@@ -17,7 +17,7 @@ export default function Home() {
     if (session && session.user) {
       router.push("/tenants");
     }
-  }, [session])
+  }, [session]);
 
   return (
     <div className="w-full max-h-fit flex flex-col">
@@ -46,9 +46,9 @@ export default function Home() {
         id="features"
         className="w-full max-h-fit bg-neutral-200 relative"
       >
-        <div className="w-full h-208 absolute right-0 -top-96 lg:bg-[url(/images/grafismo3.svg)] bg-[length:730px_700px] bg-right-top bg-[w-32] bg-no-repeat bg-contain " />
+        <div className="w-full h-208 absolute right-0 -top-96 lg:bg-[url(/images/grafismo3.svg)] lg:bg-[length:730px_700px] bg-right-top bg-[w-32] bg-no-repeat bg-contain " />
         <div className="flex justify-center p-20 mt-24 mb-20">
-          <div className="grid grid-cols-1 lg:grid-cols-2  gap-12 my-10">
+          <div className="flex flex-wrap justify-center  gap-12 my-10">
             <div>
               <Image
                 alt="reco logo"
