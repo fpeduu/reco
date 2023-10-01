@@ -24,17 +24,16 @@ export default function Home() {
       {/* HOME SECTION */}
       <section
         id="home"
-        className="w-full md:h-232 px-10 md:px-60 bg-neutral-950 flex items-center md:bg-origin-content md:bg-[url(/images/some_guy.png)] bg-no-repeat bg-right-top bg-cover "
+        className="w-full md:h-232 px-10 md:px-20 bg-neutral-950 flex items-center lg:bg-origin-content lg:bg-[url(/images/some_guy.png)] bg-no-repeat md:bg-right bg-cover "
       >
         <div className="w-full h-full py-48 text-neutral-200 flex flex-col gap-4 mb-4 items-center lg:items-start">
-          <h1 className="text-7xl font-medium">Boas-vindas à Reco!</h1>
-          <p className="max-w-2xl tracking-wider leading-7 font-extralight">
-            É um prazer te ter conosco! Somos um serviço especializado em
-            intermediar acordos extrajudiciais de cobranças condominiais de
-            forma ágil e eficiente. Nossa plataforma foi projetada para atender
-            às necessidades de administradoras, conselheiros fiscais, síndicos e
-            condôminos, oferecendo uma abordagem inovadora e focada na resolução
-            pacífica de conflitos.
+          <h1 className="text-4xl max-w-xl lg:max-w-2xl md:text-7xl font-medium">
+            A autonomia que sua administradora precisa!
+          </h1>
+          <p className="max-w-xl tracking-wider leading-7 font-extralight text-justify">
+            Potencialize o sucesso e rapidez dos seus acordos de inadimplência!
+            Somos um serviço especializado em intermediar acordos extrajudiciais
+            de cobranças condominiais de forma ágil e eficiente.
           </p>
           <button className="mt-10 bg-primary rounded-full w-[252px] h-12 font-medium">
             Junte-se à Reco
