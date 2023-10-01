@@ -9,7 +9,7 @@ import Devedores from "@/models/Devedores";
 import { DevedorAcordo } from "@/types/acordo.dto";
 
 interface Context {
-  params: { cpfDevedor: string }
+  params: { cpfDevedor: string };
 }
 
 export async function GET(request: NextRequest, context: Context) {
@@ -22,10 +22,12 @@ export async function GET(request: NextRequest, context: Context) {
 
   const { cpfDevedor } = context.params;
   const devedoresAndAcordos: DevedorAcordo[] = await Devedores.aggregate([
-    { $match: {
-      emailAdministrador: session.user?.email,
-      cpf: cpfDevedor
-    } },
+    {
+      $match: {
+        emailAdministrador: session.user?.email,
+        cpf: cpfDevedor,
+      },
+    },
     {
       $lookup: {
         from: "acordos",
@@ -51,7 +53,9 @@ export async function POST(request: NextRequest, context: Context) {
     return NextResponse.redirect("/auth/signin");
   }
 
-  const { entrada, qtdParcelas, valorTotal } = await request.json();
+  const { entrada, qtdParcelas, valorTotal, piorValor, pioresParcelas } =
+    await request.json();
+
   const { cpfDevedor } = context.params;
 
   const acordo: Acordo | null = await Acordos.findOne({ cpfDevedor });
@@ -65,7 +69,11 @@ export async function POST(request: NextRequest, context: Context) {
       valorTotal,
       qtdParcelas,
       usuarioEmail,
-    }
+      valorReserva: {
+        entrada: piorValor,
+        qtdParcelas: pioresParcelas,
+      },
+    };
 
     const acordoCreated = await Acordos.create(newAcordo);
     return NextResponse.json(acordoCreated);
