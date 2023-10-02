@@ -9,14 +9,19 @@ import { ChatProps } from "../../types/views.dto";
 import { IMessage, IProposal } from "../../types/messages.dto";
 import { IUserInput } from "@/components/UserInput/user-input.dto";
 
-import { firstProposal, secondProposal, thirdProposal, lastProposalMessage } from "./utils";
+import {
+  firstProposal,
+  secondProposal,
+  thirdProposal,
+  lastProposalMessage,
+} from "./utils";
 
 import Message from "../Message/message";
 import {
   AcceptProposal,
   ProposalDenied,
   UserInputMessage,
-  WaitForApproval
+  WaitForApproval,
 } from "../Message/messages";
 import UserInput from "@/components/UserInput/user-input";
 
@@ -26,7 +31,7 @@ async function updateProposal(chatID: string, data: Proposta) {
   return (await fetch(`${serverURL}/api/proposal/${chatID}/`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data)
+    body: JSON.stringify(data),
   })
     .then((response) => response.json())
     .catch((error) => {
@@ -39,17 +44,21 @@ export default function Chat({ chatData }: ChatProps) {
   const proposals: IProposal[] = [
     firstProposal(chatData),
     secondProposal(chatData),
-    thirdProposal(chatData)
+    thirdProposal(chatData),
   ];
   const [messages, setMessages] = useState<IMessage[]>([]);
-  const [isWaiting, setIsWaiting] = useState<boolean>(chatData.status === "Aguardando aprovação");
-  const [isDenied, setIsDenied] = useState<boolean>(chatData.status === "Acordo recusado");
+  const [isWaiting, setIsWaiting] = useState<boolean>(
+    chatData.status === "Aguardando aprovação"
+  );
+  const [isDenied, setIsDenied] = useState<boolean>(
+    chatData.status === "Acordo recusado"
+  );
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [showUserInput, setShowUserInput] = useState<boolean>(false);
   const [userProposal, setUserProposal] = useState<IUserInput>({
     installment: 0,
     reason: "",
-    value: 0
+    value: 0,
   });
 
   const lastProposalIdx = chatData.proposals.length - 1;
@@ -57,18 +66,19 @@ export default function Chat({ chatData }: ChatProps) {
     aceito: false,
     entrada: 0,
     qtdParcelas: 0,
-    valorParcela: 0
+    valorParcela: 0,
   };
 
   useEffect(() => {
     const predefinedfunctions = [
       [onConfirmFirstProposal, onDenyFirstProposal],
-      [onConfirmSecondProposal, onDenySecondProposal]
+      [onConfirmSecondProposal, onDenySecondProposal],
     ];
 
     const newMessages: IMessage[] = [];
     const proposalFinished =
-      chatData.status === "Acordo aceito" || chatData.status === "Acordo recusado";
+      chatData.status === "Acordo aceito" ||
+      chatData.status === "Acordo recusado";
     let i = 0;
     do {
       newMessages.push({
@@ -76,22 +86,27 @@ export default function Chat({ chatData }: ChatProps) {
         isBot: true,
         iteractive: lastProposalIdx === i - 1 && !proposalFinished,
         onConfirm: predefinedfunctions[i][0],
-        onDeny: predefinedfunctions[i][1]
+        onDeny: predefinedfunctions[i][1],
       });
       if (i > lastProposalIdx) break;
 
       const wasAccepted = chatData.proposals[i].aceito;
-      const answer = !wasAccepted ? "Recusar acordo" : `Pagar ${proposals[i].confirmMessage}`;
+      const answer = !wasAccepted
+        ? "Recusar acordo"
+        : `Pagar ${proposals[i].confirmMessage}`;
       newMessages.push({ message: answer, isBot: false });
       i++;
-    } while (i < predefinedfunctions.length && (i <= lastProposalIdx || !proposalFinished));
+    } while (
+      i < predefinedfunctions.length &&
+      (i <= lastProposalIdx || !proposalFinished)
+    );
 
     if (lastProposalIdx >= 1 && !chatData.proposals[1].aceito) {
       const thirdProposalData = thirdProposal(chatData);
       newMessages.push({
         message: thirdProposalData.message,
         isBot: true,
-        iteractive: false
+        iteractive: false,
       });
       if (lastProposalIdx === 1) {
         setShowUserInput(true);
@@ -102,7 +117,7 @@ export default function Chat({ chatData }: ChatProps) {
         setUserProposal({
           installment: userProposal.qtdParcelas,
           reason: userProposal.motivo as string,
-          value: userProposal.entrada
+          value: userProposal.entrada,
         });
 
         const canChoose = chatData.proposals.length === lastChooseIdx;
@@ -114,7 +129,7 @@ export default function Chat({ chatData }: ChatProps) {
             isBot: true,
             iteractive: canChoose,
             onConfirm: onConfirmLastProposal,
-            onDeny: onDenyLastProposal
+            onDeny: onDenyLastProposal,
           });
 
           const answer = !lastProposal.aceito
@@ -123,7 +138,7 @@ export default function Chat({ chatData }: ChatProps) {
           if (!canChoose)
             newMessages.push({
               message: answer,
-              isBot: false
+              isBot: false,
             });
         }
       }
@@ -134,13 +149,14 @@ export default function Chat({ chatData }: ChatProps) {
 
   async function onConfirmPredefinedProposal(index: number) {
     setIsLoading(true);
-    const { entrada, qtdParcelas, valorParcela, confirmMessage } = proposals[index];
+    const { entrada, qtdParcelas, valorParcela, confirmMessage } =
+      proposals[index];
     setMessages((prevMessages) => [
       ...prevMessages,
       {
         message: `Pagar ${confirmMessage}`,
-        isBot: false
-      }
+        isBot: false,
+      },
     ]);
 
     await updateProposal(chatData.cpf, {
@@ -148,7 +164,7 @@ export default function Chat({ chatData }: ChatProps) {
       autor: "Bot",
       entrada,
       qtdParcelas,
-      valorParcela
+      valorParcela,
     });
     setIsLoading(false);
     setIsWaiting(true);
@@ -181,7 +197,7 @@ export default function Chat({ chatData }: ChatProps) {
       autor: "Bot",
       entrada,
       qtdParcelas,
-      valorParcela
+      valorParcela,
     });
     setIsLoading(false);
 
@@ -197,8 +213,8 @@ export default function Chat({ chatData }: ChatProps) {
         isBot: true,
         iteractive: autor === "Bot",
         onConfirm: () => onConfirmPredefinedProposal(index + 1),
-        onDeny: () => onDenyPredefinedProposal(index + 1)
-      }
+        onDeny: () => onDenyPredefinedProposal(index + 1),
+      },
     ]);
     if (autor === "User") {
       setShowUserInput(true);
@@ -221,14 +237,15 @@ export default function Chat({ chatData }: ChatProps) {
     setIsLoading(true);
     setUserProposal({ installment, reason, value });
     const canBeAccepted = installment <= chatData.rules.piorParcela;
-    const installmentValue = (chatData.valorDivida - value) / Math.max(installment, 1);
+    const installmentValue =
+      (chatData.valorDivida - value) / Math.max(installment, 1);
     await updateProposal(chatData.cpf, {
       aceito: canBeAccepted,
       autor: "User",
       entrada: value,
       qtdParcelas: installment,
       motivo: reason,
-      valorParcela: installmentValue
+      valorParcela: installmentValue,
     });
     setIsLoading(false);
     setShowUserInput(false);
@@ -246,8 +263,8 @@ export default function Chat({ chatData }: ChatProps) {
           isBot: true,
           iteractive: true,
           onConfirm: onConfirmLastProposal,
-          onDeny: onDenyLastProposal
-        }
+          onDeny: onDenyLastProposal,
+        },
       ]);
     }
   }
@@ -261,10 +278,14 @@ export default function Chat({ chatData }: ChatProps) {
             <Message
               isBot={messageData.isBot}
               iteractive={
-                index === messages.length - 1 && !isWaiting && !isLoading && messageData.iteractive
+                index === messages.length - 1 &&
+                !isWaiting &&
+                !isLoading &&
+                messageData.iteractive
               }
               onConfirm={messageData.onConfirm}
-              onDeny={messageData.onDeny}>
+              onDeny={messageData.onDeny}
+            >
               <span dangerouslySetInnerHTML={{ __html: messageData.message }} />
             </Message>
             {(userProposal.value > 0 || userProposal.installment > 0) &&
@@ -305,12 +326,13 @@ export default function Chat({ chatData }: ChatProps) {
           </Message>
         )}
       </div>
-      {showUserInput &&
+      {showUserInput && (
         <UserInput
           divida={chatData.valorDivida}
           onConfirm={confirmUserInput}
           showReason={true}
-        />}
+        />
+      )}
     </div>
   );
 }

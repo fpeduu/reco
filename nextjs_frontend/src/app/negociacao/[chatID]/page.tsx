@@ -4,6 +4,7 @@ import Chat from "./components/Chat/chat";
 import ChatLoading from "./loading";
 
 import { NegotiationData } from "@/types/negotiation.dto";
+import LoadingBar from "@/components/Loading/loading";
 
 async function fetchChatData(chatID: string) {
   return (await fetch(`${serverURL}/api/proposal/${chatID}/`)
@@ -23,8 +24,8 @@ interface ChatPageProps {
 export default async function ChatPage({ params }: ChatPageProps) {
   const chatData = await fetchChatData(params.chatID);
 
-  if (!chatData || 'error' in chatData) {
-    return <ChatLoading />;
+  if (!chatData || "error" in chatData) {
+    return <LoadingBar />;
   }
 
   return (

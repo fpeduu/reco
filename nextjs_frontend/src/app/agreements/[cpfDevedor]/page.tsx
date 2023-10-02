@@ -12,6 +12,7 @@ import DownloadButton from "./components/DownloadButton/download-button";
 import TenantProfileCard from "./components/TenantProfileCard/tenant-profile-card";
 import AgreementDecision from "./components/AgreementDecision/agreement-decision";
 import HistoryLine from "./components/HistoryLine/history-line";
+import LoadingBar from "@/components/Loading/loading";
 
 async function fetchAgreement(cpfDevedor: string) {
   return (await fetch(`${serverURL}/api/agreements/${cpfDevedor}/`)
@@ -25,9 +26,9 @@ async function fetchAcceptAgreement(cpf: string, newProposal: Proposta) {
   return (await fetch(`${serverURL}/api/proposal/${cpf}/`, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify(newProposal)
+    body: JSON.stringify(newProposal),
   })
     .then((response) => response.json())
     .catch((error) => {
@@ -64,7 +65,10 @@ export default function AgreementStatus({ params }: AgreementStatusProps) {
     lastAgreement.aceito = accept;
 
     setIsLoading(true);
-    const response = await fetchAcceptAgreement(params.cpfDevedor, lastAgreement);
+    const response = await fetchAcceptAgreement(
+      params.cpfDevedor,
+      lastAgreement
+    );
     agreement.acordo.status = response.status;
     setAgreement(agreement);
     setIsLoading(false);
@@ -86,18 +90,22 @@ export default function AgreementStatus({ params }: AgreementStatusProps) {
     setSubpage("details");
   }
 
-  if (!agreement) {
-    return <div>Carregando...</div>;
+  if (!agreement || isLoading) {
+    return <LoadingBar />;
   }
 
   return (
     <div className="containerLayout flex flex-col gap-10">
       <h1 className="text-4xl font-medium">Detalhes da negociação</h1>
-      <div className="flex items-end justify-center gap-5 flex-wrap
-                      lg:flex-nowrap lg:justify-start 2xl:gap-20">
+      <div
+        className="flex items-end justify-center gap-5 flex-wrap
+                      lg:flex-nowrap lg:justify-start 2xl:gap-20"
+      >
         <TenantProfileCard tenant={agreement} />
-        <div className="flex gap-5 flex-wrap flex-1 justify-center
-                        sm:justify-start 2xl:gap-20">
+        <div
+          className="flex gap-5 flex-wrap flex-1 justify-center
+                        sm:justify-start 2xl:gap-20"
+        >
           <CurrencyCard
             icon="/icons/dollar_sign.svg"
             iconSize={34}
@@ -117,7 +125,10 @@ export default function AgreementStatus({ params }: AgreementStatusProps) {
               agreement.acordo.qtdParcelas > 1
                 ? `${agreement.acordo.qtdParcelas} parcelas`
                 : `${agreement.acordo.qtdParcelas} parcela`
-            } de ${installmentValue.toLocaleString("pt-br", { style: "currency", currency: "BRL" })}`}
+            } de ${installmentValue.toLocaleString("pt-br", {
+              style: "currency",
+              currency: "BRL",
+            })}`}
           />
         </div>
       </div>
@@ -131,7 +142,8 @@ export default function AgreementStatus({ params }: AgreementStatusProps) {
               (subpage === "timeline"
                 ? "text-red-600 border-b-red-600"
                 : "text-slate-500 border-b-slate-300")
-            }>
+            }
+          >
             Linha do Tempo
           </button>
           <button
@@ -141,7 +153,8 @@ export default function AgreementStatus({ params }: AgreementStatusProps) {
               (subpage === "details"
                 ? "text-red-600 border-b-red-600"
                 : "text-slate-500 border-b-slate-300")
-            }>
+            }
+          >
             Detalhes
           </button>
         </nav>
