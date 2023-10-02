@@ -12,10 +12,11 @@ export default function DebtorCard({ tenant, openModal }: DebtorCardProps) {
 
   return (
     <div
-      className={`w-full py-4 px-8 flex flex-wrap items-center justify-between rounded-xl shadow bg-white`}
-    >
+      className="w-full py-4 px-8 flex flex-wrap items-center justify-between
+                 rounded-xl shadow bg-white">
       <div className="flex flex-col items-start gap-1  w-full md:w-2/12">
-        <span className="font-normal text-xl w-full whitespace-nowrap overflow-hidden text-ellipsis ">
+        <span className="font-normal text-xl w-full whitespace-nowrap
+                         overflow-hidden text-ellipsis ">
           {tenant.nome}
         </span>
       </div>

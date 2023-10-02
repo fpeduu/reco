@@ -31,13 +31,14 @@ export async function GET(request: NextRequest, context: Context) {
     });
   }
 
+  const lastOne = userInfos.regrasProposta.length - 1;
+  let lastRule = userInfos.regrasProposta[lastOne];
   for (const rule of userInfos.regrasProposta) {
-    if (rule.mesesAtraso === devedor.mensalidadesAtrasadas) {
-      return NextResponse.json(rule);
+    if (devedor.mensalidadesAtrasadas <= rule.mesesAtraso)  {
+      lastRule = rule;
+      break;
     }
   }
-  const lastOne = userInfos.regrasProposta.length - 1;
-  const lastRule = userInfos.regrasProposta[lastOne];
 
   return NextResponse.json(lastRule);
 }

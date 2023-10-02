@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Styles from "./dropdown.module.scss";
+import Image from "next/image";
 
 interface DropDownProps {
   title: string;
@@ -27,14 +28,12 @@ export default function DropDown({ title, options, onChange }: DropDownProps) {
                     focus:outline-none focus:ring-2 focus:ring-offset-2
                     focus:ring-offset-white focus:white transition-all text-sm">
         {selectedOption === "Todos" ? title : selectedOption}
-        <svg
-          width="14"
-          height="11"
-          viewBox="0 0 14 11"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg">
-          <path d="M7 10.5L0.937822 -1.88258e-07L13.0622 8.71687e-07L7 10.5Z" fill="white" />
-        </svg>
+        <Image
+          src="/icons/arrow-down.svg"
+          alt="arrow-down"
+          width={16}
+          height={16}
+        />
       </button>
 
       <div

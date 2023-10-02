@@ -24,8 +24,6 @@ export default function AddTenantModal({ onClose }: AddTenantModalProps) {
       body: JSON.stringify(form)
     });
 
-    console.log(response);
-
     if (response.ok) {
       onClose();
     }

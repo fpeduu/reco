@@ -10,8 +10,8 @@ async function fetchChatData(chatID: string) {
     .then((response) => response.json())
     .catch((error) => {
       console.error(error);
-      return null
-    }) as NegotiationData;
+      return { error: true }
+    }) as NegotiationData | { error: true };
 }
 
 interface ChatPageProps {
@@ -24,8 +24,8 @@ interface ChatPageProps {
 export default async function ChatPage({ params }: ChatPageProps) {
   const chatData = await fetchChatData(params.chatID);
 
-  if (!chatData) {
-    return <ChatLoading />
+  if (!chatData || 'error' in chatData) {
+    return <ChatLoading />;
   }
 
   return (

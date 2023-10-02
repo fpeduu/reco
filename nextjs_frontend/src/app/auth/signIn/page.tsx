@@ -50,7 +50,7 @@ export default function SignIn() {
       <div className="w-full flex flex-col justify-center  items-center pt-4 md:pt-0 md:w-1/2 bg-tertiary">
         <form className="w-full px-4 sm:w-4/6 sm:px-0" onSubmit={handleSubmit}>
           <h3 className="text-center font-normal mb-5 text-xl md:text-2xl">
-            Olá! que bom te ver de novo!
+            Boas-vindas! Entre na sua conta.
           </h3>
 
           {error && (
