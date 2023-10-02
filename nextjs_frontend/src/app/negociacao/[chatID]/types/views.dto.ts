@@ -15,14 +15,3 @@ export interface AcceptProposalProps {
   debit: number;
   installment: number;
 }
-
-export interface UserInputMessageProps {
-  value: number,
-  reason: string,
-  installment: number,
-}
-
-export interface UserInputProps {
-  divida: number,
-  onConfirm: (userInput: UserInputMessageProps) => void;
-}

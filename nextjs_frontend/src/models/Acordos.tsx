@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { RegrasProposta } from "./Usuarios";
 
 export type StatusType =
   | "Aguardando inadimplente"
@@ -30,11 +31,8 @@ export interface Acordo {
   entrada: number;
   valorTotal: number;
   qtdParcelas: number;
-  valorReserva: {
-    entrada: number;
-    qtdParcelas: number;
-  };
   historicoValores: Proposta[];
+  regraProposta: RegrasProposta;
 }
 
 const AcordoSchema = new mongoose.Schema({
@@ -54,9 +52,18 @@ const AcordoSchema = new mongoose.Schema({
   entrada: Number,
   valorTotal: Number,
   qtdParcelas: Number,
-  valorReserva: {
-    entrada: Number,
-    qtdParcelas: Number,
+  regraProposta: {
+    mesesAtraso: Number,
+    melhorEntrada: {
+      type: Number,
+      default: 0,
+    },
+    melhorParcela: Number,
+    piorParcela: Number,
+    piorEntrada: {
+      type: Number,
+      default: 0
+    },
   },
   historicoValores: [
     {

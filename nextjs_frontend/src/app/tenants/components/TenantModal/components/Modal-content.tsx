@@ -1,13 +1,14 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import ModalInformation from "./Modal-information";
 import { Devedor } from "@/models/Devedores";
+import { RegrasProposta } from "@/models/Usuarios";
+import UserInput from "@/components/UserInput/user-input";
+import { IUserInput } from "@/components/UserInput/user-input.dto";
 
-export interface INegotiationData {
-  melhorParcela?: number;
-  piorParcela?: number;
+export interface INegotiationData extends RegrasProposta {
   bestValue: number;
   worstValue: number;
   bestInstallments: number;
@@ -15,64 +16,76 @@ export interface INegotiationData {
 }
 
 interface ModalContentProps {
+  rules: RegrasProposta;
   debtor: Devedor;
   onClose: () => void;
-  onConfirm: () => void;
-  negotiationData: INegotiationData;
-  setNegotiationData: (data: INegotiationData) => void;
+  onConfirm: (data: INegotiationData) => void;
+  setRules: (data: RegrasProposta) => void;
 }
 
 export default function ModalContent({
-  onClose,
-  onConfirm,
-  negotiationData,
-  debtor,
-  setNegotiationData,
+  rules, debtor,
+  onClose, onConfirm, setRules,
 }: ModalContentProps) {
-  const {
-    melhorParcela,
-    bestValue,
-    bestInstallments,
-    piorParcela,
-    worstInstallments,
-    worstValue,
-  } = negotiationData;
+  const [negotiation, setNegotiation] = useState<INegotiationData>();
+  const [showEditor, setShowEditor] = useState<boolean>(false);
 
-  const setWorstValues = (newValue: number, newParcela: number) => {
-    const totalValue =
-      bestValue + (melhorParcela ? melhorParcela * bestInstallments : 0);
+  function initializeValues(rules: RegrasProposta) {
+    if (!rules) return;
 
-    if (newValue > totalValue) {
-      alert(
-        "A entrada é maior que o valor total da dívida. Por favor, insira um valor menor."
-      );
-
-      return false;
+    const {
+      melhorEntrada,
+      piorEntrada,
+      melhorParcela,
+      piorParcela
+    } = rules;
+    const value = debtor.valorDivida;
+    let bestValue = 0, worstValue = 0;
+    if (melhorEntrada) {
+      bestValue = melhorEntrada * value;
     }
-
-    if (newValue === totalValue && newParcela > 0) {
-      alert(
-        "A entrada é igual ao valor total da dívida. Por favor, insira um valor menor ou coloque o número de parcelas como zero."
-      );
-      return false;
+    if (piorEntrada) {
+      worstValue = piorEntrada * value;
     }
+    const bestInstallments = (value - bestValue)
+                    / Math.max(melhorParcela, 1);
+    const worstInstallments = (value - worstValue)
+                    / Math.max(piorParcela, 1);
 
-    if (newValue < totalValue && newParcela === 0) {
-      alert(
-        "A entrada é menor que o valor total da dívida. Por favor, insira um valor maior ou coloque o número de parcelas como maior que zero."
-      );
-      return false;
-    }
+    setNegotiation({
+      mesesAtraso: debtor.mensalidadesAtrasadas,
+      melhorEntrada,
+      melhorParcela,
+      piorEntrada,
+      piorParcela,
 
-    setNegotiationData({
-      ...negotiationData,
-      worstValue: newValue,
-      worstInstallments: (totalValue - newValue) / newParcela,
-      piorParcela: newParcela,
+      bestValue,
+      worstValue,
+      bestInstallments,
+      worstInstallments,
+    });
+  }
+
+  useEffect(() => {
+    initializeValues(rules);
+  }, [rules])
+
+  async function confirmUserInput({ installment, value }: IUserInput) {
+    setRules({
+      ...rules,
+      piorEntrada: value / debtor.valorDivida,
+      piorParcela: installment,
     });
 
-    return true;
+    setShowEditor(false);
   };
+
+  function onHandleConfirm() {
+    if (!negotiation) return;
+    onConfirm(negotiation);
+  }
+
+  if (!rules || !negotiation) return <> Carregando... </>;
 
   return (
     <div className="bg-white pt-16 md:p-16 flex justify-center">
@@ -115,28 +128,31 @@ export default function ModalContent({
           <div className="gap-2 flex flex-wrap lg:flex-nowrap items-center w-full">
             <ModalInformation
               title="Melhor proposta"
-              value={bestValue}
-              installments={melhorParcela}
-              installmentValue={bestInstallments}
+              value={negotiation.bestValue}
+              installments={negotiation.melhorParcela}
+              installmentValue={negotiation.bestInstallments}
             />
             <ModalInformation
-              title="Valor reserva"
-              value={worstValue}
-              installments={piorParcela}
-              installmentValue={worstInstallments}
-              editable
-              setValues={setWorstValues}
+              showEdit={!showEditor}
+              title="Valor de reserva"
+              value={negotiation.worstValue}
+              onEdit={() => setShowEditor(true)}
+              installments={negotiation.piorParcela}
+              installmentValue={negotiation.worstInstallments}
             />
           </div>
         </div>
+        {showEditor ? 
+        <UserInput
+          showReason={false}
+          divida={debtor.valorDivida}
+          onConfirm={confirmUserInput}
+          confirmText="Alterar proposta"
+          title="Edite o valor de reserva"
+          onCancel={() => setShowEditor(false)}
+          containerStyles="md:w-full rounded-md"
+        />:
         <div className="flex flex-row justify-center place-items-center gap-5 w-full">
-          <button
-            onClick={onConfirm}
-            className="md:w-1/2 py-3 px-2 rounded-full text-tertiary
-              md:text-lg font-medium text-center bg-secondary"
-          >
-            Confirmar
-          </button>
           <button
             onClick={onClose}
             className="md:w-1/2 py-3 px-2 rounded-full text-tertiary
@@ -144,7 +160,14 @@ export default function ModalContent({
           >
             Cancelar
           </button>
-        </div>
+          <button
+            onClick={onHandleConfirm}
+            className="md:w-1/2 py-3 px-2 rounded-full text-tertiary
+              md:text-lg font-medium text-center bg-secondary"
+          >
+            Confirmar
+          </button>
+        </div>}
       </div>
     </div>
   );

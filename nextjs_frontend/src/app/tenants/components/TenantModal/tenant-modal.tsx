@@ -34,22 +34,15 @@ export default function TenantModal({
   onClose,
   onConfirm,
 }: TenantModalProps) {
+  const [rules, setRules] = useState<RegrasProposta>();
   const [confirmed, setConfirmed] = useState<boolean>(false);
-  const [negotiation, setNegotiation] = useState<INegotiationData>({
-    bestValue: 0,
-    worstValue: 0,
-    bestInstallments: 0,
-    worstInstallments: 0,
-    piorParcela: 0,
-    melhorParcela: 0,
-  });
 
-  const close = () => {
+  function handleClose() {
     setConfirmed(false);
     onClose();
   };
 
-  async function handleConfirm() {
+  async function handleConfirm(negotiation: INegotiationData) {
     if (!debtor) return;
     onConfirm(debtor, negotiation).then((isConfirmed) => {
       if (isConfirmed) {
@@ -64,25 +57,7 @@ export default function TenantModal({
   useEffect(() => {
     if (open && debtor)
       fetchProposalInfos(debtor.cpf).then((data) => {
-        if (data) {
-          const value = debtor.valorDivida;
-          let bestValue = 0,
-            worstValue = 0;
-          if (data.melhorEntrada) {
-            bestValue = data.melhorEntrada * value;
-          }
-          if (data.piorEntrada) {
-            worstValue = data.piorEntrada * value;
-          }
-          setNegotiation({
-            bestValue,
-            worstValue,
-            piorParcela: data.piorParcela,
-            melhorParcela: data.melhorParcela,
-            bestInstallments: (value - bestValue) / data.melhorParcela,
-            worstInstallments: (value - worstValue) / data.piorParcela,
-          });
-        }
+        if (data) setRules(data);
       });
   }, [open]);
 
@@ -112,7 +87,7 @@ export default function TenantModal({
                           sm:w-full sm:max-w-4xl"
             >
               <button
-                onClick={close}
+                onClick={handleClose}
                 className="absolute sm:top-10 right-8 sm:right-14 text-5xl h-0
                         text-gray-500 hover:text-gray-700"
               >
@@ -122,11 +97,11 @@ export default function TenantModal({
                 <Confirmation cpfDevedor={debtor.cpf} />
               ) : (
                 <ModalContent
+                  rules={rules!}
                   debtor={debtor}
-                  onClose={close}
+                  setRules={setRules}
+                  onClose={handleClose}
                   onConfirm={handleConfirm}
-                  negotiationData={negotiation}
-                  setNegotiationData={setNegotiation}
                 />
               )}
             </div>

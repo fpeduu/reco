@@ -53,8 +53,11 @@ export async function POST(request: NextRequest, context: Context) {
     return NextResponse.redirect("/auth/signin");
   }
 
-  const { entrada, qtdParcelas, valorTotal, piorValor, pioresParcelas } =
-    await request.json();
+  const {
+    valorTotal, mesesAtraso, melhorEntrada,
+    melhorParcela, piorEntrada, piorParcela,
+    valorEntrada,
+  } = await request.json();
 
   const { cpfDevedor } = context.params;
 
@@ -63,15 +66,18 @@ export async function POST(request: NextRequest, context: Context) {
     const usuarioEmail = session.user?.email as string;
     const newAcordo: Acordo = {
       status: "Aguardando inadimplente",
+      qtdParcelas: melhorParcela,
+      entrada: valorEntrada,
       historicoValores: [],
       cpfDevedor,
-      entrada,
       valorTotal,
-      qtdParcelas,
       usuarioEmail,
-      valorReserva: {
-        entrada: piorValor,
-        qtdParcelas: pioresParcelas,
+      regraProposta: {
+        melhorEntrada,
+        melhorParcela,
+        mesesAtraso,
+        piorEntrada,
+        piorParcela,
       },
     };
 

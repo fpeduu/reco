@@ -23,12 +23,13 @@ async function fetchTenants() {
 
 async function createAgreement(
   cpf: string,
-  entrada: number,
-  valorParcela: number,
   valorTotal: number,
-  qtdParcelas: number,
-  piorValor: number,
-  pioresParcelas: number
+  mesesAtraso: number,
+  melhorEntrada: number,
+  melhorParcela: number,
+  piorEntrada: number,
+  piorParcela: number,
+  valorEntrada: number,
 ) {
   return (await fetch(`${serverURL}/api/agreements/${cpf}/`, {
     method: "POST",
@@ -36,12 +37,9 @@ async function createAgreement(
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      entrada,
-      valorParcela,
-      valorTotal,
-      qtdParcelas,
-      piorValor,
-      pioresParcelas,
+      valorTotal, mesesAtraso, melhorEntrada,
+      melhorParcela, piorEntrada, piorParcela,
+      valorEntrada,
     }),
   })
     .then((response) => response.json())
@@ -70,15 +68,15 @@ export default function AgreementsPage() {
     debtor: Devedor,
     negotiation: INegotiationData
   ) {
-    console.log(negotiation);
     return createAgreement(
       debtor.cpf,
-      negotiation.bestValue,
-      negotiation.bestInstallments,
       debtor.valorDivida,
-      negotiation.melhorParcela as number,
-      negotiation.worstValue,
-      negotiation.worstInstallments
+      debtor.mensalidadesAtrasadas,
+      negotiation.melhorEntrada,
+      negotiation.melhorParcela,
+      negotiation.piorEntrada,
+      negotiation.piorParcela,
+      negotiation.bestValue,
     ).then((agreement) => {
       if (agreement) {
         setTenants((tenants) =>

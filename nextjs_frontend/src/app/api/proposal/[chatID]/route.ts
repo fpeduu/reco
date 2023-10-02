@@ -6,10 +6,14 @@ import { revalidatePath } from "next/cache";
 
 import Acordos, { Acordo, Proposta, StatusType } from "@/models/Acordos";
 import Devedores, { Devedor } from "@/models/Devedores";
-import Usuarios, { Usuario } from "@/models/Usuarios";
+import { Usuario } from "@/models/Usuarios";
 import { NegotiationData } from "@/types/negotiation.dto";
 import { notificate } from "./notification";
 
+interface AggregatedDebtor extends Devedor {
+  administrador: Usuario;
+  acordo: Acordo;
+}
 
 interface Context {
   params: { chatID: string }
@@ -19,43 +23,32 @@ export async function GET(request: NextRequest, context: Context) {
   connectToDatabase();
 
   const cpfDevedor = context.params.chatID;
-  const devedor: Devedor | null = await Devedores.findOne({
-    cpf: cpfDevedor,
-  });
-  if (!devedor) {
-    return NextResponse.json({
-      "error": "No debtor found"
-    });
+  const debtors: AggregatedDebtor[] = await Devedores.aggregate([
+    { $match: { cpf: cpfDevedor } },
+    {
+      $lookup: {
+        from: "usuarios",
+        localField: "emailAdministrador",
+        foreignField: "email",
+        as: "administrador",
+      },
+    },
+    {
+      $lookup: {
+        from: "acordos",
+        localField: "cpf",
+        foreignField: "cpfDevedor",
+        as: "acordo",
+      },
+    },
+    { $unwind: { path: "$administrador" } },
+    { $unwind: { path: "$acordo" } },
+  ]);
+  if (debtors.length === 0) {
+    return NextResponse.json({ "error": "No debtors found" });
   }
 
-  const emailAdministrador = devedor?.emailAdministrador;
-  const userInfos: Usuario | null = await Usuarios.findOne({
-    email: emailAdministrador
-  });
-  if (!userInfos) {
-    return NextResponse.json({
-      "error": "No user found"
-    });
-  }
-
-  const lastOne = userInfos.regrasProposta.length - 1;
-  let lastRule = userInfos.regrasProposta[lastOne];
-  for (const rule of userInfos.regrasProposta) {
-    if (devedor.mensalidadesAtrasadas <= rule.mesesAtraso)  {
-      lastRule = rule;
-      break;
-    }
-  }
-
-  const proposal: Acordo | null = await Acordos.findOne({
-    cpfDevedor
-  });
-  if (!proposal) {
-    return NextResponse.json({
-      "error": "No proposal found"
-    });
-  }
-
+  const devedor: AggregatedDebtor = debtors[0];
   const response: NegotiationData = {
     cpf: devedor.cpf,
     nome: devedor.nome,
@@ -63,10 +56,10 @@ export async function GET(request: NextRequest, context: Context) {
     nomeCondominio: devedor.nomeCondominio,
     emailAdministrador: devedor.emailAdministrador,
     mensalidadesAtrasadas: devedor.mensalidadesAtrasadas,
-    proposals: proposal.historicoValores,
-    contact: userInfos.contact,
-    status: proposal.status,
-    rules: lastRule,
+    proposals: devedor.acordo.historicoValores,
+    contact: devedor.administrador.contact,
+    rules: devedor.acordo.regraProposta,
+    status: devedor.acordo.status,
   };
 
   return NextResponse.json(response);

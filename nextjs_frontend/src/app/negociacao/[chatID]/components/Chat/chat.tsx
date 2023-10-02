@@ -4,8 +4,11 @@ import { serverURL } from "@/config";
 import { useEffect, useState } from "react";
 
 import { Acordo, Proposta } from "@/models/Acordos";
+
 import { ChatProps } from "../../types/views.dto";
-import { IMessage, IUserInput, IProposal } from "../../types/messages.dto";
+import { IMessage, IProposal } from "../../types/messages.dto";
+import { IUserInput } from "@/components/UserInput/user-input.dto";
+
 import { firstProposal, secondProposal, thirdProposal, lastProposalMessage } from "./utils";
 
 import Message from "../Message/message";
@@ -15,7 +18,7 @@ import {
   UserInputMessage,
   WaitForApproval
 } from "../Message/messages";
-import UserInput from "../UserInput/user-input";
+import UserInput from "@/components/UserInput/user-input";
 
 import Styles from "./chat.module.scss";
 
@@ -267,7 +270,8 @@ export default function Chat({ chatData }: ChatProps) {
             </Message>
             {(userProposal.value > 0 || userProposal.installment > 0) &&
               index === userInputMessageIndex && (
-                <Message isBot={false} iteractive={false}>
+                <Message isBot={false} iteractive={false}
+                  key={userProposal.reason}>
                   <UserInputMessage
                     value={userProposal.value}
                     reason={userProposal.reason}
@@ -303,7 +307,12 @@ export default function Chat({ chatData }: ChatProps) {
           </Message>
         )}
       </div>
-      {showUserInput && <UserInput divida={chatData.valorDivida} onConfirm={confirmUserInput} />}
+      {showUserInput &&
+        <UserInput
+          divida={chatData.valorDivida}
+          onConfirm={confirmUserInput}
+          showReason={true}
+        />}
     </div>
   );
 }

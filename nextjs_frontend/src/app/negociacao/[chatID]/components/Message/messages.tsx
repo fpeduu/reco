@@ -1,8 +1,8 @@
 import {
   AcceptProposalProps,
   GenericMessageProps,
-  UserInputMessageProps
 } from "../../types/views.dto"
+import { UserInputMessageProps } from "@/components/UserInput/user-input.dto"
 
 export function AcceptProposal({
   author, value, debit, installment
