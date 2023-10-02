@@ -94,17 +94,18 @@ export default function TenantModal({
               >
                 &times;
               </button>
-              {confirmed ? (
-                <Confirmation cpfDevedor={debtor.cpf} />
-              ) : (
-                <ModalContent
-                  rules={rules!}
-                  debtor={debtor}
-                  setRules={setRules}
-                  onClose={handleClose}
-                  onConfirm={handleConfirm}
-                />
-              )}
+
+              {confirmed
+                ? debtor && <Confirmation cpfDevedor={debtor.cpf} />
+                : debtor && (
+                    <ModalContent
+                      rules={rules!}
+                      debtor={debtor}
+                      setRules={setRules}
+                      onClose={handleClose}
+                      onConfirm={handleConfirm}
+                    />
+                  )}
             </div>
           </div>
         </div>
