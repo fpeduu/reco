@@ -1,7 +1,7 @@
 interface PricingCardProps {
   title: string;
   value: number;
-  dailyAgreements: number;
+  dailyAgreements: number | string;
 }
 
 export default function PricingCard({
@@ -16,10 +16,10 @@ export default function PricingCard({
         <h3 className="font-medium text-xl text-center">
           R$
           <span className="text-5xl">{value.toFixed(2).replace(".", ",")}</span>
-          <p>/ mês</p>
+          <p>condomínio/mês</p>
         </h3>
         <span className="text-lg font-light">
-          {dailyAgreements} acordos diários
+          até {dailyAgreements} acordos mensais
         </span>
         <button className="w-40 h-11 bg-primary flex items-center justify-center rounded-full text-lg">
           Começar
