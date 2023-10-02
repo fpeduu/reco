@@ -122,19 +122,21 @@ export default function TenantList({
 
   return (
     <div className="flex flex-col items-center justify-between gap-3">
-      <Search onSearch={handleSearch} />
-      <div className="flex justify-end items-center w-full gap-5">
-        <span className=" text-sm font-light">Filtrar por:</span>
-        <Dropdown
-          title="Condomínio"
-          options={condomiunsList}
-          onChange={handleFilterChange}
-        />
-        <Dropdown
-          title="Atraso"
-          options={monthsLateList}
-          onChange={handleFilterChange}
-        />
+      <div className="flex flex-wrap w-full gap-4 md:gap-8 mb-6 md:flex-nowrap">
+        <Search onSearch={handleSearch} />
+        <div className="flex justify-end items-center w-fit gap-5">
+          <span className=" text-sm font-light">Filtrar por:</span>
+          <Dropdown
+            title="Condomínio"
+            options={condomiunsList}
+            onChange={handleFilterChange}
+          />
+          <Dropdown
+            title="Atraso"
+            options={monthsLateList}
+            onChange={handleFilterChange}
+          />
+        </div>
       </div>
       {handlePagination().map((tenant) => (
         <DebtorCard key={tenant.cpf} tenant={tenant} openModal={openModal} />
