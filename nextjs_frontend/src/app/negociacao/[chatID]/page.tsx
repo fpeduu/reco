@@ -10,8 +10,8 @@ async function fetchChatData(chatID: string) {
     .then((response) => response.json())
     .catch((error) => {
       console.error(error);
-      return { error: true }
-    }) as NegotiationData | { error: true };
+      return { error: true };
+    })) as NegotiationData | { error: true };
 }
 
 interface ChatPageProps {
