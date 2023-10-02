@@ -47,7 +47,11 @@ async function generateAgreement(devedor: DevedorAcordo) {
   });
   const debitMonths = ["01/01/2021", "01/02/2021", "01/03/2021"];
   const debitMonthsString = debitMonths.join(", ");
-  const debitMonth = (totalDebit / acordo.qtdParcelas).toLocaleString("pt-br", {
+  const firstValue = acordo.entrada.toLocaleString("pt-br", {
+    style: "currency",
+    currency: "BRL"
+  });
+  const debitMonth = ((totalDebit - acordo.entrada)/ acordo.qtdParcelas).toLocaleString("pt-br", {
     style: "currency",
     currency: "BRL"
   });
@@ -62,7 +66,7 @@ CLÁUSULAS E CONDIÇÕES:
 
 1. O(A) DEVEDOR(A) declara e confessa a dívida de ${totalDebitString} referente as cotas condominiais vencidas nas seguintes datas: ${debitMonthsString}, com o acréscimo das multas, juros de mora, calculados até a presente data, conforme planilha em anexo.
 
-2. No intuito de viabilizar a regularização do pagamento das cotas condominiais, o CREDOR receberá do(a) DEVEDOR(A), a sobredita importância em ${acordo.qtdParcelas} parcelas mensais sucessivas de ${debitMonth}, vencendo-se a primeira no dia ${firstPaymentDay} e a última em ${lastPaymentDay}, cujos pagamentos deverão ser realizados através de boletos bancários a serem emitidos pelo condomínio ou sua administradora.
+2. No intuito de viabilizar a regularização do pagamento das cotas condominiais, o CREDOR receberá do(a) DEVEDOR(A), a sobredita importância de ${firstValue} de entrada e ${acordo.qtdParcelas} parcelas mensais sucessivas de ${debitMonth}, vencendo-se a primeira no dia ${firstPaymentDay} e a última em ${lastPaymentDay}, cujos pagamentos deverão ser realizados através de boletos bancários a serem emitidos pelo condomínio ou sua administradora.
 
 3. O presente acordo não implica novação da dívida, mas tão somente numa liberalidade do CREDOR na forma de recebimento de seu crédito.
 

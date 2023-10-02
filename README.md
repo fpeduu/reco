@@ -19,16 +19,7 @@ Clone ou faça o download do repositório, e siga os passos abaixo:
 - MONGODB_URI: URI de conexão com o MongoDB
 - NEXTAUTH_SECRET: Secret do NextAuth, hash de 32 dígitos, para uso da biblioteca "next-auth"
 - NEXTAUTH_URL: URL do NextAuth (usualmente, https://localhost:3000/api/auth)
-- BACKEND_SERVER_URL: URL do servidor (usualmente, https://localhost:8080)
-
-#### Backend
-- MONGODB_URI: URI de conexão com o MongoDB
-
-#### Bot do Telegram
-- TELEGRAM_BOT_TOKEN: Token do bot do Telegram, para envio de mensagens
-- SERVER_URL: URL do servidor (usualmente, https://localhost:8000)
-- SITE_URL: URL do site (usualmente, https://localhost:3000)
-- WEBHOOK_URL: URL do webhook (por exemplo o link do Heroku)
+- NEXT_PUBLIC_BACKEND_URL: URL do servidor (usualmente, https://localhost:8080)
 
 #### As adicionando ao projeto:
 
@@ -57,20 +48,9 @@ $ yarn dev
 
 ```bash
 # Acesse a pasta do backend
-$ cd fastapi_backend
+$ cd python_backend
 # Instale as dependências
 $ pip install -r requirements.txt
 # Rode o projeto
 $ uvicorn main:app --reload
-```
-
-### Bot do Telegram
-
-```bash
-# Acesse a pasta do bot
-$ cd telegram_bot
-# Instale as dependências
-$ pip install -r requirements.txt
-# Rode o projeto
-$ uvicorn main:bot --reload --port=5000
 ```

@@ -257,9 +257,8 @@ export default function Chat({ chatData }: ChatProps) {
     <div className={Styles.chat}>
       <div className="overflow-y-scroll flex-1">
         {messages.map((messageData, index) => (
-          <>
+          <span key={index}>
             <Message
-              key={index}
               isBot={messageData.isBot}
               iteractive={
                 index === messages.length - 1 && !isWaiting && !isLoading && messageData.iteractive
@@ -270,8 +269,7 @@ export default function Chat({ chatData }: ChatProps) {
             </Message>
             {(userProposal.value > 0 || userProposal.installment > 0) &&
               index === userInputMessageIndex && (
-                <Message isBot={false} iteractive={false}
-                  key={userProposal.reason}>
+                <Message isBot={false} iteractive={false}>
                   <UserInputMessage
                     value={userProposal.value}
                     reason={userProposal.reason}
@@ -279,7 +277,7 @@ export default function Chat({ chatData }: ChatProps) {
                   />
                 </Message>
               )}
-          </>
+          </span>
         ))}
         {isWaiting && (
           <Message isBot={true} iteractive={false}>
