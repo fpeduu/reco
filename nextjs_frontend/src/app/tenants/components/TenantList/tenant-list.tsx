@@ -13,9 +13,11 @@ import {
 } from "@/services/tableUtils";
 import { INegotiationData } from "../TenantModal/components/Modal-content";
 import TenantModal from "../TenantModal/tenant-modal";
+import LoadingBar from "@/components/Loading/loading";
 
 interface TenantListProps {
   tenants: Devedor[];
+  loading: boolean;
   onCreateAgreement: (
     debtor: Devedor,
     negotiation: INegotiationData
@@ -26,6 +28,7 @@ const tenantsPerPage = 7;
 
 export default function TenantList({
   tenants,
+  loading,
   onCreateAgreement,
 }: TenantListProps) {
   const [filteredTenants, setFilteredTenants] = useState<Devedor[]>(tenants);
@@ -138,9 +141,15 @@ export default function TenantList({
           />
         </div>
       </div>
-      {handlePagination().map((tenant) => (
-        <DebtorCard key={tenant.cpf} tenant={tenant} openModal={openModal} />
-      ))}
+      {loading ? (
+        <LoadingBar />
+      ) : filteredTenants.length === 0 ? (
+        "Sem nenhum devedor registrado. Clique em Adicionar ou Importar para adicionar"
+      ) : (
+        handlePagination().map((tenant) => (
+          <DebtorCard key={tenant.cpf} tenant={tenant} openModal={openModal} />
+        ))
+      )}
       <Paginator
         currentPage={page}
         onPageChange={setPage}

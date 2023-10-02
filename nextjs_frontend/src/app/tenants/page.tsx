@@ -29,7 +29,7 @@ async function createAgreement(
   melhorParcela: number,
   piorEntrada: number,
   piorParcela: number,
-  valorEntrada: number,
+  valorEntrada: number
 ) {
   return (await fetch(`${serverURL}/api/agreements/${cpf}/`, {
     method: "POST",
@@ -37,8 +37,12 @@ async function createAgreement(
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      valorTotal, mesesAtraso, melhorEntrada,
-      melhorParcela, piorEntrada, piorParcela,
+      valorTotal,
+      mesesAtraso,
+      melhorEntrada,
+      melhorParcela,
+      piorEntrada,
+      piorParcela,
       valorEntrada,
     }),
   })
@@ -52,16 +56,19 @@ async function createAgreement(
 export default function AgreementsPage() {
   const { data: session } = useSession({ required: true });
   const [tenants, setTenants] = useState<Devedor[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
   const [addingTenant, setAddingTenant] = useState<boolean>(false);
   const [importingTenant, setImportingTenant] = useState<boolean>(false);
 
   useEffect(() => {
+    setLoading(true);
     async function getTenants() {
       const tenants = await fetchTenants();
       setTenants(tenants);
     }
 
     getTenants();
+    setLoading(false);
   }, [addingTenant, importingTenant]);
 
   async function onCreateAgreement(
@@ -76,7 +83,7 @@ export default function AgreementsPage() {
       negotiation.melhorParcela,
       negotiation.piorEntrada,
       negotiation.piorParcela,
-      negotiation.bestValue,
+      negotiation.bestValue
     ).then((agreement) => {
       if (agreement) {
         setTenants((tenants) =>
@@ -118,7 +125,11 @@ export default function AgreementsPage() {
         <ImportTenantModal onClose={() => setImportingTenant(false)} />
       )}
 
-      <TenantList tenants={tenants} onCreateAgreement={onCreateAgreement} />
+      <TenantList
+        tenants={tenants}
+        loading={loading}
+        onCreateAgreement={onCreateAgreement}
+      />
       <span className="hidden">
         {/* Sem isso não renderiza as cores */}
         <span className="w-5 h-5 rounded-full bg-status-0" />
