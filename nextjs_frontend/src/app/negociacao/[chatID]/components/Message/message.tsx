@@ -6,13 +6,20 @@ interface MessageProps {
   onDeny?: () => void;
 }
 
-export default function Message({ isBot, children, iteractive, onConfirm, onDeny }: MessageProps) {
-  const styles = isBot ? "" : "ml-auto bg-tertiary";
+export default function Message({
+  isBot,
+  children,
+  iteractive,
+  onConfirm,
+  onDeny,
+}: MessageProps) {
+  const styles = isBot ? "" : "min-[640px]:ml-auto bg-tertiary";
 
   return (
     <div
       className={`xl:w-2/5 shadow-md m-7 max-h-fit rounded-xl p-5
-                    ${styles} sm:w-4/5`}>
+                    ${styles} sm:w-4/5`}
+    >
       <div className="text-base font-normal">{children}</div>
       {iteractive ? (
         <div className="flex flex-col mt-8">
@@ -20,12 +27,14 @@ export default function Message({ isBot, children, iteractive, onConfirm, onDeny
           <div className="flex w-full md:w-2/3 gap-2 mt-2 sm:w-full">
             <button
               onClick={onConfirm}
-              className="bg-primary h-12 md:h-10 rounded-md flex-1 text-white">
+              className="bg-primary h-12 md:h-10 rounded-md flex-1 text-white"
+            >
               Aceitar acordo
             </button>
             <button
               onClick={onDeny}
-              className="bg-tertiary h-12 md:h-10 rounded-md flex-1 text-[#545454]">
+              className="bg-tertiary h-12 md:h-10 rounded-md flex-1 text-[#545454]"
+            >
               Recusar acordo
             </button>
           </div>
