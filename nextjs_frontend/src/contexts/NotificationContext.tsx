@@ -25,7 +25,7 @@ export function NotificationProvider({
   const [notifications, setNotifications] = useState<INotification[]>([]);
 
   useEffect(() => {
-    if (!session) return;
+    if (!session || typeof apiURL === "undefined") return;
     const socket = io(apiURL, {
       transports: ["websocket"],
       auth: { email: session?.user?.email }

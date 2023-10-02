@@ -3,17 +3,26 @@
 import Image from "next/image";
 import Styles from "./landing.module.scss";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import PricingCard from "./components/PricingCard/pricing-card";
 import DepositionCard from "./components/DepositionCard/deposition-card";
 import FeatureCard from "./components/FeatureCard/feature-card";
+import { useEffect } from "react";
 
 export default function Home() {
   const router = useRouter();
   const { data: session } = useSession();
 
-  if (session && session.user) {
-    router.push("/tenants");
+  useEffect(() => {
+    if (session && session.user) {
+      router.push("/tenants");
+    }
+  }, [session]);
+
+  function handleLogin() {
+    signIn(undefined, {
+      callbackUrl: "/tenants/"
+    });
   }
 
   return (
@@ -21,36 +30,40 @@ export default function Home() {
       {/* HOME SECTION */}
       <section
         id="home"
-        className="w-full h-232 px-60 bg-neutral-950 flex items-center bg-origin-content bg-[url(/images/some_guy.png)] bg-no-repeat bg-right-top bg-cover">
+        className="w-full md:h-232 px-10 md:px-20 bg-neutral-950 flex items-center lg:bg-origin-content xl:bg-[url(/images/some_guy.png)] xl:bg-[length:1000px] 2xl:bg-cover bg-no-repeat md:bg-right">
         <div className="w-full h-full py-48 text-neutral-200 flex flex-col gap-4 mb-4 items-center lg:items-start">
-          <h1 className="text-7xl font-medium">Boas-vindas à Reco!</h1>
-          <p className="max-w-2xl tracking-wider leading-7 font-extralight">
-            É um prazer te ter conosco! Somos um serviço especializado em intermediar acordos
-            extrajudiciais de cobranças condominiais de forma ágil e eficiente. Nossa plataforma foi
-            projetada para atender às necessidades de administradoras, conselheiros fiscais,
-            síndicos e condôminos, oferecendo uma abordagem inovadora e focada na resolução pacífica
-            de conflitos.
+          <h1 className="text-4xl max-w-xl lg:max-w-2xl md:text-7xl font-medium">
+            A autonomia que sua administradora precisa!
+          </h1>
+          <p className="max-w-xl tracking-wider leading-7 font-extralight text-justify">
+            Potencialize o sucesso e rapidez dos seus acordos de inadimplência! Somos um serviço
+            especializado em intermediar acordos extrajudiciais de cobranças condominiais de forma
+            ágil e eficiente.
           </p>
-          <button className="mt-10 bg-primary rounded-full w-[252px] h-12 font-medium">
+          <button
+            onClick={handleLogin}
+            className="mt-10 bg-primary rounded-full w-[252px] h-12 font-medium z-50">
             Junte-se à Reco
           </button>
         </div>
       </section>
       {/* FEATURES SECTION*/}
       <section id="features" className="w-full max-h-fit bg-neutral-200 relative">
-        <div className="w-full h-208 absolute right-0 -top-96 bg-[url(/images/grafismo3.svg)] bg-right-top bg-no-repeat bg-contain" />
-        <div className="flex justify-center p-20 mt-32 mb-20">
-          <div className="grid grid-cols-2 gap-12 my-10">
-            <div>
-              <Image alt="reco logo" src="/logo.svg" width={400} height={100} priority />
-              <h2 className="text-5xl md:text-6xl md:min-w-[500px] text-end font-extralight pr-4">
-                te oferece:
-              </h2>
+        <div className="w-full h-208 absolute right-0 -top-128 xl:bg-[url(/images/grafismo3.svg)] xl:bg-[length:800px_900px] 2xl:bg-[length:1000px_900px] bg-right-top bg-no-repeat bg-contain" />
+        <div className="flex justify-center p-20 mt-24 mb-20">
+          <div className="flex flex-wrap justify-center  gap-12 my-10">
+            <div className="md:w-128 2xl:w-160 flex items-center justify-end">
+              <div className="md:w-128">
+                <Image alt="reco logo" src="/logo.svg" width={400} height={100} priority />
+                <h2 className="text-5xl md:text-6xl md:min-w-[500px] text-end font-extralight pr-4">
+                  te oferece:
+                </h2>
+              </div>
             </div>
             <FeatureCard
               image="/icons/brain_analysis.svg"
               title="Análises avançadas"
-              description="Nossa Inteligência Artificial fornece as melhores propostas às suas negociações."
+              description="Nosso Sistema Inteligente fornece as melhores propostas às suas negociações."
             />
             <FeatureCard
               image="/icons/laptop_autom.svg"
@@ -67,7 +80,7 @@ export default function Home() {
       </section>
       {/* SECTION USER GUIDE */}
       <section id="userGuide" className="w-full max-h-fit bg-neutral-200 ">
-        <div className="flex flex-col items-center p-16 mb-20">
+        <div className="flex flex-col items-center px-16 pb-16 mb-24">
           <h2 className="text-7xl font-medium">Como funciona?</h2>
           <div className="flex flex-col gap-5 mt-5 md:flex-row lg:gap-10 ">
             <div className={Styles.userGuideStep}>
@@ -78,7 +91,7 @@ export default function Home() {
             <div className="relative top-12 right-12 hidden md:block lg:right-[105px] md:top-16">
               <div className={`${Styles.horizontalLine} `}></div>
             </div>
-            <div className="relative left-[50%] md:hidden">
+            <div className="relative left-[55%] w-8 md:hidden">
               <div className={Styles.verticalLine}></div>
             </div>
             <div className={Styles.userGuideStep}>
@@ -88,7 +101,7 @@ export default function Home() {
             <div className="relative top-12 right-12 hidden md:block lg:right-[105px] md:top-16">
               <div className={Styles.horizontalLine}></div>
             </div>
-            <div className="relative left-[50%] md:hidden">
+            <div className="relative left-[55%] w-8 md:hidden">
               <div className={Styles.verticalLine}></div>
             </div>
             <div className={Styles.userGuideStep}>
@@ -112,40 +125,40 @@ export default function Home() {
           <div className="flex flex-wrap justify-center mt-16 gap-16 lg:gap-6">
             <DepositionCard
               name="Jéssica Lima"
-              role="Gerente Financeira da SEMOG"
+              role="Gerente financeira da SEMOG"
               text="A Reco aumentou a produtividade do setor de cobranças da SEMOG. Conseguimos fechar muitos acordos em menos tempo."
-              image="/images/castiel.jpg"
+              image="/images/jessica.png"
             />
             <DepositionCard
               name="Castiel Veilmont"
-              role="Gerente Financeira da SEMOG"
-              text="A Reco aumentou a produtividade do setor de cobranças da SEMOG. Conseguimos fechar muitos acordos em menos tempo."
-              image="/images/castiel.jpg"
+              role="Gerente financeiro da SELECT"
+              text="Desde o processo de registro até a negociação das dívidas, tudo foi simples e direto, o que tornou a experiência do usuário muito agradável."
+              image="/images/castiel.png"
             />
             <DepositionCard
               name="Lilian Oliveira"
-              role="Gerente Financeira da SEMOG"
-              text="A Reco aumentou a produtividade do setor de cobranças da SEMOG. Conseguimos fechar muitos acordos em menos tempo."
-              image="/images/castiel.jpg"
+              role="Gerente financeira da ADMINI"
+              text="É uma ferramenta muito útil para agilizar o processo de quitação de débitos. Facilita a comunicação com o condomínio e a visualização das informações financeiras."
+              image="/images/lilian.png"
             />
           </div>
         </div>
       </section>
       {/* PRICING SECTION */}
       <section id="pricing" className="w-full max-h-fit bg-neutral-200">
-        <div className="flex flex-wrap items-center justify-center gap-20 px-16 py-32 bg-[url(/images/grafismo1.svg)] bg-no-repeat bg-right">
+        <div className="flex flex-wrap items-center justify-center gap-20 px-16 py-36 bg-[url(/images/grafismo1.svg)] bg-no-repeat bg-right-bottom md:bg-right">
           <div className="w-[350px]">
             <h2 className="mb-10 text-7xl text-justify font-medium">Planos</h2>
             <p className="text-justify text-lg text-secondary font-light">
-              Conheça os planos da nossa plataforma! <br /> <br />O plano Básico é descomplicado,
-              ideal para conhecer a plataforma. Já o plano Premium oferece recursos avançados e
-              suporte especializado para acordos justos e sustentáveis.
+              Conheça os planos da nossa plataforma! <br />
+              Na Reco, você pode escolher o plano que se encaixa melhor na rotina da sua
+              administradora.
             </p>
-            <h4 className="font-medium text-2xl mt-10">Métodos de pagamento</h4>
-            <div className="flex flex-wrap gap-9 mt-4 justify-center md:justify-start">
+            <h4 className="font-medium text-2xl mt-6">Métodos de pagamento</h4>
+            <div className="flex flex-wrap gap-5 md:gap-9 mt-4 justify-center md:justify-start">
               <Image alt="paypal icon" src="/icons/paypal.svg" width={35} height={35} priority />
               <Image alt="pix icon" src="/icons/pix.svg" width={40} height={40} priority />
-              <Image alt="visa icon" src="/icons/visa.svg" width={50} height={50} priority />
+              <Image alt="visa icon" src="/icons/visa.svg" width={55} height={55} priority />
               <Image
                 alt="mastercard icon"
                 src="/icons/mastercard.svg"
@@ -155,9 +168,26 @@ export default function Home() {
               />
             </div>
           </div>
-          <PricingCard title="Básico" value={789.9} dailyAgreements={10} />
-          <PricingCard title="Básico" value={859.9} dailyAgreements={20} />
-          <PricingCard title="Básico" value={929.9} dailyAgreements={30} />
+          <div className="flex gap-8 flex-wrap justify-center">
+            <PricingCard title="Básico" value={289.9} dailyAgreements={10} />
+            <PricingCard title="Pro" value={359.9} dailyAgreements={20} />
+            <PricingCard title="Premium" value={429.9} dailyAgreements={30} />
+          </div>
+        </div>
+      </section>
+      {/* CUSTOM PLAN SECTION */}
+      <section id="customPlan" className="w-full max-h-fit bg-neutral-950">
+        <div className="flex flex-wrap px-16 md:px-32 py-16 flex-col text-white">
+          <h2 className="text-4xl mb-10 md:text-7xl text-center font-medium md:text-start">
+            Plano personalizado
+          </h2>
+          <p className="font-extralight text-xl text-justify max-w-2xl">
+            Sente que nenhum plano encaixou para você? Não tem problema, aqui na reco você pode ter
+            o seu próprio plano personalizado!
+          </p>
+          <button className="mt-10 bg-primary rounded-full w-[252px] h-12 font-medium">
+            Personalize seu plano
+          </button>
         </div>
       </section>
     </div>

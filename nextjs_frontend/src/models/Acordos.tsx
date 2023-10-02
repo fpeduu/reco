@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { RegrasProposta } from "./Usuarios";
 
 export type StatusType =
   | "Aguardando inadimplente"
@@ -31,33 +32,50 @@ export interface Acordo {
   valorTotal: number;
   qtdParcelas: number;
   historicoValores: Proposta[];
+  regraProposta: RegrasProposta;
 }
 
 const AcordoSchema = new mongoose.Schema({
   usuarioEmail: {
     type: String,
-    required: true
+    required: true,
   },
   cpfDevedor: {
     type: String,
-    required: true
+    required: true,
   },
   dataAcordo: {
     type: Date,
-    default: Date.now
+    default: Date.now,
   },
   status: String,
   entrada: Number,
   valorTotal: Number,
   qtdParcelas: Number,
-  historicoValores: [{
-    autor: String,
-    motivo: String,
-    entrada: Number,
-    aceito: Boolean,
-    qtdParcelas: Number,
-    valorParcela: Number,
-  }]
+  regraProposta: {
+    mesesAtraso: Number,
+    melhorEntrada: {
+      type: Number,
+      default: 0,
+    },
+    melhorParcela: Number,
+    piorParcela: Number,
+    piorEntrada: {
+      type: Number,
+      default: 0
+    },
+  },
+  historicoValores: [
+    {
+      autor: String,
+      motivo: String,
+      entrada: Number,
+      aceito: Boolean,
+      qtdParcelas: Number,
+      valorParcela: Number,
+    },
+  ],
 });
 
-export default mongoose.models.Acordos || mongoose.model("Acordos", AcordoSchema);
+export default mongoose.models.Acordos ||
+  mongoose.model("Acordos", AcordoSchema);

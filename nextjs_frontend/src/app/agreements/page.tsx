@@ -28,16 +28,16 @@ export default function AgreementsPage() {
 
   const inProgressAgreements = agreements.filter((agreement) => {
     if (!agreement) return;
-    return getStatusStep(agreement.acordo.status) < 6;
+    return getStatusStep(agreement.acordo.status) < 5;
   });
 
   const endedAgreements = agreements.filter((agreement) => {
     if (!agreement) return;
-    return getStatusStep(agreement.acordo.status) === 6;
+    return getStatusStep(agreement.acordo.status) === 5;
   });
 
   return (
-    <div className="containerLayout flex flex-col gap-20">
+    <div className="containerLayout flex flex-col py-2 gap-5 xl:gap-20">
       <Search onSearch={setSearchQuery} />
       <AgreementList
         searchQuery={searchQuery}

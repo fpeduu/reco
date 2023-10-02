@@ -4,22 +4,27 @@ interface AgreementDecisionProps {
 }
 
 export default function AgreementDecision({
-  onAcceptAgreement, onRejectAgreement,
+  onAcceptAgreement,
+  onRejectAgreement,
 }: AgreementDecisionProps) {
   return (
-    <div className="flex gap-2">
-      <button className="font-semibold py-4 px-6 text-center
+    <div className="flex gap-2 w-fit justify-center md:w-full md:justify-end">
+      <button
+        className="font-semibold py-4 px-6 text-center
                 bg-red-100 text-red-500 rounded-lg shadow
                 hover:bg-red-200 hover:text-primary"
-        onClick={onRejectAgreement}>
+        onClick={onRejectAgreement}
+      >
         Rejeitar acordo
       </button>
-      <button className="font-semibold py-4 px-6 text-center
+      <button
+        className="font-semibold py-4 px-6 text-center
                 bg-green-100 text-emerald-700 rounded-lg shadow
                 hover:bg-green-200 hover:text-emerald-800"
-        onClick={onAcceptAgreement}>
+        onClick={onAcceptAgreement}
+      >
         Aceitar acordo
       </button>
     </div>
-  )
+  );
 }

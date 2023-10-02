@@ -13,14 +13,10 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Reco",
-  description: "Uma plataforma de resolução de acordos",
+  description: "Uma plataforma de resolução de acordos"
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body className={`${NoirPro.className} ${inter.className}`}>
@@ -30,7 +26,7 @@ export default function RootLayout({
               <Header />
               <div className="w-full flex">
                 <SideBar />
-                <main className="w-full min-h-screen ml-16 sm:ml-0 pt-20 flex flex-col items-center justify-between">
+                <main className="w-full min-h-screen pt-20 flex flex-col items-center justify-between">
                   {children}
                 </main>
               </div>

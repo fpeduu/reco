@@ -11,20 +11,32 @@ import {
   filterByCodominiumAndMonths,
   getUniqueMonths,
 } from "@/services/tableUtils";
+import { INegotiationData } from "../TenantModal/components/Modal-content";
+import TenantModal from "../TenantModal/tenant-modal";
 
 interface TenantListProps {
   tenants: Devedor[];
+  onCreateAgreement: (
+    debtor: Devedor,
+    negotiation: INegotiationData
+  ) => Promise<boolean>;
 }
 
 const tenantsPerPage = 7;
 
-export default function TenantList({ tenants }: TenantListProps) {
+export default function TenantList({
+  tenants,
+  onCreateAgreement,
+}: TenantListProps) {
   const [filteredTenants, setFilteredTenants] = useState<Devedor[]>(tenants);
   const [condomiunsList, setCondomiunsList] = useState<string[]>([]);
   const [monthsLateList, setMonthsLateList] = useState<string[]>([]);
   const [condominium, setCondominium] = useState<string>("Todos");
   const [monthsLate, setMonthsLate] = useState<string>("Todos");
   const [page, setPage] = useState(1);
+
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedDebtor, setSelectedDebtor] = useState<Devedor | null>(null);
 
   const totalPageCount = Math.ceil(filteredTenants.length / tenantsPerPage);
 
@@ -99,29 +111,47 @@ export default function TenantList({ tenants }: TenantListProps) {
     setPage(1);
   }
 
+  function openModal(tenant: Devedor) {
+    setSelectedDebtor(tenant);
+    setModalOpen(true);
+  }
+
+  function closeModal() {
+    setModalOpen(false);
+  }
+
   return (
     <div className="flex flex-col items-center justify-between gap-3">
-      <Search onSearch={handleSearch} />
-      <div className="flex justify-end items-center w-full gap-5">
-        <span className=" text-sm font-light">Filtrar por:</span>
-        <Dropdown
-          title="Condomínio"
-          options={condomiunsList}
-          onChange={handleFilterChange}
-        />
-        <Dropdown
-          title="Atraso"
-          options={monthsLateList}
-          onChange={handleFilterChange}
-        />
+      <div className="flex flex-wrap w-full gap-4 md:gap-8 mb-6 md:flex-nowrap">
+        <Search onSearch={handleSearch} />
+        <div className="flex justify-end items-center w-fit gap-5">
+          <span className=" text-sm font-light">Filtrar por:</span>
+          <Dropdown
+            title="Condomínio"
+            options={condomiunsList}
+            onChange={handleFilterChange}
+          />
+          <Dropdown
+            title="Atraso"
+            options={monthsLateList}
+            onChange={handleFilterChange}
+          />
+        </div>
       </div>
       {handlePagination().map((tenant) => (
-        <DebtorCard key={tenant.cpf} tenant={tenant} />
+        <DebtorCard key={tenant.cpf} tenant={tenant} openModal={openModal} />
       ))}
       <Paginator
         currentPage={page}
         onPageChange={setPage}
         pageLimit={totalPageCount}
+        uniqueKey="pag"
+      />
+      <TenantModal
+        open={modalOpen}
+        onClose={closeModal}
+        debtor={selectedDebtor!}
+        onConfirm={onCreateAgreement}
       />
     </div>
   );

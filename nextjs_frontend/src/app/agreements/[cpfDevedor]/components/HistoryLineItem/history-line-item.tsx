@@ -9,11 +9,17 @@ interface HistoryLineItemProps {
 }
 
 export default function HistoryLineItem({
-  divida, proposal, align, connect
+  divida,
+  proposal,
+  align,
+  connect
 }: HistoryLineItemProps) {
-  const value: number = divida && proposal && proposal.entrada > 0 ?
-    proposal.autor === "User" ? proposal.entrada :
-    divida * proposal.entrada : 0;
+  const value: number =
+    divida && proposal && proposal.entrada > 0
+      ? proposal.autor === "User"
+        ? proposal.entrada
+        : divida * proposal.entrada
+      : 0;
 
   return (
     <div className="w-full flex justify-center gap-5">
@@ -29,33 +35,41 @@ export default function HistoryLineItem({
         </h1>
         {proposal && (
           <>
-            {proposal.entrada > 0 && <span className="text-sm text-zinc-500">
-              <span className="font-medium">Valor de entrada:</span>&nbsp;
-              {value.toLocaleString("pt-BR", {
-                style: "currency",
-                currency: "BRL"
-              })}
-            </span>}
-            <span className="text-sm text-zinc-500">
+            {proposal.entrada > 0 && (
+              <span className="text-sm text-zinc-500">
+                <span className="font-medium">Valor de entrada:</span>&nbsp;
+                {value.toLocaleString("pt-BR", {
+                  style: "currency",
+                  currency: "BRL"
+                })}
+              </span>
+            )}
+            <span className="text-sm text-zinc-500 whitespace-nowrap">
               +
               <span className="font-medium">
-                {proposal.qtdParcelas} parcelas&nbsp;
+                {proposal.qtdParcelas > 1
+                  ? `${proposal.qtdParcelas} parcelas`
+                  : `${proposal.qtdParcelas} parcela`}
+                &nbsp;
               </span>
-              de {proposal.valorParcela.toLocaleString("pt-BR", {
+              de&nbsp;
+              {proposal.valorParcela.toLocaleString("pt-BR", {
                 style: "currency",
                 currency: "BRL"
               })}
             </span>
-            {proposal.motivo && <span className="text-sm text-zinc-500">
-              <span className="font-medium">Motivo:</span>&nbsp;
-              {proposal.motivo}
-            </span>}
+            {proposal.motivo && (
+              <span className="text-sm text-zinc-500 w-40">
+                <span className="font-medium">Motivo:</span>&nbsp;
+                {proposal.motivo}
+              </span>
+            )}
             {proposal.aceito ? (
-              <span className="w-24 h-8 px-2 flex items-center justify-center rounded-md font-medium bg-emerald-50 text-emerald-600">
+              <span className="w-24 h-8 px-2 flex items-center justify-center rounded-md bg-emerald-50 text-emerald-600">
                 Aceito
               </span>
             ) : (
-              <span className="w-24 h-8 px-2 flex items-center justify-center rounded-md font-medium bg-rose-100 text-red-600">
+              <span className="w-24 h-8 px-2 flex items-center justify-center rounded-md bg-rose-100 text-red-600">
                 Recusado
               </span>
             )}

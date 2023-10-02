@@ -66,10 +66,10 @@ export function secondProposal(chatData: NegotiationData) {
     (chatData.valorDivida - chatData.valorDivida * currentValue) / currentInstallment;
   let confirmMessage = "";
 
-  if (firstInstallment === 1) {
+  if (firstInstallment === currentInstallment) {
     confirmMessage = formatProposal(chatData.valorDivida, currentValue, currentInstallment);
   } else {
-    (currentValue = 0), (currentInstallment = firstInstallment - 1);
+    currentValue = 0, currentInstallment = firstInstallment + 1;
     confirmMessage = formatProposal(chatData.valorDivida, 0, currentInstallment);
     installmentValue = chatData.valorDivida / currentInstallment;
   }

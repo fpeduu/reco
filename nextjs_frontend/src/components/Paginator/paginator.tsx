@@ -5,31 +5,30 @@ interface PaginatorProps {
   onPageChange: (page: number) => void;
   currentPage: number;
   pageLimit: number;
+  uniqueKey: string;
 }
 
 export default function Paginator({
   onPageChange,
   currentPage,
   pageLimit,
+  uniqueKey,
 }: PaginatorProps) {
   const isMobile = typeof window !== "undefined" && window.innerWidth <= 768;
+
   function handlePreviousPage() {
     if (currentPage > 1) {
       const newPage = currentPage - 1;
       onPageChange(newPage);
 
       setTimeout(() => {
-        const pageElements = document.querySelectorAll("[data-page]");
-        pageElements.forEach((element) => {
-          element.classList.remove(Styles["active-page"]);
-        });
-
         const clickedPageElement = document.querySelector(
-          `[data-page="${newPage}"]`
+          `[data-page="${newPage}"].${uniqueKey}`
         ) as HTMLElement;
 
         if (clickedPageElement) {
-          clickedPageElement.classList.add(Styles["active-page"]);
+          clickedPageElement.classList.remove(Styles["active-page"]);
+          clickedPageElement.classList.add(Styles["active-page"], uniqueKey);
           clickedPageElement.focus();
         }
       }, 0);
@@ -42,39 +41,38 @@ export default function Paginator({
       onPageChange(newPage);
 
       setTimeout(() => {
-        const pageElements = document.querySelectorAll("[data-page]");
-        pageElements.forEach((element) => {
-          element.classList.remove(Styles["active-page"]);
-        });
-
         const clickedPageElement = document.querySelector(
-          `[data-page="${newPage}"]`
+          `[data-page="${newPage}"].${uniqueKey}`
         ) as HTMLElement;
 
         if (clickedPageElement) {
-          clickedPageElement.classList.add(Styles["active-page"]);
+          clickedPageElement.classList.remove(Styles["active-page"]);
+          clickedPageElement.classList.add(Styles["active-page"], uniqueKey);
           clickedPageElement.focus();
         }
       }, 0);
     }
   }
 
-  function handlePageClick(page: number) {
+  function handlePageClick(
+    event: React.MouseEvent<HTMLAnchorElement>,
+    page: number
+  ) {
+    event?.preventDefault();
     onPageChange(page);
     currentPage = page;
 
     setTimeout(() => {
       const clickedPageElement = document.querySelector(
-        `[data-page="${page}"]`
+        `[data-page="${page}"].${uniqueKey}`
       ) as HTMLElement;
 
-      const pageElements = document.querySelectorAll("[data-page]");
-      pageElements.forEach((element) => {
-        element.classList.remove(Styles["active-page"]);
-      });
+      if (clickedPageElement) {
+        clickedPageElement.classList.remove(Styles["active-page"]);
+      }
 
       if (clickedPageElement) {
-        clickedPageElement.classList.add(Styles["active-page"]);
+        clickedPageElement.classList.add(Styles["active-page"], uniqueKey);
         clickedPageElement.focus();
       }
     }, 0);
@@ -150,9 +148,9 @@ export default function Paginator({
             className={`${
               typeof page === "number" ? Styles.pageButton : Styles.pageEllipsis
             } ${page === currentPage ? Styles["active-page"] : ""}`}
-            onClick={() => {
+            onClick={(event) => {
               if (typeof page === "number") {
-                handlePageClick(page);
+                handlePageClick(event, page);
               }
             }}
             data-page={page === "..." ? undefined : page}

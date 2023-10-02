@@ -8,12 +8,6 @@ export interface IMessage {
   onDeny?: () => void;
 }
 
-export interface IUserInput {
-  value: number,
-  reason: string,
-  installment: number,
-}
-
 export interface IProposal extends Proposta {
   message: string;
   confirmMessage: string;

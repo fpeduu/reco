@@ -6,8 +6,6 @@ import Styles from "./sidebar.module.scss";
 import { usePathname } from "next/navigation";
 import { useSideBarContext } from "@/contexts/SideBarContext";
 
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-
 export default function SideBar() {
   const { hideSideBar } = useSideBarContext();
   const { data: session } = useSession();
@@ -20,26 +18,17 @@ export default function SideBar() {
           <nav>
             <div className="flex flex-col gap-2">
               {!hideSideBar && (
-                <span className="ml-3 text-slate-400 text-sm font-medium">
-                  Menu Principal
-                </span>
+                <span className="ml-3 text-slate-400 text-sm font-normal">Menu Principal</span>
               )}
               <ul className="flex flex-col gap-2">
                 <li className="w-full flex place-items-center">
                   <Link
                     href="/tenants/"
                     className={
-                      Styles.navitem +
-                      " " +
-                      (pathname === "/tenants" ? Styles.active : "")
-                    }
-                  >
+                      Styles.navitem + " " + (pathname === "/tenants" ? Styles.active : "")
+                    }>
                     <Image
-                      src={
-                        pathname === "/tenants"
-                          ? "/icons/home.svg"
-                          : "/icons/home_stroke.svg"
-                      }
+                      src={pathname === "/tenants" ? "/icons/home.svg" : "/icons/home_stroke.svg"}
                       alt="Home icon"
                       width={22}
                       height={23}
@@ -53,11 +42,8 @@ export default function SideBar() {
                       <Link
                         href="/agreements/"
                         className={
-                          Styles.navitem +
-                          " " +
-                          (pathname === "/agreements" ? Styles.active : "")
-                        }
-                      >
+                          Styles.navitem + " " + (pathname === "/agreements" ? Styles.active : "")
+                        }>
                         <Image
                           src={
                             pathname === "/agreements"
@@ -71,40 +57,21 @@ export default function SideBar() {
                         {!hideSideBar && <span>Negociações</span>}
                       </Link>
                     </li>
-                    <li className="w-full flex place-items-center">
-                      <Link
-                        href="/importar/"
-                        className={
-                          Styles.navitem +
-                          " " +
-                          (pathname === "/importar" ? Styles.active : "")
-                        }
-                      >
-                        <AddCircleOutlineIcon sx={{ width: 22, height: 23 }} />
-
-                        {!hideSideBar && <span>Importar devedores</span>}
-                      </Link>
-                    </li>
                   </>
                 )}
               </ul>
             </div>
             <div className="mt-20 flex flex-col gap-2">
               {!hideSideBar && (
-                <span className="ml-3 text-slate-400 text-sm font-medium">
-                  Preferências
-                </span>
+                <span className="ml-3 text-slate-400 text-sm font-normal">Preferências</span>
               )}
               <ul className="flex flex-col gap-2">
                 <li className="w-full flex place-items-center">
                   <Link
-                    href="#"
+                    href="/settings/"
                     className={
-                      Styles.navitem +
-                      " " +
-                      (pathname === "/settings" ? Styles.active : "")
-                    }
-                  >
+                      Styles.navitem + " " + (pathname === "/settings" ? Styles.active : "")
+                    }>
                     <Image
                       src={
                         pathname === "/settings"
@@ -121,18 +88,9 @@ export default function SideBar() {
                 <li className="w-full flex place-items-center">
                   <Link
                     href="#"
-                    className={
-                      Styles.navitem +
-                      " " +
-                      (pathname === "/help" ? Styles.active : "")
-                    }
-                  >
+                    className={Styles.navitem + " " + (pathname === "/help" ? Styles.active : "")}>
                     <Image
-                      src={
-                        pathname === "/help"
-                          ? "/icons/help.svg"
-                          : "/icons/help_stroke.svg"
-                      }
+                      src={pathname === "/help" ? "/icons/help.svg" : "/icons/help_stroke.svg"}
                       alt="Options icon"
                       width={22}
                       height={23}

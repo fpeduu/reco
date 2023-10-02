@@ -93,49 +93,59 @@ export default function AgreementStatus({ params }: AgreementStatusProps) {
   return (
     <div className="containerLayout flex flex-col gap-10">
       <h1 className="text-4xl font-medium">Detalhes da negociação</h1>
-      <div className="flex items-end justify-start gap-20">
+      <div className="flex items-end justify-center gap-5 flex-wrap
+                      lg:flex-nowrap lg:justify-start 2xl:gap-20">
         <TenantProfileCard tenant={agreement} />
-        <CurrencyCard
-          icon="/icons/dollar_sign.svg"
-          iconSize={34}
-          title="Valor em débito"
-          value={agreement.valorDivida}
-          desccriptionTitle="Em atraso:"
-          description={`${agreement.mensalidadesAtrasadas} meses`}
-          descriptionStyle="text-rose-400"
-        />
-        <CurrencyCard
-          icon="/icons/document.svg"
-          iconSize={26}
-          title="Valor de entrada"
-          value={agreement.acordo.entrada}
-          descriptionStyle="text-green-600"
-          description={`+ ${
-            agreement.acordo.qtdParcelas
-          } parcelas de ${installmentValue.toLocaleString()}`}
-        />
+        <div className="flex gap-5 flex-wrap flex-1 justify-center
+                        sm:justify-start 2xl:gap-20">
+          <CurrencyCard
+            icon="/icons/dollar_sign.svg"
+            iconSize={34}
+            title="Valor em débito"
+            value={agreement.valorDivida}
+            desccriptionTitle="Em atraso:"
+            description={`${agreement.mensalidadesAtrasadas} meses`}
+            descriptionStyle="text-rose-400"
+          />
+          <CurrencyCard
+            icon="/icons/document.svg"
+            iconSize={26}
+            title="Valor de entrada"
+            value={agreement.acordo.entrada}
+            descriptionStyle="text-green-600"
+            description={`+ ${
+              agreement.acordo.qtdParcelas > 1
+                ? `${agreement.acordo.qtdParcelas} parcelas`
+                : `${agreement.acordo.qtdParcelas} parcela`
+            } de ${installmentValue.toLocaleString("pt-br", { style: "currency", currency: "BRL" })}`}
+          />
+        </div>
       </div>
       <h2 className="text-4xl font-medium">Andamento</h2>
       <div className="w-full h-fit bg-white rounded-2xl">
-        <nav className="border-b border-b-slate-300">
+        <nav className="h-16 md:h-10 flex border-b border-b-slate-300 relative">
           <button
             onClick={switchToTimeline}
             className={
-              "w-56 p-5 pb-0 border-b text-sm " +
-              (subpage === "timeline" ? "text-red-600 border-b-red-600" : "text-slate-500")
+              "w-1/2 md:w-56 h-16 md:h-10 p-5 pb-0 absolute border-b text-sm " +
+              (subpage === "timeline"
+                ? "text-red-600 border-b-red-600"
+                : "text-slate-500 border-b-slate-300")
             }>
             Linha do Tempo
           </button>
           <button
             onClick={switchToDetails}
             className={
-              "w-56 p-5 pb-0 border-b text-sm " +
-              (subpage === "details" ? "text-red-600 border-b-red-600" : "text-slate-500")
+              "w-1/2 md:w-56 h-16 md:h-10 p-5 pb-0 absolute left-1/2 md:left-56 border-b text-sm " +
+              (subpage === "details"
+                ? "text-red-600 border-b-red-600"
+                : "text-slate-500 border-b-slate-300")
             }>
             Detalhes
           </button>
         </nav>
-        <div className="max-h-128 overflow-y-auto p-20 flex flex-col items-end">
+        <div className="max-h-128 overflow-y-auto overflow-x-hidden p-20 flex flex-col items-center">
           {subpage === "timeline" && !isLoading ? (
             <>
               <StatusBarBig status={agreement.acordo.status} />

@@ -19,7 +19,7 @@ export default function NotificationFlyMenu({
 
   return (
     <Popover className="relative">
-      <Popover.Button className="p-2 border rounded-full mr-20 hover:cursor-pointer hover:bg-slate-100">
+      <Popover.Button className="p-2 border rounded-full md:mr-20 hover:cursor-pointer hover:bg-slate-100">
         <Image src="/icons/notification_bell.svg" alt="Notifications" width={24} height={24} />
       </Popover.Button>
       <Popover.Panel className="absolute -translate-x-2/3 mt-2 z-20">

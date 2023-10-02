@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -8,6 +8,8 @@ import Link from "next/link";
 export default function SignIn() {
   const router = useRouter();
   const { data: session } = useSession();
+
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (session && session.user) {
@@ -21,20 +23,22 @@ export default function SignIn() {
     const password = e.target.password.value;
 
     const result = await signIn("credentials", {
-      redirect: true,
+      redirect: false,
       email,
       password,
     });
 
     if (!result?.error) {
       router.push("/tenants");
+    } else {
+      setError("E-mail ou senha incorretos");
     }
   };
 
   return (
-    <div className="flex flex-wrap w-full h-full">
+    <div className="w-full min-h-screen flex flex-wrap ">
       <div className="bg-[#d9d9d9] flex items-center justify-center w-full md:w-1/2 ">
-        <div className="w-48 lg:w-96">
+        <div className="w-full px-4 my-2 md:px-0 md:w-48 sm:my-8 lg:w-96">
           <h1 className="text-3xl font-lightbold leading-10 md:text-6xl">
             Acessar o sistema
           </h1>
@@ -43,11 +47,17 @@ export default function SignIn() {
           </h3>
         </div>
       </div>
-      <div className="w-full flex flex-col justify-center h-full items-center md:w-1/2 bg-tertiary">
-        <form className="w-4/6" onSubmit={handleSubmit}>
+      <div className="w-full flex flex-col justify-center  items-center pt-4 md:pt-0 md:w-1/2 bg-tertiary">
+        <form className="w-full px-4 sm:w-4/6 sm:px-0" onSubmit={handleSubmit}>
           <h3 className="text-center font-normal mb-5 text-xl md:text-2xl">
-            Olá! que bom te ver de novo!
+            Boas-vindas! Entre na sua conta.
           </h3>
+
+          {error && (
+            <div className="text-red-400 bg-red-200 rounded p-2 font-normal mb-5 text-sm md:text-base">
+              {error}
+            </div>
+          )}
           <label htmlFor="email" className="font-normal">
             Email
           </label>
@@ -55,6 +65,7 @@ export default function SignIn() {
             className="w-full p-2 mb-5 border border-gray-300 shadow rounded-md h-12 hover:border-gray-400"
             type="email"
             name="email"
+            defaultValue="teste@email.com"
             id="email"
             placeholder="Digite seu email"
           />
@@ -63,6 +74,7 @@ export default function SignIn() {
           </label>
           <input
             className="w-full p-2 mb-5 border border-gray-300 shadow rounded-md h-12 hover:border-gray-400"
+            defaultValue="123"
             type="password"
             name="password"
             id="password"
@@ -93,7 +105,7 @@ export default function SignIn() {
           </button>
           <Link
             href="#"
-            className="flex justify-center text-sm font-normal hover:underline mt-8 mb-20 pt-[2px]"
+            className="flex justify-center text-sm font-normal hover:underline mt-8 mb-10 pt-[2px]"
           >
             Não tem nenhuma conta ainda? Entre em contato!
           </Link>
