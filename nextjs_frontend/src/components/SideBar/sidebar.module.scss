@@ -13,7 +13,8 @@
 }
 
 .sidebarSmall {
-  @apply w-16 h-full fixed sm:static hidden sm:flex flex-col justify-start px-2 pt-28 bg-white gap-16 overflow-hidden z-30;
+  @apply w-16 h-full fixed sm:static hidden sm:flex flex-col 
+         min-w-[60px] justify-start px-2 pt-28 bg-white gap-16 overflow-hidden z-30;
 
   .navitem {
     @apply w-full h-11 flex justify-center items-center rounded-xl p-1 gap-3 
