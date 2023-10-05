@@ -26,14 +26,9 @@ export default function DropDown({ title, options, onChange }: DropDownProps) {
                     justify-center items-center gap-2 rounded-md border
                     font-light bg-secondary text-white shadow-sm align-middle
                     focus:outline-none focus:ring-2 focus:ring-offset-2
-                    focus:ring-offset-white focus:white transition-all text-sm">
+                    focus:ring-offset-white focus:white transition-all text-sm whitespace-nowrap">
         {selectedOption === "Todos" ? title : selectedOption}
-        <Image
-          src="/icons/arrow-down.svg"
-          alt="arrow-down"
-          width={16}
-          height={16}
-        />
+        <Image src="/icons/arrow-down.svg" alt="arrow-down" width={16} height={16} />
       </button>
 
       <div

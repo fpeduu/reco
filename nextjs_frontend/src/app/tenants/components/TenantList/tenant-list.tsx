@@ -7,10 +7,7 @@ import Search from "@/components/Search/search";
 import DebtorCard from "../DebtorCard/debtor-card";
 import Dropdown from "@/components/Dropdown/dropdown";
 import Paginator from "@/components/Paginator/paginator";
-import {
-  filterByCodominiumAndMonths,
-  getUniqueMonths,
-} from "@/services/tableUtils";
+import { filterByCodominiumAndMonths, getUniqueMonths } from "@/services/tableUtils";
 import { INegotiationData } from "../TenantModal/components/Modal-content";
 import TenantModal from "../TenantModal/tenant-modal";
 import LoadingBar from "@/components/Loading/loading";
@@ -18,19 +15,12 @@ import LoadingBar from "@/components/Loading/loading";
 interface TenantListProps {
   tenants: Devedor[];
   loading: boolean;
-  onCreateAgreement: (
-    debtor: Devedor,
-    negotiation: INegotiationData
-  ) => Promise<boolean>;
+  onCreateAgreement: (debtor: Devedor, negotiation: INegotiationData) => Promise<boolean>;
 }
 
 const tenantsPerPage = 7;
 
-export default function TenantList({
-  tenants,
-  loading,
-  onCreateAgreement,
-}: TenantListProps) {
+export default function TenantList({ tenants, loading, onCreateAgreement }: TenantListProps) {
   const [filteredTenants, setFilteredTenants] = useState<Devedor[]>(tenants);
   const [condomiunsList, setCondomiunsList] = useState<string[]>([]);
   const [monthsLateList, setMonthsLateList] = useState<string[]>([]);
@@ -53,9 +43,7 @@ export default function TenantList({
     const uniqueCondomiuns = condomiuns.filter((condominium, index) => {
       return condomiuns.indexOf(condominium) === index;
     });
-    const uniqueMonths = getUniqueMonths(
-      tenants.map((x) => x.mensalidadesAtrasadas)
-    );
+    const uniqueMonths = getUniqueMonths(tenants.map((x) => x.mensalidadesAtrasadas));
 
     setCondomiunsList(["Todos", ...uniqueCondomiuns]);
     setMonthsLateList(["Todos", ...uniqueMonths]);
@@ -74,8 +62,7 @@ export default function TenantList({
         )
         .sort(
           (a, b) =>
-            a.nome.localeCompare(b.nome) ||
-            a.mensalidadesAtrasadas - b.mensalidadesAtrasadas
+            a.nome.localeCompare(b.nome) || a.mensalidadesAtrasadas - b.mensalidadesAtrasadas
         )
     );
   }, [monthsLate, condominium, tenants]);
@@ -99,10 +86,7 @@ export default function TenantList({
   }
 
   function handlePagination() {
-    return filteredTenants.slice(
-      (page - 1) * tenantsPerPage,
-      page * tenantsPerPage
-    );
+    return filteredTenants.slice((page - 1) * tenantsPerPage, page * tenantsPerPage);
   }
 
   function handleFilterChange(title: string, option: string) {
@@ -128,17 +112,9 @@ export default function TenantList({
       <div className="flex flex-wrap w-full gap-4 md:gap-8 mb-6 md:flex-nowrap">
         <Search onSearch={handleSearch} />
         <div className="flex justify-end items-center w-fit gap-5">
-          <span className=" text-sm font-light">Filtrar por:</span>
-          <Dropdown
-            title="Condomínio"
-            options={condomiunsList}
-            onChange={handleFilterChange}
-          />
-          <Dropdown
-            title="Atraso"
-            options={monthsLateList}
-            onChange={handleFilterChange}
-          />
+          <span className="whitespace-nowrap text-sm font-light">Filtrar por:</span>
+          <Dropdown title="Condomínio" options={condomiunsList} onChange={handleFilterChange} />
+          <Dropdown title="Atraso" options={monthsLateList} onChange={handleFilterChange} />
         </div>
       </div>
       {loading ? (
