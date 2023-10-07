@@ -1,12 +1,30 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import ProfileSettings from "./ProfileSettings/profile-settings";
+import { Usuario } from "@/models/Usuarios";
+import { serverURL } from "@/config";
+import LoadingBar from "@/components/Loading/loading";
+
+async function fetchUser(userEmail: string) {
+  return (await fetch(`${serverURL}/api/auth?email=${userEmail}`)
+    .then((res) => res.json())
+    .catch((err) => console.error(err))) as Usuario;
+}
 
 export default function SettingsPage() {
   const { data: session } = useSession({ required: true });
+  const [user, setUser] = useState<Usuario>();
   const [activeTab, setActiveTab] = useState<"profile" | "payment" | "language">("profile");
+
+  useEffect(() => {
+    if (!session) return;
+    //TODO: change to session email
+    fetchUser("teste@email.com").then((res) => {
+      setUser(res);
+    });
+  }, [session]);
 
   function switchToProfile() {
     setActiveTab("profile");
@@ -50,7 +68,15 @@ export default function SettingsPage() {
             Idioma
           </button>
         </nav>
-        {activeTab === "profile" && <ProfileSettings session={session} />}
+        {!user ? (
+          <LoadingBar />
+        ) : activeTab === "profile" ? (
+          <ProfileSettings user={user} />
+        ) : activeTab === "payment" ? (
+          <></>
+        ) : activeTab === "language" ? (
+          <></>
+        ) : null}
       </div>
     </div>
   );

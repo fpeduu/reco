@@ -1,35 +1,16 @@
 "use client";
 
-import LoadingBar from "@/components/Loading/loading";
 import { serverURL } from "@/config";
 import { Usuario } from "@/models/Usuarios";
-import { Session } from "next-auth";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 interface ProfileSettingsProps {
-  session: Session | null;
+  user: Usuario;
 }
 
-async function fetchUser(userEmail: string) {
-  return (await fetch(`${serverURL}/api/auth?email=${userEmail}`)
-    .then((res) => res.json())
-    .catch((err) => console.error(err))) as Usuario;
-}
-
-export default function ProfileSettings({ session }: ProfileSettingsProps) {
-  const [user, setUser] = useState<Usuario>();
+export default function ProfileSettings({ user }: ProfileSettingsProps) {
   const [isEditing, setIsEditing] = useState(false);
   const updateUrl = `${serverURL}/api/users`;
-
-  useEffect(() => {
-    if (!session) return;
-    //TODO: change to session email
-    fetchUser("teste@email.com").then((res) => {
-      setUser(res);
-    });
-  }, [session]);
-
-  if (!user) return <LoadingBar />;
 
   return (
     <>
