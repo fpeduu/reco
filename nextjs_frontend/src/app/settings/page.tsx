@@ -6,6 +6,7 @@ import ProfileSettings from "./ProfileSettings/profile-settings";
 import { Usuario } from "@/models/Usuarios";
 import { serverURL } from "@/config";
 import LoadingBar from "@/components/Loading/loading";
+import ProposalSettings from "./ProposalSettings/proposal-settings";
 
 async function fetchUser(userEmail: string) {
   return (await fetch(`${serverURL}/api/auth?email=${userEmail}`)
@@ -16,7 +17,9 @@ async function fetchUser(userEmail: string) {
 export default function SettingsPage() {
   const { data: session } = useSession({ required: true });
   const [user, setUser] = useState<Usuario>();
-  const [activeTab, setActiveTab] = useState<"profile" | "payment" | "language">("profile");
+  const [activeTab, setActiveTab] = useState<"profile" | "proposal" | "payment" | "language">(
+    "profile"
+  );
 
   useEffect(() => {
     if (!session) return;
@@ -28,6 +31,10 @@ export default function SettingsPage() {
 
   function switchToProfile() {
     setActiveTab("profile");
+  }
+
+  function switchToProposal() {
+    setActiveTab("proposal");
   }
 
   function switchToPayment() {
@@ -52,11 +59,20 @@ export default function SettingsPage() {
             Meu Perfil
           </button>
           <button
+            onClick={switchToProposal}
+            className={
+              "w-full md:w-fit h-10 px-5 flex items-center justify-center rounded-lg text-lg font-light whitespace-nowrap " +
+              (activeTab === "proposal" ? "bg-white" : "text-zinc-400")
+            }>
+            Lógica de acordo
+          </button>
+          <button
             onClick={switchToPayment}
             className={
               "w-full md:w-fit h-10 px-5 flex items-center justify-center rounded-lg text-lg font-light whitespace-nowrap " +
               (activeTab === "payment" ? "bg-white" : "text-zinc-400")
-            }>
+            }
+            disabled>
             Dados de Pagamento
           </button>
           <button
@@ -64,7 +80,8 @@ export default function SettingsPage() {
             className={
               "w-full md:w-fit h-10 px-5 flex items-center justify-center rounded-lg text-lg font-light whitespace-nowrap " +
               (activeTab === "language" ? "bg-white" : "text-zinc-400")
-            }>
+            }
+            disabled>
             Idioma
           </button>
         </nav>
@@ -72,6 +89,8 @@ export default function SettingsPage() {
           <LoadingBar />
         ) : activeTab === "profile" ? (
           <ProfileSettings user={user} />
+        ) : activeTab === "proposal" ? (
+          <ProposalSettings user={user} />
         ) : activeTab === "payment" ? (
           <></>
         ) : activeTab === "language" ? (
