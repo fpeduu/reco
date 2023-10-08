@@ -1,7 +1,9 @@
 import { useState } from "react";
-import Button from "@/components/Button/button";
 import { Devedor } from "@/models/Devedores";
 import { serverURL } from "@/config";
+
+import Button from "@/components/Button/button";
+import SnackBar from "@/components/SnackBar/snack-bar";
 
 interface AddTenantModalProps {
   onClose: () => void;
@@ -9,19 +11,49 @@ interface AddTenantModalProps {
 
 export default function AddTenantModal({ onClose }: AddTenantModalProps) {
   const [form, setForm] = useState<Devedor>({} as Devedor);
+  const [averageDebit, setAverageDebit] = useState<number>(0);
+  const [snackbarMessage, setSnackbarMessage] = useState<string>("");
 
-  const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  function handleFormChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async () => {
+  function handleAverageDebitChange(
+    e: React.ChangeEvent<HTMLInputElement>
+  ) {
+    setAverageDebit(Number(e.target.value));
+  }
+
+  async function handleSubmit() {
+    let { cpf, nome, valorDivida, nomeCondominio } = form;
+    if (!nomeCondominio) {
+      nomeCondominio = "Não informado";
+    }
+
+    if (!cpf) {
+      return setSnackbarMessage("Preencha o campo de CPF!");
+    }
+    if (!nome) {
+      return setSnackbarMessage("Preencha o campo de Nome!");
+    }
+    if (!valorDivida) {
+      return setSnackbarMessage("Preencha o Valor da dívida!");
+    }
+    if (!averageDebit) {
+      return setSnackbarMessage("Preencha a Mensalidade média!");
+    }
+
     const response = await fetch(`${serverURL}/api/tenants/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify(form)
+      body: JSON.stringify({
+        ...form,
+        nomeCondominio: nomeCondominio,
+        mensalidadesAtrasadas: Math.floor(valorDivida / averageDebit)
+      })
     });
 
     if (response.ok) {
@@ -31,6 +63,8 @@ export default function AddTenantModal({ onClose }: AddTenantModalProps) {
 
   return (
     <div className="fixed z-40 inset-0 items-center justify-center overflow-y-auto">
+      <SnackBar message={snackbarMessage} type="error"/>
+
       <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
         <div className="fixed inset-0 transition-opacity" aria-hidden="true">
           <div className="absolute inset-0 bg-gray-800 opacity-50" onClick={onClose} />
@@ -45,57 +79,51 @@ export default function AddTenantModal({ onClose }: AddTenantModalProps) {
 
                 <div className="mb-4">
                   <label htmlFor="cpf" className="font-normal">
-                    CPF
+                    CPF*
                   </label>
                   <input
-                    onChange={handleFormChange}
+                    onChange={handleFormChange} required
                     className="w-full px-3 py-2 border border-gray-300 shadow rounded-md h-10 focus:ring-primary-500 focus:border-primary-500"
-                    type="text"
-                    name="cpf"
-                    id="cpf"
-                    placeholder="Digite o CPF"
+                    type="text" name="cpf" id="cpf"
+                    placeholder="Digite o CPF do inadimplente"
                   />
                 </div>
 
                 <div className="mb-4">
                   <label htmlFor="nome" className="font-normal">
-                    Nome
+                    Nome*
                   </label>
                   <input
-                    onChange={handleFormChange}
+                    onChange={handleFormChange} required
                     className="w-full px-3 py-2 border border-gray-300 shadow rounded-md h-10 focus:ring-primary-500 focus:border-primary-500"
-                    type="text"
-                    name="nome"
-                    id="nome"
-                    placeholder="Digite o Nome"
+                    type="text" name="nome" id="nome"
+                    placeholder="Digite o Nome do inadimplente"
                   />
                 </div>
 
                 <div className="mb-4">
                   <label htmlFor="valorDivida" className="font-normal">
-                    Valor da Dívida
+                    Valor da dívida*
                   </label>
                   <input
-                    onChange={handleFormChange}
+                    onChange={handleFormChange} required
                     className="w-full px-3 py-2 border border-gray-300 shadow rounded-md h-10 focus:ring-primary-500 focus:border-primary-500"
-                    type="text"
-                    name="valorDivida"
-                    id="valorDivida"
-                    placeholder="Digite o Valor da Dívida"
+                    min="0"
+                    type="number" name="valorDivida" id="valorDivida"
+                    placeholder="Digite o valor total da dívida"
                   />
                 </div>
 
                 <div className="mb-4">
-                  <label htmlFor="mensalidadesAtrasadas" className="font-normal">
-                    Mensalidades Atrasadas
+                  <label htmlFor="averageDebit" className="font-normal">
+                    Mensalidade média*
                   </label>
                   <input
-                    onChange={handleFormChange}
+                    onChange={handleAverageDebitChange} required
                     className="w-full px-3 py-2 border border-gray-300 shadow rounded-md h-10 focus:ring-primary-500 focus:border-primary-500"
-                    type="text"
-                    name="mensalidadesAtrasadas"
-                    id="mensalidadesAtrasadas"
-                    placeholder="Digite as Mensalidades Atrasadas"
+                    min="0"
+                    type="number" id="averageDebit" name="averageDebit"
+                    placeholder="Digite a cobrança recorrente mensal"
                   />
                 </div>
 
@@ -104,12 +132,10 @@ export default function AddTenantModal({ onClose }: AddTenantModalProps) {
                     Nome do Condomínio
                   </label>
                   <input
-                    onChange={handleFormChange}
+                    onChange={handleFormChange} type="text"
                     className="w-full px-3 py-2 border border-gray-300 shadow rounded-md h-10 focus:ring-primary-500 focus:border-primary-500"
-                    type="text"
-                    name="nomeCondominio"
-                    id="nomeCondominio"
-                    placeholder="Digite o Nome do Condomínio"
+                    name="nomeCondominio" id="nomeCondominio"
+                    placeholder="Digite o nome do condomínio"
                   />
                 </div>
               </div>

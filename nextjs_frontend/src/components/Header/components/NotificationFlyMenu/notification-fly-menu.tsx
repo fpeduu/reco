@@ -19,12 +19,12 @@ export default function NotificationFlyMenu({
 
   return (
     <Popover className="relative">
-      <Popover.Button className="relative p-2 border rounded-full md:mr-20 hover:cursor-pointer hover:bg-slate-100">
+      <Popover.Button className="relative p-2 border rounded-full md:mr-20
+                                 hover:cursor-pointer hover:bg-slate-100">
         {notifications.length > 0 && (
           <span
-            className={
-              "absolute -top-2 -right-2 w-5 h-5 rounded-full bg-primary text-white text-sm font-normal"
-            }>
+            className="absolute -top-2 -right-2 w-5 h-5 rounded-full
+                      bg-primary text-white text-sm font-normal">
             {notifications.length < 10 ? notifications.length : "9+"}
           </span>
         )}
@@ -45,6 +45,11 @@ export default function NotificationFlyMenu({
               onRemove={() => handleRemoveCard(index)}
             />
           ))}
+          {notifications.length === 0 && (
+            <p className="text-center text-gray-500 m-auto font-light">
+              Nenhuma notificação
+            </p>
+          )}
         </div>
       </Popover.Panel>
     </Popover>

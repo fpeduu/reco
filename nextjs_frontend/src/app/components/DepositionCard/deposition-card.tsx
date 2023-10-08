@@ -19,8 +19,8 @@ export default function DepositionCard({
         <Image
           src={image}
           alt="deposition image"
-          layout="fill"
-          objectFit="cover"
+          width={90}
+          height={90}
         />
       </div>
       <h6 className="text-lg text-center font-medium">{name}</h6>

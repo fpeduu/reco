@@ -1,5 +1,5 @@
 .notificationBox {
-  @apply w-128 max-h-96 min-h-fit mt-6 p-2 pr-5
+  @apply w-128 max-h-96 min-h-[70px] mt-6 p-2 pr-5
         flex flex-col gap-3 overflow-y-auto
         bg-white border-2 border-gray-200 shadow;
 
