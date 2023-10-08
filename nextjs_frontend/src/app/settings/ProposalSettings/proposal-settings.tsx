@@ -12,7 +12,7 @@ interface ProposalSettingsProps {
 export default function ProposalSettings({ user }: ProposalSettingsProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [regras, setRegras] = useState<RegrasProposta[]>(
-    user.regrasProposta.toSorted((a, b) => a.mesesAtraso - b.mesesAtraso)
+    user.regrasProposta.sort((a, b) => a.mesesAtraso - b.mesesAtraso)
   );
 
   function handleAddRule(event: FormEvent<HTMLFormElement>) {
