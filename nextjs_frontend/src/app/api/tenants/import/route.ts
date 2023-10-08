@@ -1,9 +1,8 @@
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 import options from "../../auth/[...nextauth]/options";
-import Devedores from "@/models/Devedores";
+import Devedores, { Devedor } from "@/models/Devedores";
 const csv = require("papaparse");
-const fs = require("fs");
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(options);
@@ -24,8 +23,9 @@ export async function POST(req: NextRequest) {
 
     var devedores = csvData.data;
 
-    devedores.forEach(async (devedor: any) => {
+    devedores.forEach(async (devedor: Devedor) => {
       devedor.emailAdministrador = session.user?.email ?? "";
+      devedor.nomeCondominio = devedor.nomeCondominio || "Não informado";
 
       const newDevedor = new Devedores(devedor);
       await newDevedor.save();

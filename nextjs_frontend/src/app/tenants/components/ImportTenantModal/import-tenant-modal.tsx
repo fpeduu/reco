@@ -7,27 +7,26 @@ import { useDropzone } from "react-dropzone";
 import Papa from "papaparse";
 import { serverURL } from "@/config";
 import { useRouter } from "next/navigation";
-import Snackbar from "@mui/material/Snackbar";
-import { Alert, AlertColor } from "@mui/material";
+import SnackBar from "@/components/SnackBar/snack-bar";
 
 interface ImportTenantModalProps {
   onClose: () => void;
 }
 
-export default function ImportTenantModal({ onClose }: ImportTenantModalProps) {
+export default function ImportTenantModal({
+  onClose
+}: ImportTenantModalProps) {
   const router = useRouter();
   const [droppedFiles, setDroppedFiles] = useState<any[]>([]);
-  const [showSnackbar, setShowSnackbar] = useState<boolean>(false);
   const [snackbarMessage, setSnackbarMessage] = useState<string>("");
   const [snackbarType, setSnackbarType] = useState<string>("error");
 
-  const callSnackbar = (message: string, type: string = "error") => {
+  function callSnackbar(message: string, type: string = "error") {
     setSnackbarMessage(message);
-    setShowSnackbar(true);
     setSnackbarType(type);
   };
 
-  const validateCSVHeaders = (file: any) => {
+  function validateCSVHeaders(file: any) {
     return new Promise((resolve, reject) => {
       Papa.parse(file, {
         header: true,
@@ -38,7 +37,7 @@ export default function ImportTenantModal({ onClose }: ImportTenantModalProps) {
             "cpf",
             "nome",
             "valorDivida",
-            "nomeCondominio",
+            "mensalidadesAtrasadas"
           ];
 
           const isValid = requiredHeaders.every((header) =>
@@ -49,7 +48,7 @@ export default function ImportTenantModal({ onClose }: ImportTenantModalProps) {
             resolve(true);
           } else {
             reject(
-              "Invalid headers in the CSV file. Please make sure the headers are 'cpf', 'nome', 'valorDivida', and 'nomeCondominio'."
+              "Invalid headers in the CSV file. Please make sure the headers are 'cpf', 'nome', 'valorDivida', and 'mensalidadesAtrasadas'."
             );
           }
         },
@@ -66,11 +65,9 @@ export default function ImportTenantModal({ onClose }: ImportTenantModalProps) {
       const isCSV = acceptedFiles.every((file) => csvRegex.test(file.name));
 
       if (!isCSV) {
-        callSnackbar(
+        return callSnackbar(
           "Arquivo inválido. Por favor, selecione apenas arquivos .csv"
         );
-
-        return;
       }
 
       const hasValidHeaders = await Promise.all(
@@ -89,13 +86,13 @@ export default function ImportTenantModal({ onClose }: ImportTenantModalProps) {
         setDroppedFiles(acceptedFiles);
       } else {
         callSnackbar(
-          "Arquivo inválido. Por favor, verifique se todos os arquivos possuem as colunas 'cpf', 'nome', 'valorDivida' e 'nomeCondominio'."
+          "Arquivo inválido. Por favor, verifique se todos os arquivos possuem as colunas 'cpf', 'nome', 'valorDivida' e 'mensalidadesAtrasadas'."
         );
       }
     },
   });
 
-  const handleSubmit = async () => {
+  async function handleSubmit() {
     const formData = new FormData();
     droppedFiles.forEach((file) => formData.append("files", file));
 
@@ -115,19 +112,7 @@ export default function ImportTenantModal({ onClose }: ImportTenantModalProps) {
 
   return (
     <div className="fixed z-40 inset-0 items-center justify-center overflow-y-auto">
-      <Snackbar
-        open={showSnackbar}
-        autoHideDuration={6000}
-        onClose={() => setShowSnackbar(false)}
-      >
-        <Alert
-          onClose={() => setShowSnackbar(false)}
-          severity={snackbarType as AlertColor}
-          sx={{ width: "100%" }}
-        >
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
+      <SnackBar message={snackbarMessage} type={snackbarType} />
 
       <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
         <div className="fixed inset-0 transition-opacity" aria-hidden="true">
@@ -139,8 +124,12 @@ export default function ImportTenantModal({ onClose }: ImportTenantModalProps) {
             <div className="bg-white mb-10 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
               <div className="mb-10">
                 <h1 className="text-4xl font-bold leading-10">
-                  Adicione devedores por meio de arquivos .csv:
+                  Importar devedores
                 </h1>
+                <p className="text-base font-light">
+                  Adicione a partir de arquivos CSVs. Os arquivos devem conter
+                  as colunas "cpf", "nome", "valorDivida" e "mensalidadesAtrasadas".
+                </p>
               </div>
 
               <div
