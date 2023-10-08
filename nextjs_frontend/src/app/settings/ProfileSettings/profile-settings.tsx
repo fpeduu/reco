@@ -77,50 +77,6 @@ export default function ProfileSettings({ user }: ProfileSettingsProps) {
           />
         </form>
       </section>
-
-      <section className="p-10 flex flex-col md:flex-row gap-10 md:gap-20">
-        <div className="w-full md:w-1/5 flex flex-col">
-          <h1 className="text-xl font-normal whitespace-nowrap">Regras de acordo</h1>
-          <h2 className="text-sm font-extralight text-neutral-500 leading-tight whitespace-nowrap">
-            usadas na geração de propostas
-          </h2>
-        </div>
-        <form
-          action={updateUrl}
-          method="post"
-          className="w-full md:w-4/5 flex flex-col overflow-x-auto md:overflow-x-visible">
-          <table>
-            <tr className="w-full px-2 mb-1 flex items-center gap-5 border-b border-b-neutral-500">
-              <th className="w-1/5 font-normal whitespace-nowrap border-b">Meses de atraso</th>
-              <th className="w-1/5 font-normal whitespace-nowrap border-b">Melhor entrada</th>
-              <th className="w-1/5 font-normal whitespace-nowrap border-b">Melhor parcelamento</th>
-              <th className="w-1/5 font-normal whitespace-nowrap border-b">Pior entrada</th>
-              <th className="w-1/5 font-normal whitespace-nowrap border-b">Pior parcelamento</th>
-            </tr>
-            {user.regrasProposta.map((regra) => (
-              <tr
-                key={regra.mesesAtraso}
-                className="w-full px-2 mb-1 flex items-center gap-5 border-b border-dashed border-b-neutral-300">
-                <td className="w-1/5 text-center font-light whitespace-nowrap">
-                  {regra.mesesAtraso}
-                </td>
-                <td className="w-1/5 text-center font-light whitespace-nowrap">
-                  {regra.melhorEntrada * 100}%
-                </td>
-                <td className="w-1/5 text-center font-light whitespace-nowrap">
-                  {regra.melhorParcela}x
-                </td>
-                <td className="w-1/5 text-center font-light whitespace-nowrap">
-                  {regra.piorEntrada * 100}%
-                </td>
-                <td className="w-1/5 text-center font-light whitespace-nowrap">
-                  {regra.piorParcela}x
-                </td>
-              </tr>
-            ))}
-          </table>
-        </form>
-      </section>
     </>
   );
 }
