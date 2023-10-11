@@ -114,7 +114,7 @@ export default function TenantList({ tenants, loading, onCreateAgreement }: Tena
         <div className="flex justify-end items-center w-fit gap-5">
           <span className="whitespace-nowrap text-sm font-light">Filtrar por:</span>
           <Dropdown title="Condomínio" options={condomiunsList} onChange={handleFilterChange} />
-          <Dropdown title="Atraso" options={monthsLateList} onChange={handleFilterChange} />
+          <Dropdown title="Dívida relativa" options={monthsLateList} onChange={handleFilterChange} />
         </div>
       </div>
       {loading ? (

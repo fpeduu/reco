@@ -31,13 +31,11 @@ export default function DebtorCard({ tenant, openModal }: DebtorCardProps) {
           {tenant?.nomeCondominio}
         </div>
       </div>
-      <div className="w-20 pb-1 flex md:block items-center gap-2">
-        <p className="font-normal">Atraso:</p>
+      <div className="w-32 pb-1 flex md:block items-center gap-2">
+        <p className="font-normal">Dívida relativa:</p>
         <div className="flex items-center gap-1 text-xs font-light whitespace-nowrap">
           <span className="pt-1">
-            {tenant.mensalidadesAtrasadas > 0
-              ? `${tenant.mensalidadesAtrasadas} meses`
-              : "Nenhum atraso"}
+            {tenant.mensalidadesAtrasadas} meses
           </span>
         </div>
       </div>

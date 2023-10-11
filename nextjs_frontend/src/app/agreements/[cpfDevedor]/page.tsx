@@ -111,7 +111,7 @@ export default function AgreementStatus({ params }: AgreementStatusProps) {
             iconSize={34}
             title="Valor em débito"
             value={agreement.valorDivida}
-            desccriptionTitle="Em atraso:"
+            desccriptionTitle="Dívida relativa:"
             description={`${agreement.mensalidadesAtrasadas} meses`}
             descriptionStyle="text-rose-400"
           />

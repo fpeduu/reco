@@ -107,7 +107,7 @@ export default function ModalContent({
               </span>
             </div>
             <div className="flex flex-col items-start gap-2 mr-20">
-              <span className="font-normal text-sm">Atraso:</span>
+              <span className="font-normal text-sm">Dívida relativa:</span>
               <span className="text-sm font-light">{debtor.mensalidadesAtrasadas} meses</span>
             </div>
             <div className="flex flex-col items-start gap-2">

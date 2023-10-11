@@ -38,9 +38,9 @@ export default function DropDown({ title, options, onChange }: DropDownProps) {
                             min-w-[15rem] bg-white shadow-md rounded-lg
                             p-2 mt-2 divide-y divide-gray-200 z-10">
         <div className="py-2 first:pt-0 last:pb-0 w-full">
-          {options.map((option) => (
+          {options.map((option, index) => (
             <button
-              key={option}
+              key={option + index}
               data-value={option}
               onClick={handleSelectOption}
               className={Styles.dropdownOption}>
