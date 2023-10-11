@@ -8,6 +8,8 @@ import { serverURL } from "@/config";
 import LoadingBar from "@/components/Loading/loading";
 import ProposalSettings from "./ProposalSettings/proposal-settings";
 
+type SettingsTabs = "profile" | "proposal" | "payment";
+
 async function fetchUser(userEmail: string) {
   return (await fetch(`${serverURL}/api/auth?email=${userEmail}`)
     .then((res) => res.json())
@@ -17,16 +19,14 @@ async function fetchUser(userEmail: string) {
 export default function SettingsPage() {
   const { data: session } = useSession({ required: true });
   const [user, setUser] = useState<Usuario>();
-  const [activeTab, setActiveTab] = useState<"profile" | "proposal" | "payment" | "language">(
+  const [activeTab, setActiveTab] = useState<SettingsTabs>(
     "profile"
   );
 
   useEffect(() => {
-    if (!session) return;
-    //TODO: change to session email
-    fetchUser("teste@email.com").then((res) => {
-      setUser(res);
-    });
+    if (!session || !session.user) return;
+    const userEmail = session.user.email as string;
+    fetchUser(userEmail).then((res) => setUser(res));
   }, [session]);
 
   function switchToProfile() {
@@ -39,10 +39,6 @@ export default function SettingsPage() {
 
   function switchToPayment() {
     setActiveTab("payment");
-  }
-
-  function switchToLanguage() {
-    setActiveTab("language");
   }
 
   return (
@@ -75,15 +71,6 @@ export default function SettingsPage() {
             disabled>
             Dados de Pagamento
           </button>
-          <button
-            onClick={switchToLanguage}
-            className={
-              "w-full md:w-fit h-10 px-5 flex items-center justify-center rounded-lg text-lg font-light whitespace-nowrap " +
-              (activeTab === "language" ? "bg-white" : "text-zinc-400")
-            }
-            disabled>
-            Idioma
-          </button>
         </nav>
         {!user ? (
           <LoadingBar />
@@ -92,8 +79,6 @@ export default function SettingsPage() {
         ) : activeTab === "proposal" ? (
           <ProposalSettings user={user} />
         ) : activeTab === "payment" ? (
-          <></>
-        ) : activeTab === "language" ? (
           <></>
         ) : null}
       </div>

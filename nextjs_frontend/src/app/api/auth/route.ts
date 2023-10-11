@@ -26,10 +26,10 @@ export async function GET(req: NextRequest) {
   }
 
   const returnUser: Usuario = {
+    password: "",
     nome: user.nome,
     email: user.email,
     contact: user.contact,
-    password: "",
     regrasProposta: user.regrasProposta
   };
 

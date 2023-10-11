@@ -128,7 +128,7 @@ export default function ImportTenantModal({
                 </h1>
                 <p className="text-base font-light">
                   Adicione a partir de arquivos CSVs. Os arquivos devem conter
-                  as colunas "cpf", "nome", "valorDivida" e "mensalidadesAtrasadas".
+                  as colunas &quot;cpf&quot;, &quot;nome&quot;, &quot;valorDivida&quot; e &quot;mensalidadesAtrasadas&quot;.
                 </p>
               </div>
 
