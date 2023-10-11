@@ -3,10 +3,10 @@ import { RegrasProposta } from "./Usuarios";
 
 export type StatusType =
   | "Aguardando inadimplente"
-  | "Conversa iniciada"
   | "Primeira proposta"
   | "Segunda proposta"
   | "Proposta do inadimplente"
+  | "Decisão do inadimplente"
   | "Aguardando aprovação"
   | "Acordo aceito"
   | "Acordo recusado";
@@ -18,6 +18,7 @@ export interface Proposta {
   aceito: boolean;
   entrada: number;
   motivo?: string;
+  status: StatusType;
   qtdParcelas: number;
   valorParcela: number;
 }
@@ -69,6 +70,7 @@ const AcordoSchema = new mongoose.Schema({
     {
       autor: String,
       motivo: String,
+      status: String,
       entrada: Number,
       aceito: Boolean,
       qtdParcelas: Number,

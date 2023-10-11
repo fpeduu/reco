@@ -47,7 +47,8 @@ export function ProposalDenied({ name, contact }: GenericMessageProps) {
       <p className="text-primary">
         A proposta foi recusada.
       </p>
-      Sentimos muito, {name}. Infelizmente não podemos oferecer um acordo melhor. Mas não se preocupe, você ainda pode entrar em contato conosco para negociar, através do seguinte número: {contact}.
+      Sentimos muito, {name}. Infelizmente não será possível enviar esse acordo para a análise.
+      Mas não se preocupe, você ainda pode entrar em contato conosco para negociar, através do seguinte número: {contact}.
     </div>
   )
 }

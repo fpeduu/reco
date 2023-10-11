@@ -21,7 +21,6 @@ interface AgreementListProps {
 const agreementStatusList: (StatusType | "Todos")[] = [
   "Todos",
   "Aguardando inadimplente",
-  "Conversa iniciada",
   "Primeira proposta",
   "Segunda proposta",
   "Proposta do inadimplente",
@@ -115,7 +114,7 @@ export default function AgreementList({
       setProgress(option);
     } else if (title === "Condomínio") {
       setCondominium(option);
-    } else if (title === "Atraso") {
+    } else if (title === "Dívida relativa") {
       setPaymentStatus(option);
     }
     setPage(1);
@@ -152,7 +151,7 @@ export default function AgreementList({
             onChange={handleFilterChange}
           />
           <Dropdown
-            title="Atraso"
+            title="Dívida relativa"
             options={monthsLateList}
             onChange={handleFilterChange}
           />

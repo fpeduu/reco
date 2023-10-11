@@ -88,21 +88,8 @@ export async function POST(request: NextRequest, context: Context) {
     } else {
       status = "Acordo recusado";
     }
-  } else if (newProposal.aceito) {
-    status = "Aguardando aprovação";
-  } else switch (history.length) {
-    case 0:
-      status = "Primeira proposta";
-      break;
-    case 1:
-      status = "Segunda proposta";
-      break;
-    case 2:
-      status = "Proposta do inadimplente";
-      break;
-    default:
-      status = "Conversa iniciada";
-      break;
+  } else {
+    status = newProposal.status;
   }
 
   const devedor: Devedor | null = await Devedores.findOne({
@@ -118,7 +105,8 @@ export async function POST(request: NextRequest, context: Context) {
   }
   agreement.qtdParcelas = newProposal.qtdParcelas;
 
-  if (status !== "Acordo aceito" && status !== "Acordo recusado") {
+  if (!["Acordo aceito", "Acordo recusado",
+        "Decisão do inadimplente"].includes(status)) {
     history.push(newProposal);
   }
 
@@ -137,6 +125,8 @@ export async function POST(request: NextRequest, context: Context) {
   );
 
   revalidatePath("/negociacao/[chatID]/page");
+  revalidatePath("/agreements/[chatID]/page");
+  revalidatePath("/agreements/page");
   notificate(devedor, updatedProposal);
   return NextResponse.json(updatedProposal);
 }

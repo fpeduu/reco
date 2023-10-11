@@ -5,21 +5,7 @@ import { Devedor } from "@/models/Devedores";
 import { Acordo, StatusType } from "@/models/Acordos";
 import { INotification } from "@/types/notification.dto";
 
-function notificationMesssage(
-  status: StatusType, accepted: boolean, historyLength: number
-) {
-  if (historyLength >= 4 && !accepted) {
-    return {
-      type: "Erro",
-      message: "O inadimplente rejeitou todas as propostas!"
-    }
-  }
-  if (historyLength === 3 && accepted) {
-    return {
-      type: "Aviso",
-      message: "O inadimplente está propondo um acordo."
-    }
-  }
+function notificationMesssage(status: StatusType) {
   if (status === "Aguardando aprovação") {
     return {
       type: "Sucesso",
@@ -39,11 +25,9 @@ export function notificate(debtor: Devedor, agreement: Acordo) {
 
   const socket = io(apiURL as string, { transports: ['websocket'] });
   const length = agreement.historicoValores.length;
-  const lastProposal = agreement.historicoValores[length - 1].aceito;
+  const lastProposalStatus = agreement.historicoValores[length - 1].status;
 
-  const message = notificationMesssage(
-    agreement.status, lastProposal, length
-  );
+  const message = notificationMesssage(lastProposalStatus);
 
   socket.emit("notificate", {
     condominiumName: debtor.nomeCondominio,

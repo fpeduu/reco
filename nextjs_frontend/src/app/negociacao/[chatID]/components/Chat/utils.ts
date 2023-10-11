@@ -30,29 +30,32 @@ export function formatProposal(totalValue: number, value: number, installment: n
   return proposalString;
 }
 
-export function firstProposal(chatData: NegotiationData) {
-  const totalDebit = chatData.valorDivida.toLocaleString("pt-br", {
+export function firstProposal({
+  valorDivida, rules, nome
+}: NegotiationData) {
+  const totalDebit = valorDivida.toLocaleString("pt-br", {
     style: "currency",
     currency: "BRL"
   });
-  const bestValue = chatData.rules.melhorEntrada;
+  const bestValue = rules.melhorEntrada;
   const confirmMessage = formatProposal(
-    chatData.valorDivida, bestValue,
-    chatData.rules.melhorParcela
+    valorDivida, bestValue, rules.melhorParcela
   );
-  const firstInstallmentValue =
-    (chatData.valorDivida - chatData.valorDivida * bestValue) / chatData.rules.melhorParcela;
+  const firstInstallmentValue = (valorDivida - valorDivida * bestValue)
+                                / rules.melhorParcela;
 
-  const proposalMessage = `Olá, <b>${chatData.nome}</b>! Detectamos uma pendência referente a <b>${chatData.mensalidadesAtrasadas} meses</b> de atraso, totalizando <b>${totalDebit}</b>. Estamos aqui para facilitar sua negociação. Nossa primeira proposta é para você pagar <b>${confirmMessage}</b>. O que acha?`;
+  const proposalMessage = `Olá, <b>${nome}</b>! Você tem uma pendência totalizando um valor de <b>${totalDebit}</b>. Estamos aqui para facilitar sua negociação. Nossa proposta é para você pagar <b>${confirmMessage}</b>. O que acha?`;
 
   const proposal: IProposal = {
     autor: "Bot",
     aceito: false,
     entrada: bestValue,
     message: proposalMessage,
-    confirmMessage: confirmMessage,
+    status: "Primeira proposta",
+    denyText: "Recusar proposta",
+    confirmText: `Pagar ${confirmMessage}`,
     valorParcela: firstInstallmentValue,
-    qtdParcelas: chatData.rules.melhorParcela
+    qtdParcelas: rules.melhorParcela
   };
   return proposal;
 }
@@ -80,32 +83,51 @@ export function secondProposal(chatData: NegotiationData) {
     aceito: false,
     entrada: currentValue,
     message: proposalMessage,
-    confirmMessage: confirmMessage,
+    status: "Segunda proposta",
+    denyText: "Recusar proposta",
+    confirmText: `Pagar ${confirmMessage}`,
     valorParcela: installmentValue,
     qtdParcelas: currentInstallment
   };
   return proposal;
 }
 
-export function thirdProposal(chatData: NegotiationData) {
-  const proposalMessage = `${chatData.nome}, vamos tentar chegar a um acordo. Informe abaixo um <b>valor de entrada</b> e a <b>quantidade de parcelas</b> que seriam ideais para você. E, se puder, <b>justifique sua proposta</b>.`;
+export function thirdProposal({
+  nome, valorDivida, rules
+}: NegotiationData) {
+  const proposalMessage = `${nome}, vamos tentar chegar a um acordo. Informe abaixo um <b>valor de entrada</b> e a <b>quantidade de parcelas</b> que seriam ideais para você. E, se puder, <b>justifique sua proposta</b>.`;
 
-  const confirmMessage = formatProposal(chatData.valorDivida,
-    chatData.rules.piorEntrada, chatData.rules.piorParcela);
-  const installmentValue = (chatData.valorDivida - chatData.valorDivida
-    * chatData.rules.piorEntrada) / chatData.rules.piorParcela;
+  const confirmMessage = formatProposal(valorDivida,
+    rules.piorEntrada, rules.piorParcela);
+  const installmentValue = (valorDivida - valorDivida
+    * rules.piorEntrada) / rules.piorParcela;
   const proposal: IProposal = {
     autor: "User",
     aceito: false,
-    entrada: chatData.rules.piorEntrada,
     message: proposalMessage,
-    confirmMessage: confirmMessage,
+    entrada: rules.piorEntrada,
+    denyText: "Recusar proposta",
+    qtdParcelas: rules.piorParcela,
     valorParcela: installmentValue,
-    qtdParcelas: chatData.rules.piorParcela
+    status: "Proposta do inadimplente",
+    confirmText: `Pagar ${confirmMessage}`,
   };
   return proposal;
 }
 
-export function lastProposalMessage(newProposal: string) {
-  return "Sinto muito, mas este acordo não é viável para nós. O que você acha de tentarmos o seguinte acordo: <b>" + newProposal + "</b>?";
+export function restartProposal() {
+  const proposalMessage = "Infelizmente não será possível enviar essa proposta para análise, gostaria de tentar novamente, ou sugerir uma nova proposta?"
+
+  const proposal: IProposal = {
+    autor: "Bot",
+    aceito: false,
+    message: proposalMessage,
+    denyText: "Recomeçar negociação",
+    status: "Decisão do inadimplente",
+    confirmText: "Sugerir nova proposta",
+    valorParcela: 0,
+    qtdParcelas: 0,
+    entrada: 0,
+  };
+  return proposal;
 }
