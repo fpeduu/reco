@@ -1,8 +1,10 @@
 import Image from "next/image";
+import Link from "next/link";
 
 interface NotificationCardProps {
   type: "Sucesso" | "Erro" | "Aviso" | "Informação";
   tenantName: string;
+  tenantCpf: string;
   condominiumName: string;
   message: string;
   onRemove: Function;
@@ -11,6 +13,7 @@ interface NotificationCardProps {
 export default function NotificationCard({
   type,
   tenantName,
+  tenantCpf,
   condominiumName,
   message,
   onRemove
@@ -50,13 +53,13 @@ export default function NotificationCard({
     <div className="w-full h-20 flex items-center gap-5">
       <span className={"w-1 h-full " + color} />
       <Image src={icon} alt="icon" width={27} height={27} />
-      <div className="py-1 pl-0 pr-4 flex flex-col">
+      <Link href={`/agreements/${tenantCpf}`} className="py-1 pl-0 pr-4 flex flex-col">
         <h1 className="font-semibold text-black">{title}</h1>
         <span className="text-sm font-medium text-neutral-700">
           {tenantName} | {condominiumName}
         </span>
         <span className="mt-2 text-xs text-neutral-400">{message}</span>
-      </div>
+      </Link>
       <button onClick={handleRemove} className="ml-auto">
         <Image src="/icons/x_circle.svg" alt="icon" width={27} height={27} />
       </button>
