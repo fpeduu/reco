@@ -9,149 +9,237 @@ async function generateAgreement(devedor: DevedorAcordo) {
   const page = pdfDoc.addPage();
   const { width, height } = page.getSize();
 
+  const leftSpace = 30;
+  const rightSpace = 15;
+  let lastLineHeight = height;
+
+  // Title
   const fontSize = 11;
+  const title = "Termo de acordo e confissão de dívida";
 
-  const title = "Termo de Acordo Extrajudicial";
-  const titleWidth = timesRomanFont.widthOfTextAtSize(title, fontSize);
-  const titleX = (width - titleWidth) / 2;
-
+  lastLineHeight -= 50;
   page.drawText(title, {
-    x: titleX,
-    y: height - 50,
-    size: fontSize,
+    x: leftSpace,
+    y: lastLineHeight,
+    size: 16,
     font: timesBoldFont,
     color: rgb(0, 0, 0)
   });
 
-  const today = new Date();
   const { acordo } = devedor;
-  const firstPaymentMonth = today.getMonth() + 2;
-  const lastPaymentMonth = firstPaymentMonth + acordo.qtdParcelas;
-  const firstPaymentYear = firstPaymentMonth > 12 ? today.getFullYear() + 1 : today.getFullYear();
-  const lastPaymentYear =
-    lastPaymentMonth > 12
-      ? today.getFullYear() + Math.floor(lastPaymentMonth / 12)
-      : today.getFullYear();
-
-  if (acordo.dataAcordo === undefined) {
+  if (!acordo.dataAcordo) {
     acordo.dataAcordo = new Date();
   }
-  const day = new Date(acordo.dataAcordo).getDate();
-  const firstPaymentDay = `${day}/${firstPaymentMonth % 12}/${firstPaymentYear}`;
-  const lastPaymentDay = `${day}/${lastPaymentMonth % 12}/${lastPaymentYear}`;
 
-  const totalDebit = devedor.valorDivida;
-  const totalDebitString = totalDebit.toLocaleString("pt-br", {
-    style: "currency",
-    currency: "BRL"
+  const acordoDateString = new Date(acordo.dataAcordo).toLocaleDateString("pt-br");
+
+  // Header
+  lastLineHeight -= 50;
+  page.drawText("Acordo", {
+    x: leftSpace,
+    y: lastLineHeight,
+    size: 12,
+    font: timesBoldFont,
+    color: rgb(1, 0, 0)
   });
-  const debitMonths = ["01/01/2021", "01/02/2021", "01/03/2021"];
-  const debitMonthsString = debitMonths.join(", ");
-  const firstValue = acordo.entrada.toLocaleString("pt-br", {
-    style: "currency",
-    currency: "BRL"
+
+  lastLineHeight -= 20;
+  page.drawText("Detalhes", {
+    x: leftSpace + 2,
+    y: lastLineHeight,
+    size: fontSize,
+    font: timesRomanFont,
+    color: rgb(0.5, 0.5, 0.5)
   });
-  const debitMonth = ((totalDebit - acordo.entrada)/ acordo.qtdParcelas).toLocaleString("pt-br", {
-    style: "currency",
-    currency: "BRL"
+
+  lastLineHeight -= 5;
+  page.drawLine({
+    start: { x: leftSpace, y: lastLineHeight },
+    end: {
+      x: width - rightSpace,
+      y: lastLineHeight
+    }
   });
-  const content = `
-DEVEDOR(A):
 
-${devedor.nome}, inscrita no CPF sob o nº ${devedor.cpf}.
+  const details = `
+Unidade:-
+Cod. acordo:-
+Efetuado em:${acordoDateString}
+Condômino(Proprietário):${devedor.nome}  CPF/CNPJ: ${devedor.cpf}
+                    -
+    
+Condomínio:${devedor.nomeCondominio}
+                    -
+                    CNPJ: -`;
 
-APARTAMENTO: ${devedor.nomeCondominio}
+  const detailsLines = details.split("\n");
+  for (let i = 0; i < detailsLines.length; i++) {
+    const line = detailsLines[i];
+    const separator = line.indexOf(":");
+    const section = line[0] !== " " ? line.slice(0, separator + 1) : "";
+    const sectionContent = line[0] === " " ? line.trim() : line.slice(separator + 1);
 
-CLÁUSULAS E CONDIÇÕES:
-
-1. O(A) DEVEDOR(A) declara e confessa a dívida de ${totalDebitString} referente as cotas condominiais vencidas nas seguintes datas: ${debitMonthsString}, com o acréscimo das multas, juros de mora, calculados até a presente data, conforme planilha em anexo.
-
-2. No intuito de viabilizar a regularização do pagamento das cotas condominiais, o CREDOR receberá do(a) DEVEDOR(A), a sobredita importância de ${firstValue} de entrada e ${acordo.qtdParcelas} parcelas mensais sucessivas de ${debitMonth}, vencendo-se a primeira no dia ${firstPaymentDay} e a última em ${lastPaymentDay}, cujos pagamentos deverão ser realizados através de boletos bancários a serem emitidos pelo condomínio ou sua administradora.
-
-3. O presente acordo não implica novação da dívida, mas tão somente numa liberalidade do CREDOR na forma de recebimento de seu crédito.
-
-4. O inadimplemento de qualquer uma das parcelas do acordo ou cota condominial vencida na pendência deste, implicará no vencimento antecipado da dívida e poderá, a critério do credor ensejar a imediata ação de execução.
-
-5. A verificação da inadimplência e da mora independerá de qualquer tipo de notificação, bastando, para tanto, o não pagamento das parcelas aqui convencionadas.
-
-6. Em caso de mora das cotas mensais, ocorrerá o vencimento antecipado da dívida, incluindo os juros moratórios e correção monetária legal, devendo, entretanto, serem deduzidos do montante do débito os valores eventualmente recebidos por meio do presente acordo.
-
-7. Caso o CREDOR tenha que se valer de ação judicial para exigir o débito aqui confessado pelo DEVEDOR, ainda que se trate do prosseguimento do processo eventualmente suspenso, serão acrescidos ao débito as despesas daí decorrentes, inclusive os honorários advocatícios fixados pelo juízo sobre o valor da dívida.
-
-8. O presente acordo obriga herdeiros e sucessores de ambas as partes.
-
-9. Por fim, por estarem firmes no propósito de prevenirem ou abreviarem qualquer demanda judicial em relação ao débito mencionado no item nº 2, reconhecido como líquido e certo, assinam o presente para os fins de direito.
-
-_________________, ___ de _____ de ______.
-`;
-
-  const contentLines = content.split("\n");
-
-  let formattedContent = "";
-  for (const line of contentLines) {
-    const words = line.split(" ");
-    let currentLine = "";
-
-    for (const word of words) {
-      if (currentLine.length + word.length + 1 <= 100) {
-        currentLine += (currentLine === "" ? "" : " ") + word;
-      } else {
-        formattedContent += currentLine + "\n";
-        currentLine = word;
-      }
+    if (i > 0 && i % 2 === 0) {
+      page.drawRectangle({
+        x: leftSpace,
+        y: lastLineHeight - 4,
+        width: width - leftSpace - rightSpace,
+        height: 14,
+        color: rgb(0.7, 0.7, 0.7),
+        opacity: 0.2
+      });
     }
 
-    formattedContent += currentLine + "\n";
+    page.drawText(section, {
+      x: leftSpace + 2,
+      y: lastLineHeight,
+      size: fontSize,
+      font: timesRomanFont,
+      color: rgb(0, 0, 0),
+      lineHeight: 12
+    });
+    page.drawText(sectionContent, {
+      x: leftSpace + 150,
+      y: lastLineHeight,
+      size: fontSize,
+      font: timesRomanFont,
+      color: rgb(0, 0, 0),
+      lineHeight: 12
+    });
+
+    lastLineHeight -= 14;
   }
 
-  page.drawText(formattedContent, {
-    x: 50,
-    y: height - 80,
-    size: 12,
-    font: timesRomanFont,
-    color: rgb(0, 0, 0),
-    lineHeight: 14
+  lastLineHeight += 10;
+  page.drawLine({
+    start: { x: leftSpace, y: lastLineHeight },
+    end: {
+      x: width - rightSpace,
+      y: lastLineHeight
+    }
   });
 
-  const secondPage = pdfDoc.addPage();
+  // Content 1
+  const content = `Pelo presente instrumento de confissão de dívida as partes acima qualificadas, independente de seu número e gênero, têm
+por justo, líquido, certo e exigível, obrigando a si e seus sucessores, de maneira irrevogável o seguinte: O CONDÔMINO
+reconhece ser devedor dos valores abaixo registrados, dando por líquido, certo e exigíveis.`;
 
-  const secondPageContent = `
-_______________________________________________________
-Devedor(a)
+  lastLineHeight -= 25;
+  page.drawText(content, {
+    x: leftSpace,
+    y: lastLineHeight,
+    size: fontSize,
+    font: timesRomanFont,
+    color: rgb(0, 0, 0),
+    lineHeight: 12
+  });
+  lastLineHeight -= 12 * content.split("\n").length;
 
-_______________________________________________________
-${devedor.nomeCondominio}
+  lastLineHeight -= 30;
+  page.drawLine({
+    start: { x: leftSpace + 10, y: lastLineHeight },
+    end: { x: leftSpace + 180, y: lastLineHeight }
+  });
+  page.drawLine({
+    start: { x: leftSpace + 240, y: lastLineHeight },
+    end: { x: leftSpace + 410, y: lastLineHeight }
+  });
 
-_______________________________________________________
-Síndico(a)
-
-_______________________________________________________
-Primeira testemunha 
-
-_______________________________________________________
-Segunda testemunha  
-`;
-
-  secondPage.drawText(secondPageContent, {
-    x: 50,
-    y: height - 80,
+  lastLineHeight -= 14;
+  page.drawText("Condomínio", {
+    x: leftSpace + 65,
+    y: lastLineHeight,
+    size: fontSize,
+    font: timesRomanFont,
+    color: rgb(0, 0, 0)
+  });
+  page.drawText("Condômino", {
+    x: leftSpace + 300,
+    y: lastLineHeight,
     size: fontSize,
     font: timesRomanFont,
     color: rgb(0, 0, 0)
   });
 
+  // Content 2
+  const content2 = `Os pagamentos deverão ser efetuados através de boletos bancários fornecidos pela administradora.
+O não pagamento de qualquer das parcelas, neste, acordadas, considerar-se-á vencidas antecipadamente a dívida com multa
+de 2% e juros 1% ao mês.
+
+Fica, desde já, acordado que as taxas de condomínio vincendas, se não pagas, poderão ensejar quebra deste acordo, podendo
+a administradora encaminhar o débito ao departamento jurídico para que seja exercida a cobrança judicial dos valores.`;
+
+  lastLineHeight -= 25;
+  page.drawText(content2, {
+    x: leftSpace,
+    y: lastLineHeight,
+    size: fontSize,
+    font: timesRomanFont,
+    color: rgb(0, 0, 0),
+    lineHeight: 12
+  });
+  lastLineHeight -= 12 * content2.split("\n").length;
+
+  // Content 3
+  const content3 = `Cumprida a obrigação, o CONDOMÍNIO ${devedor.nomeCondominio} dará plena, geral e irrevogável quitação de todo objeto da presente demanda.`;
+  let firstLine = "";
+  let secondLine = "";
+  const content3Words = content3.split(" ");
+  for (const word of content3Words) {
+    if (secondLine.length === 0 && firstLine.length + word.length <= 115) {
+      firstLine += word + " ";
+      continue;
+    }
+    secondLine += word + " ";
+  }
+  const formattedContent3 = firstLine + "\n" + secondLine;
+
+  lastLineHeight -= 12;
+  page.drawText(formattedContent3, {
+    x: leftSpace,
+    y: lastLineHeight,
+    size: fontSize,
+    font: timesRomanFont,
+    color: rgb(0, 0, 0),
+    lineHeight: 12
+  });
+  lastLineHeight -= 12 * formattedContent3.split("\n").length;
+
+  // Content 4
+  const content4 = `FIRMO O PRESENTE COMPROMISSO DE PAGAMENTO DO VALOR SUPRA MENCIONADO CONFORME RESUMO ABAIXO:`;
+
+  lastLineHeight -= 12;
+  page.drawText(content4, {
+    x: leftSpace,
+    y: lastLineHeight,
+    size: fontSize - 1.2,
+    font: timesRomanFont,
+    color: rgb(0, 0, 0),
+    lineHeight: 12
+  });
+  lastLineHeight -= 12 * content4.split("\n").length;
+
+  lastLineHeight -= 30;
+  page.drawLine({
+    start: { x: leftSpace, y: lastLineHeight },
+    end: { x: leftSpace + 180, y: lastLineHeight }
+  });
+
+  lastLineHeight -= 14;
+  page.drawText(devedor.nome, {
+    x: leftSpace,
+    y: lastLineHeight,
+    size: fontSize,
+    font: timesRomanFont,
+    color: rgb(0, 0, 0)
+  });
+
+  // Logo Reco
   const imageBytes = await fetch("/reco.png").then((response) => response.arrayBuffer());
   const image = await pdfDoc.embedPng(imageBytes);
   const imageDims = image.scale(0.1);
 
   page.drawImage(image, {
-    x: width - imageDims.width - 10,
-    y: 10,
-    width: imageDims.width,
-    height: imageDims.height
-  });
-
-  secondPage.drawImage(image, {
     x: width - imageDims.width - 10,
     y: 10,
     width: imageDims.width,
