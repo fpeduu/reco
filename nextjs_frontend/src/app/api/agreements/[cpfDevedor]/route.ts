@@ -7,6 +7,7 @@ import { getServerSession } from "next-auth/next";
 
 import Devedores from "@/models/Devedores";
 import { DevedorAcordo } from "@/types/acordo.dto";
+import { randomUUID } from "crypto";
 
 interface Context {
   params: { cpfDevedor: string };
@@ -54,24 +55,20 @@ export async function POST(request: NextRequest, context: Context) {
   }
 
   const {
-    valorTotal, mesesAtraso, melhorEntrada,
-    melhorParcela, piorEntrada, piorParcela,
-    valorEntrada,
+    valorTotal, mesesAtraso, melhorEntrada, melhorParcela,
+    piorEntrada, piorParcela, valorEntrada,
   } = await request.json();
-
   const { cpfDevedor } = context.params;
 
   const acordo: Acordo | null = await Acordos.findOne({ cpfDevedor });
   if (!acordo) {
     const usuarioEmail = session.user?.email as string;
+    const status = "Aguardando inadimplente";
     const newAcordo: Acordo = {
-      status: "Aguardando inadimplente",
+      identificador: randomUUID(),
       qtdParcelas: melhorParcela,
       entrada: valorEntrada,
       historicoValores: [],
-      cpfDevedor,
-      valorTotal,
-      usuarioEmail,
       regraProposta: {
         melhorEntrada,
         melhorParcela,
@@ -79,6 +76,10 @@ export async function POST(request: NextRequest, context: Context) {
         piorEntrada,
         piorParcela,
       },
+      usuarioEmail,
+      cpfDevedor,
+      valorTotal,
+      status,
     };
 
     const acordoCreated = await Acordos.create(newAcordo);

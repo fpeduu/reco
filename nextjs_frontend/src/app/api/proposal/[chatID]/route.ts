@@ -110,13 +110,13 @@ export async function POST(request: NextRequest, context: Context) {
     history.push(newProposal);
   }
 
-  agreement.dataAcordo = new Date();
+  agreement.dataAtualizacao = new Date();
   agreement.status = status;
 
   const updatedProposal = await Acordos.findOneAndUpdate(
     { cpfDevedor },
     { $set: {
-      dataAcordo: agreement.dataAcordo,
+      dataAtualizacao: agreement.dataAtualizacao,
       status, entrada: agreement.entrada,
       qtdParcelas: agreement.qtdParcelas,
       historicoValores: history,

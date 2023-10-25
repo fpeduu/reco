@@ -27,11 +27,11 @@ async function generateAgreement(devedor: DevedorAcordo) {
   });
 
   const { acordo } = devedor;
-  if (!acordo.dataAcordo) {
-    acordo.dataAcordo = new Date();
+  if (!acordo.dataAtualizacao) {
+    acordo.dataAtualizacao = new Date();
   }
 
-  const acordoDateString = new Date(acordo.dataAcordo).toLocaleDateString("pt-br");
+  const acordoDateString = new Date(acordo.dataAtualizacao).toLocaleDateString("pt-br");
 
   // Header
   lastLineHeight -= 50;

@@ -24,9 +24,12 @@ export interface Proposta {
 }
 
 export interface Acordo {
+  identificador: string;
+  dataAtualizacao?: Date;
+  dataCriacao?: Date;
+
   usuarioEmail: string;
   cpfDevedor: string;
-  dataAcordo?: Date;
   status: StatusType;
 
   entrada: number;
@@ -37,6 +40,18 @@ export interface Acordo {
 }
 
 const AcordoSchema = new mongoose.Schema({
+  identificador: {
+    type: String,
+    required: true,
+  },
+  dataCriacao: {
+    type: Date,
+    default: Date.now,
+  },
+  dataAtualizacao: {
+    type: Date,
+    default: Date.now,
+  },
   usuarioEmail: {
     type: String,
     required: true,
@@ -44,10 +59,6 @@ const AcordoSchema = new mongoose.Schema({
   cpfDevedor: {
     type: String,
     required: true,
-  },
-  dataAcordo: {
-    type: Date,
-    default: Date.now,
   },
   status: String,
   entrada: Number,
