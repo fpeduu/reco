@@ -1,19 +1,19 @@
-import { Devedor } from "@/models/Devedores";
 import Image from "next/image";
-import { useParams } from "next/navigation";
 import { useRef } from "react";
+import { DevedorAcordo } from "@/types/acordo.dto";
 
 interface TenantProfileCardProps {
-  tenant: Devedor;
+  tenant: DevedorAcordo;
 }
 
 export default function TenantProfileCard({ tenant }: TenantProfileCardProps) {
-  const params = useParams();
   const linkRef = useRef<HTMLSpanElement>(null);
 
   function handleCopyLink() {
     if (!linkRef.current || typeof window === "undefined") return;
-    navigator.clipboard.writeText(`${window.location.origin}/negociacao/${params.cpfDevedor}`);
+    const identifier = tenant.acordo.identificador;
+    const urlOrigin = window.location.origin;
+    navigator.clipboard.writeText(`${urlOrigin}/negociacao/${identifier}`);
     linkRef.current.textContent = "Link copiado!";
   }
 

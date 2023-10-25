@@ -15,7 +15,10 @@ import LoadingBar from "@/components/Loading/loading";
 interface TenantListProps {
   tenants: Devedor[];
   loading: boolean;
-  onCreateAgreement: (debtor: Devedor, negotiation: INegotiationData) => Promise<boolean>;
+  onCreateAgreement: (
+    debtor: Devedor,
+    negotiation: INegotiationData
+  ) => Promise<string | null>;
 }
 
 const tenantsPerPage = 7;

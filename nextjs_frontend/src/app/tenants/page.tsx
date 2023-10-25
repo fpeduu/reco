@@ -89,10 +89,9 @@ export default function AgreementsPage() {
         setTenants((tenants) =>
           tenants.filter((tenant) => tenant.cpf !== debtor.cpf)
         );
-        return true;
-      } else {
-        return false;
+        return agreement.identificador;
       }
+      return null;
     });
   }
 

@@ -98,7 +98,7 @@ export default function ModalContent({
 
         <div className="w-full my-8 gap-2 flex flex-col">
           <div
-            className="flex-1 p-4 gap-10 flex flex-wrap items-center
+            className="flex-1 p-4 gap-5 flex flex-wrap items-center
                           min-h-max justify-start rounded-md shadow bg-tertiary">
             <div className="flex flex-col items-start gap-2 w-1/2">
               <span className="font-normal text-lg">{debtor.nome}</span>

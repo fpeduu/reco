@@ -5,16 +5,19 @@ import { getServerSession } from "next-auth";
 import { revalidatePath } from "next/cache";
 
 import Acordos, { Acordo, Proposta, StatusType } from "@/models/Acordos";
-import Devedores, { Devedor } from "@/models/Devedores";
+import { Devedor } from "@/models/Devedores";
 import { Usuario } from "@/models/Usuarios";
 import { NegotiationData } from "@/types/negotiation.dto";
 import { notificate } from "./notification";
 
-interface AggregatedDebtor extends Devedor {
+interface AgreementAgg extends Acordo {
   administrador: Usuario;
-  acordo: Acordo;
+  devedor: Devedor;
 }
 
+interface AgreementAgg2 extends Acordo {
+  devedor: Devedor;
+}
 interface Context {
   params: { chatID: string }
 }
@@ -22,44 +25,46 @@ interface Context {
 export async function GET(request: NextRequest, context: Context) {
   connectToDatabase();
 
-  const cpfDevedor = context.params.chatID;
-  const debtors: AggregatedDebtor[] = await Devedores.aggregate([
-    { $match: { cpf: cpfDevedor } },
+  const identificador = context.params.chatID;
+  const agreements: AgreementAgg[] = await Acordos.aggregate([
+    { $match: { identificador } },
+    {
+      $lookup: {
+        from: "devedores",
+        localField: "cpfDevedor",
+        foreignField: "cpf",
+        as: "devedor",
+      },
+    },
     {
       $lookup: {
         from: "usuarios",
-        localField: "emailAdministrador",
+        localField: "usuarioEmail",
         foreignField: "email",
         as: "administrador",
       },
     },
-    {
-      $lookup: {
-        from: "acordos",
-        localField: "cpf",
-        foreignField: "cpfDevedor",
-        as: "acordo",
-      },
-    },
     { $unwind: { path: "$administrador" } },
-    { $unwind: { path: "$acordo" } },
+    { $unwind: { path: "$devedor" } },
   ]);
-  if (debtors.length === 0) {
-    return NextResponse.json({ "error": "No debtors found" });
+  if (agreements.length === 0) {
+    return NextResponse.json({ "error": "No agreements found" });
   }
 
-  const devedor: AggregatedDebtor = debtors[0];
+  const agreement: AgreementAgg = agreements[0];
+  const devedor: Devedor = agreement.devedor;
   const response: NegotiationData = {
-    cpf: devedor.cpf,
     nome: devedor.nome,
     valorDivida: devedor.valorDivida,
     nomeCondominio: devedor.nomeCondominio,
-    emailAdministrador: devedor.emailAdministrador,
     mensalidadesAtrasadas: devedor.mensalidadesAtrasadas,
-    proposals: devedor.acordo.historicoValores,
-    contact: devedor.administrador.contact,
-    rules: devedor.acordo.regraProposta,
-    status: devedor.acordo.status,
+    emailAdministrador: agreement.usuarioEmail,
+    contact: agreement.administrador.contact,
+    proposals: agreement.historicoValores,
+    identifier: agreement.identificador,
+    rules: agreement.regraProposta,
+    cpf: agreement.cpfDevedor,
+    status: agreement.status,
   };
 
   return NextResponse.json(response);
@@ -68,16 +73,25 @@ export async function GET(request: NextRequest, context: Context) {
 export async function POST(request: NextRequest, context: Context) {
   connectToDatabase();
 
-  const cpfDevedor = context.params.chatID;
+  const identificador = context.params.chatID;
   const newProposal: Proposta = await request.json();
 
-  const agreement: Acordo | null = await Acordos.findOne({
-    cpfDevedor
-  });
-  if (!agreement) {
-    return NextResponse.json({ "error": "No proposal found" });
+  const agreements: AgreementAgg2[] = await Acordos.aggregate([
+    { $match: { identificador } },
+    {
+      $lookup: {
+        from: "devedores",
+        localField: "cpfDevedor",
+        foreignField: "cpf",
+        as: "devedor",
+      },
+    },
+    { $unwind: { path: "$devedor" } },
+  ]);
+  if (agreements.length === 0) {
+    return NextResponse.json({ "error": "No agreement found" });
   }
-
+  const agreement: AgreementAgg2 = agreements[0];
   let status: StatusType = "Aguardando inadimplente";
   const session = await getServerSession(options);
   const history = agreement.historicoValores;
@@ -92,12 +106,7 @@ export async function POST(request: NextRequest, context: Context) {
     status = newProposal.status;
   }
 
-  const devedor: Devedor | null = await Devedores.findOne({
-    cpf: cpfDevedor,
-  });
-  if (!devedor) {
-    return NextResponse.json({ "error": "No debtor found" });
-  }
+  const devedor: Devedor = agreement.devedor;
   if (newProposal.autor === "User") {
     agreement.entrada = newProposal.entrada;
   } else {
@@ -114,7 +123,7 @@ export async function POST(request: NextRequest, context: Context) {
   agreement.status = status;
 
   const updatedProposal = await Acordos.findOneAndUpdate(
-    { cpfDevedor },
+    { identificador },
     { $set: {
       dataAtualizacao: agreement.dataAtualizacao,
       status, entrada: agreement.entrada,

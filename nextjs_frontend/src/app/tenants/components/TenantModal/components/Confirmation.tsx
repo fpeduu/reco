@@ -4,19 +4,19 @@ import Link from "next/link";
 import { serverURL } from "@/config";
 
 interface ConfirmationProps {
-  cpfDevedor: string;
+  identifier: string;
 }
 
-export default function Confirmation({ cpfDevedor }: ConfirmationProps) {
+export default function Confirmation({ identifier }: ConfirmationProps) {
   function copyToClipboard() {
-    const link = `${serverURL}/negociacao/${cpfDevedor}`;
+    const link = `${serverURL}/negociacao/${identifier}`;
     navigator.clipboard.writeText(link);
   }
 
   return (
     <div className="bg-white pt-16 md:p-16 flex justify-center">
       <div
-        className="mt-3 sm:mt-0 max-w-xl w-full gap-5 flex flex-col 
+        className="mt-3 sm:mt-0 max-w-2xl w-full gap-5 flex flex-col 
                       items-center">
         <Image src="/icons/confirmation.svg" alt="confirmation img" width={60} height={60} />
 
@@ -36,7 +36,7 @@ export default function Confirmation({ cpfDevedor }: ConfirmationProps) {
         <div
           className="w-full bg-tertiary rounded-sm text-lg
                         font-light p-2 mt-4 flex flex-wrap items-center overflow-x-auto break-keep whitespace-nowrap">
-          {serverURL}/negociacao/{cpfDevedor}
+          {serverURL}/negociacao/{identifier}
           <button className="md:ml-auto hover:bg-gray-100 rounded-sm p-1" onClick={copyToClipboard}>
             <Image src="/icons/copy.svg" alt="Copy link" width={20} height={20} />
           </button>

@@ -149,7 +149,7 @@ export default function Chat({ chatData }: ChatProps) {
       isBot: false,
     }]);
 
-    await updateProposal(chatData.cpf, {
+    await updateProposal(chatData.identifier, {
       aceito: true, autor: "Bot",
       status: "Aguardando aprovação",
       valorParcela, qtdParcelas, entrada,
@@ -187,7 +187,7 @@ export default function Chat({ chatData }: ChatProps) {
     const isWorstProposal = qtdParcelas === chatData.rules.piorParcela;
 
     // If accept, stop proposals
-    await updateProposal(chatData.cpf, {
+    await updateProposal(chatData.identifier, {
       aceito: isWorstProposal,
       autor: "Bot", valorParcela,
       status, entrada, qtdParcelas,
@@ -252,7 +252,7 @@ export default function Chat({ chatData }: ChatProps) {
                              / Math.max(installment, 1);
     const status = canBeAccepted ? "Aguardando aprovação" :
                    "Proposta do inadimplente";
-    await updateProposal(chatData.cpf, {
+    await updateProposal(chatData.identifier, {
       autor: "User",
       entrada: value,
       aceito: canBeAccepted,

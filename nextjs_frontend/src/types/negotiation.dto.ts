@@ -6,5 +6,6 @@ export interface NegotiationData extends Devedor {
     rules: RegrasProposta;
     proposals: Proposta[];
     status: StatusType;
+    identifier: string;
     contact: string;
 }

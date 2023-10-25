@@ -9,6 +9,7 @@ import ModalContent, { INegotiationData } from "./components/Modal-content";
 import Confirmation from "./components/Confirmation";
 import { Devedor } from "@/models/Devedores";
 import LoadingBar from "@/components/Loading/loading";
+import SnackBar from "@/components/SnackBar/snack-bar";
 
 interface TenantModalProps {
   open: boolean;
@@ -17,7 +18,7 @@ interface TenantModalProps {
   onConfirm: (
     debtor: Devedor,
     negotiation: INegotiationData
-  ) => Promise<boolean>;
+  ) => Promise<string | null>;
 }
 
 async function fetchProposalInfos(cpf: string) {
@@ -36,21 +37,21 @@ export default function TenantModal({
   onConfirm,
 }: TenantModalProps) {
   const [rules, setRules] = useState<RegrasProposta>();
-  const [confirmed, setConfirmed] = useState<boolean>(false);
+  const [identifier, setIdentifier] = useState<string>("");
+  const [snackbarMessage, setSnackbarMessage] = useState<string>("");
 
   function handleClose() {
-    setConfirmed(false);
+    setIdentifier("");
     onClose();
   }
 
   async function handleConfirm(negotiation: INegotiationData) {
     if (!debtor) return;
-    onConfirm(debtor, negotiation).then((isConfirmed) => {
-      if (isConfirmed) {
-        setConfirmed(true);
+    onConfirm(debtor, negotiation).then((newIdentifier) => {
+      if (newIdentifier !== null) {
+        setIdentifier(newIdentifier);
       } else {
-        alert("Erro ao criar acordo");
-        console.error(isConfirmed);
+        setSnackbarMessage("Erro ao iniciar acordo, contacte o suporte");
       }
     });
   }
@@ -72,6 +73,7 @@ export default function TenantModal({
         role="dialog"
         aria-modal="true"
       >
+        <SnackBar message={snackbarMessage} type={"error"} />
         <div
           className="fixed inset-0 bg-gray-500 bg-opacity-75
                       transition-opacity"
@@ -95,8 +97,8 @@ export default function TenantModal({
                 &times;
               </button>
 
-              {confirmed
-                ? debtor && <Confirmation cpfDevedor={debtor.cpf} />
+              {identifier !== ""
+                ? debtor && <Confirmation identifier={identifier} />
                 : debtor && (
                     <ModalContent
                       rules={rules!}
