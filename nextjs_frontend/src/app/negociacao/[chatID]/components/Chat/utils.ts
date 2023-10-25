@@ -30,9 +30,7 @@ export function formatProposal(totalValue: number, value: number, installment: n
   return proposalString;
 }
 
-export function firstProposal({
-  valorDivida, rules, nome
-}: NegotiationData) {
+export function firstProposal({ nome, valorDivida, rules }: NegotiationData) {
   const totalDebit = valorDivida.toLocaleString("pt-br", {
     style: "currency",
     currency: "BRL"
@@ -44,7 +42,7 @@ export function firstProposal({
   const firstInstallmentValue = (valorDivida - valorDivida * bestValue)
                                 / rules.melhorParcela;
 
-  const proposalMessage = `Olá, <b>${nome}</b>! Você tem uma pendência totalizando um valor de <b>${totalDebit}</b>. Estamos aqui para facilitar sua negociação. Nossa proposta é para você pagar <b>${confirmMessage}</b>. O que acha?`;
+  const proposalMessage = `Olá, <b>${nome}</b>! Você tem uma pendência totalizando um valor de <b>${totalDebit}</b>. Nossa proposta é para você pagar <b>${confirmMessage}</b>. O que acha?`;
 
   const proposal: IProposal = {
     autor: "Bot",
@@ -60,23 +58,22 @@ export function firstProposal({
   return proposal;
 }
 
-export function secondProposal(chatData: NegotiationData) {
-  const firstInstallment = chatData.rules.melhorParcela;
-  let currentInstallment = chatData.rules.piorParcela;
-  let proposalMessage = `Entendido ${chatData.nome}. `;
-  let currentValue = chatData.rules.piorEntrada;
+export function secondProposal({ rules, valorDivida }: NegotiationData) {
+  const firstInstallment = rules.melhorParcela;
+  let currentInstallment = rules.piorParcela;
+  let currentValue = rules.piorEntrada;
   let installmentValue =
-    (chatData.valorDivida - chatData.valorDivida * currentValue) / currentInstallment;
+    (valorDivida - valorDivida * currentValue) / currentInstallment;
   let confirmMessage = "";
 
   if (firstInstallment === currentInstallment) {
-    confirmMessage = formatProposal(chatData.valorDivida, currentValue, currentInstallment);
+    confirmMessage = formatProposal(valorDivida, currentValue, currentInstallment);
   } else {
     currentValue = 0, currentInstallment = firstInstallment + 1;
-    confirmMessage = formatProposal(chatData.valorDivida, 0, currentInstallment);
-    installmentValue = chatData.valorDivida / currentInstallment;
+    confirmMessage = formatProposal(valorDivida, 0, currentInstallment);
+    installmentValue = valorDivida / currentInstallment;
   }
-  proposalMessage += `Uma alternativa seria <b>${confirmMessage}</b>. Essa opção lhe atende melhor?`;
+  const proposalMessage = `Uma alternativa seria <b>${confirmMessage}</b>. Essa opção lhe atende melhor?`;
 
   const proposal: IProposal = {
     autor: "Bot",
@@ -92,10 +89,8 @@ export function secondProposal(chatData: NegotiationData) {
   return proposal;
 }
 
-export function thirdProposal({
-  nome, valorDivida, rules
-}: NegotiationData) {
-  const proposalMessage = `${nome}, vamos tentar chegar a um acordo. Informe abaixo um <b>valor de entrada</b> e a <b>quantidade de parcelas</b> que seriam ideais para você. E, se puder, <b>justifique sua proposta</b>.`;
+export function thirdProposal({ valorDivida, rules }: NegotiationData) {
+  const proposalMessage = `Vamos tentar chegar a um acordo: Informe abaixo um <b>valor de entrada</b> e a <b>quantidade de parcelas</b> que seriam ideais para você. E, se puder, <b>justifique sua proposta</b>.`;
 
   const confirmMessage = formatProposal(valorDivida,
     rules.piorEntrada, rules.piorParcela);
