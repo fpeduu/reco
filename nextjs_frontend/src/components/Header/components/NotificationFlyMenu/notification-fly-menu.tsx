@@ -19,7 +19,8 @@ export default function NotificationFlyMenu({
 
   return (
     <Popover className="relative">
-      <Popover.Button className="relative p-2 border rounded-full md:mr-20
+      <Popover.Button
+        className="relative p-2 border rounded-full md:mr-20
                                  hover:cursor-pointer hover:bg-slate-100">
         {notifications.length > 0 && (
           <span
@@ -40,15 +41,14 @@ export default function NotificationFlyMenu({
               key={index}
               type={notification.type}
               tenantName={notification.tenantName}
+              tenantCpf={notification.tenantCpf}
               condominiumName={notification.condominiumName}
               message={notification.message}
               onRemove={() => handleRemoveCard(index)}
             />
           ))}
           {notifications.length === 0 && (
-            <p className="text-center text-gray-500 m-auto font-light">
-              Nenhuma notificação
-            </p>
+            <p className="text-center text-gray-500 m-auto font-light">Nenhuma notificação</p>
           )}
         </div>
       </Popover.Panel>
