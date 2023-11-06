@@ -5,11 +5,14 @@ import React, { useEffect, useState } from "react";
 import { RegrasProposta } from "@/models/Usuarios";
 import { serverURL } from "@/config";
 
-import ModalContent, { INegotiationData } from "./components/Modal-content";
+import ModalContent, {
+  INegotiationData
+} from "./components/Modal-content";
 import Confirmation from "./components/Confirmation";
-import { Devedor } from "@/models/Devedores";
-import LoadingBar from "@/components/Loading/loading";
 import SnackBar from "@/components/SnackBar/snack-bar";
+import LoadingBar from "@/components/Loading/loading";
+import { Devedor } from "@/models/Devedores";
+import Modal from "@/components/Modal/modal";
 
 interface TenantModalProps {
   open: boolean;
@@ -66,52 +69,26 @@ export default function TenantModal({
   if (!debtor && open) return <LoadingBar />;
 
   return (
-    open && (
-      <div
-        className="relative z-40"
-        aria-labelledby="modal-title"
-        role="dialog"
-        aria-modal="true"
-      >
-        <SnackBar message={snackbarMessage} type={"error"} />
-        <div
-          className="fixed inset-0 bg-gray-500 bg-opacity-75
-                      transition-opacity"
-        ></div>
+    <Modal open={open} onClose={handleClose}>
+      <SnackBar message={snackbarMessage} type={"error"} />
+      <button
+        onClick={handleClose}
+        className="absolute sm:top-10 right-8 sm:right-14 text-5xl
+                    h-0 text-gray-500 hover:text-gray-700">
+        &times;
+      </button>
 
-        <div className="fixed inset-0 z-10 h-screen overflow-y-auto">
-          <div
-            className="flex min-h-full items-center justify-center p-4 text-center
-                        sm:items-center sm:p-0"
-          >
-            <div
-              className="relative p-6 transform overflow-hidden rounded-2xl
-                        bg-white text-left shadow-xl transition-all sm:my-8
-                          sm:w-full sm:max-w-4xl"
-            >
-              <button
-                onClick={handleClose}
-                className="absolute sm:top-10 right-8 sm:right-14 text-5xl h-0
-                        text-gray-500 hover:text-gray-700"
-              >
-                &times;
-              </button>
-
-              {identifier !== ""
-                ? debtor && <Confirmation identifier={identifier} />
-                : debtor && (
-                    <ModalContent
-                      rules={rules!}
-                      debtor={debtor}
-                      setRules={setRules}
-                      onClose={handleClose}
-                      onConfirm={handleConfirm}
-                    />
-                  )}
-            </div>
-          </div>
-        </div>
-      </div>
+      {identifier !== ""
+        ? debtor && <Confirmation identifier={identifier} />
+        : debtor && (
+            <ModalContent
+              rules={rules!}
+              debtor={debtor}
+              setRules={setRules}
+              onClose={handleClose}
+              onConfirm={handleConfirm}
+            />
+          )}
+      </Modal>
     )
-  );
 }

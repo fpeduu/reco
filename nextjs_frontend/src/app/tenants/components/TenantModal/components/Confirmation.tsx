@@ -35,7 +35,8 @@ export default function Confirmation({ identifier }: ConfirmationProps) {
 
         <div
           className="w-full bg-tertiary rounded-sm text-lg
-                        font-light p-2 mt-4 flex flex-wrap items-center overflow-x-auto break-keep whitespace-nowrap">
+                     font-light p-2 mt-4 flex flex-wrap items-center
+                     overflow-x-auto break-keep whitespace-nowrap">
           {serverURL}/negociacao/{identifier}
           <button className="md:ml-auto hover:bg-gray-100 rounded-sm p-1" onClick={copyToClipboard}>
             <Image src="/icons/copy.svg" alt="Copy link" width={20} height={20} />

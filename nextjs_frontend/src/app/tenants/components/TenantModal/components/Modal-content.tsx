@@ -86,8 +86,9 @@ export default function ModalContent({
   if (!rules || !negotiation) return <LoadingBar />;
 
   return (
-    <div className="bg-white pt-16 md:p-16 flex justify-center">
-      <div className="mt-3 max-w-2xl w-full gap-5 sm:ml-4 sm:mt-0 sm:text-left">
+    <div className="bg-white pt-16 flex justify-center
+                      w-full md:w-192 md:p-16 pb-4">
+      <div className="mt-3 max-w-2xl w-full gap-5 sm:ml-4 sm:mt-0">
         <h1 className="font-medium text-4xl leading-10 text-center mb-2" id="modal-title">
           Confira as informações:
         </h1>
@@ -99,8 +100,8 @@ export default function ModalContent({
         <div className="w-full my-8 gap-2 flex flex-col">
           <div
             className="flex-1 p-4 gap-5 flex flex-wrap items-center
-                          min-h-max justify-start rounded-md shadow bg-tertiary">
-            <div className="flex flex-col items-start gap-2 w-1/2">
+                        min-h-max justify-start rounded-md shadow bg-tertiary">
+            <div className="flex flex-col items-start gap-2 w-100 md:w-1/2">
               <span className="font-normal text-lg">{debtor.nome}</span>
               <span className="text-sm font-light">
                 {debtor.cpf} | {debtor.nomeCondominio}
